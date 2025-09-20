@@ -1,0 +1,129 @@
+/* Full page background */
+body, .container {
+  background-image: url('https://images.stockcake.com/public/1/5/f/15fc753a-4deb-46a2-be7e-8969532fa1a0_large/serene-african-evening-stockcake.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  color: #fdfdfd;
+}
+
+/* Typography shadows */
+h1, h2, h3 {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+}
+
+/* Logo Header */
+.logo-header {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo-img {
+  max-width: 180px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+/* Banner 3D Effect */
+.home-banner {
+  background: linear-gradient(135deg, #00563F, #007F5F);
+  border: 2px solid #ffffff30;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transform: perspective(800px) rotateX(2deg);
+}
+
+/* Steps Cards 3D */
+.home-steps .card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  border-radius: 15px;
+  transform: perspective(1000px);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.home-steps .card:hover {
+  transform: translateY(-10px) rotateY(5deg);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Buttons 3D Hover */
+button.btn {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+button.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+/* Upgrade Section */
+.upgrade-info {
+  background: linear-gradient(135deg, #ffffffdd, #ccffd8);
+  border: 2px solid #28a74550;
+  box-shadow: 0 8px 24px rgba(0, 128, 0, 0.2);
+}
+
+/* Testimonial Section */
+.testimonial {
+  background: rgba(255, 255, 255, 0.85);
+  border-left: 6px solid #28a745;
+  transform: perspective(600px) rotateX(1deg);
+}
+
+/* Footer Styling */
+.footer {
+  background: rgba(0, 0, 0, 0.5);
+  color: #ccc;
+  padding: 2rem;
+  border-top: 1px solid #ffffff20;
+  box-shadow: 0 -2px 20px rgba(0,0,0,0.4);
+}
+
+/* Why Choose Us section styling */
+.why-choose-us {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: perspective(800px) rotateX(1deg);
+}
+
+.why-choose-us h5 {
+  font-weight: bold;
+}
+
+.why-choose-us p {
+  color: #333;
+}
+
+/* Shares Form Inputs & Style */
+.shares-container h2 {
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.shares-container input,
+.shares-container select,
+.shares-container textarea {
+  border-radius: 10px;
+  font-size: 1rem;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.shares-container input:focus,
+.shares-container select:focus,
+.shares-container textarea:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 122, 61, 0.5);
+  border-color: #007A3D;
+}

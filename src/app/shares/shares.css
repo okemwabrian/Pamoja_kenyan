@@ -1,0 +1,20 @@
+.shares-container h2 {
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.shares-container input,
+.shares-container select,
+.shares-container textarea {
+  border-radius: 10px;
+  font-size: 1rem;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.shares-container input:focus,
+.shares-container select:focus,
+.shares-container textarea:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 122, 61, 0.5);
+  border-color: #007A3D;
+}

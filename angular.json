@@ -32,6 +32,7 @@
               }
             ],
             "styles": [
+              "src/custom-theme.scss",
               "src/styles.css"
             ],
             "server": "src/main.server.ts",
@@ -96,5 +97,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "ae1ce614-03fc-4b16-87c5-5ee15ffcaaf1"
   }
 }

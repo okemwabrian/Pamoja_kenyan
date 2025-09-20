@@ -1,0 +1,147 @@
+<div class="container my-5">
+  <h2 class="text-success mb-4">Single Family Membership Registration</h2>
+
+  <!-- Flash Messages -->
+  <div *ngIf="message" class="alert alert-info">
+    {{ message }}
+  </div>
+
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+
+    <!-- Personal Info -->
+    <fieldset class="border rounded-3 p-3 mb-4">
+      <legend class="w-auto px-2 text-success">Personal Information</legend>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">First Name</label>
+          <input formControlName="firstName" type="text" class="form-control" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Middle Name</label>
+          <input formControlName="middleName" type="text" class="form-control" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Last Name</label>
+          <input formControlName="lastName" type="text" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input formControlName="email" type="email" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Confirm Email</label>
+          <input formControlName="confirmEmail" type="email" class="form-control" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Address -->
+    <fieldset class="border rounded-3 p-3 mb-4">
+      <legend class="w-auto px-2 text-success">Address</legend>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Address Line 1</label>
+          <input formControlName="address1" type="text" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Address Line 2</label>
+          <input formControlName="address2" type="text" class="form-control" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">City</label>
+          <input formControlName="city" type="text" class="form-control" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">State / Province</label>
+          <input formControlName="stateProvince" type="text" class="form-control" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">ZIP / Postal</label>
+          <input formControlName="zip" type="text" class="form-control" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Contact -->
+    <fieldset class="border rounded-3 p-3 mb-4">
+      <legend class="w-auto px-2 text-success">Contact</legend>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Primary Phone</label>
+          <input formControlName="phoneMain" type="tel" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Optional Phone</label>
+          <input formControlName="phoneOptional" type="tel" class="form-control" />
+        </div>
+        <div class="col-md-12">
+          <label class="form-label">Upload Minnesota ID</label>
+          <input formControlName="minnesotaId" type="file" class="form-control" />
+          <div class="form-text">Accepted formats: JPG, PDF, PNG, WEBP. Max: 314MB</div>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Spouse / Authorized Rep -->
+    <fieldset class="border rounded-3 p-3 mb-4">
+      <legend class="w-auto px-2 text-success">Spouse / Authorized Representative</legend>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Spouse</label>
+          <input formControlName="spouse" type="text" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Spouse Phone</label>
+          <input formControlName="spousePhone" type="text" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Authorized Rep</label>
+          <input formControlName="authorizedRep" type="text" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Authorized Rep Phone</label>
+          <input formControlName="authorizedRepPhone" type="text" class="form-control" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Declaration -->
+    <fieldset class="border rounded-3 p-3 mb-4">
+      <legend class="w-auto px-2 text-danger">Declaration</legend>
+      <p>
+        I declare that the information provided above is accurate, true, and correct...
+      </p>
+      <p>
+        Upon registration, I agree to remain a Pamoja Kenya member for at least five (5) years after benefiting...
+      </p>
+      <div class="form-check">
+        <input class="form-check-input" formControlName="declarationAccepted" type="checkbox" id="declaration" />
+        <label class="form-check-label" for="declaration">
+          I have read the Pamoja Constitution and agree to the conditions.
+        </label>
+      </div>
+    </fieldset>
+
+    <!-- Payment Summary -->
+    <fieldset class="border rounded-3 p-3 mb-4">
+      <legend class="w-auto px-2 text-success">Payment Summary</legend>
+      <p class="mb-3">– Payment MUST be made in full before your registration is complete.</p>
+
+      <div class="mb-3">
+        <label class="form-label">Quantity</label>
+        <input type="number" class="form-control" value="1" readonly />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Membership</label>
+        <input type="text" class="form-control" value="Single Family Membership: $627.30" readonly />
+      </div>
+
+      <p><strong>Total:</strong> <span class="text-danger">$627.30</span></p>
+    </fieldset>
+
+    <!-- Payment Button -->
+    <button type="submit" class="btn btn-success px-4">Continue to Payment</button>
+    <a routerLink="/membership" class="btn btn-secondary ms-3">Back to Choices</a>
+  </form>
+</div>

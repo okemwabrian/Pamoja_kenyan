@@ -1,0 +1,123 @@
+<!-- Purchase Shares Form with Styling and Redirection -->
+<div
+  class="container shares-container my-5 p-5 rounded shadow-lg animate__animated animate__fadeIn"
+  style="
+    max-width: 650px;
+    background: linear-gradient(135deg, #ffffff 60%, #e6f5eb);
+    backdrop-filter: blur(6px);
+    transform: perspective(1000px) rotateX(1deg);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  "
+>
+  <h2 class="mb-4 text-center fw-bold" style="color: #007A3D;">
+    Purchase Shares
+  </h2>
+
+  <form (ngSubmit)="onSubmit()" #sharesForm="ngForm" novalidate>
+
+    <!-- Full Name -->
+    <div class="mb-4">
+      <label for="fullName" class="form-label fw-semibold">Full Name</label>
+      <input
+        type="text"
+        id="fullName"
+        name="fullName"
+        [(ngModel)]="formData.fullName"
+        class="form-control border border-success shadow-sm"
+        placeholder="Brian"
+        required
+      />
+    </div>
+
+    <!-- Email -->
+    <div class="mb-4">
+      <label for="email" class="form-label fw-semibold">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="formData.email"
+        class="form-control border border-success shadow-sm"
+        placeholder="brian@gmai.com"
+        required
+      />
+    </div>
+
+    <!-- Number of Shares -->
+    <div class="mb-4">
+      <label for="shares" class="form-label fw-semibold">Number of Shares</label>
+      <input
+        type="number"
+        id="shares"
+        name="shares"
+        [(ngModel)]="formData.shares"
+        class="form-control border border-success shadow-sm"
+        required
+        min="1"
+        placeholder="Enter number of shares"
+      />
+    </div>
+
+    <!-- Payment Method -->
+    <div class="mb-4">
+      <label for="paymentMethod" class="form-label fw-semibold">Preferred Payment Method</label>
+      <select
+        id="paymentMethod"
+        name="paymentMethod"
+        [(ngModel)]="formData.paymentMethod"
+        class="form-select border border-success shadow-sm"
+        required
+      >
+        <option value="" disabled selected>Select payment method</option>
+        <option value="paypal">PayPal</option>
+        <option value="bank">Bank Transfer</option>
+        <option value="card">Credit/Debit Card</option>
+      </select>
+    </div>
+
+    <!-- Comments -->
+    <div class="mb-4">
+      <label for="comments" class="form-label fw-semibold">Additional Notes (Optional)</label>
+      <textarea
+        id="comments"
+        name="comments"
+        [(ngModel)]="formData.comments"
+        rows="4"
+        class="form-control border border-success shadow-sm"
+        placeholder="Your notes here..."
+      ></textarea>
+    </div>
+
+    <!-- Payment Summary -->
+    <div
+      class="mb-4 p-3 rounded"
+      style="background-color: #f2fdf6; border-left: 6px solid #007A3D;"
+    >
+      <p class="mb-1 fw-semibold">
+        <span>Total Payment:</span>
+        <span class="text-danger">
+          {{
+            formData.shares && formData.shares > 0
+              ? ('$' + (formData.shares * 100).toFixed(2))
+              : '$0.00'
+          }}
+        </span>
+      </p>
+      <p class="text-muted mb-0">
+        (1 Share = $100.00)
+      </p>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="text-center">
+      <button
+        type="submit"
+        class="btn btn-success btn-lg px-5 py-2 fw-bold"
+        [disabled]="!sharesForm.form.valid"
+        style="background-color: #007A3D; border-radius: 10px;"
+      >
+        Proceed to Payment
+      </button>
+    </div>
+  </form>
+</div>

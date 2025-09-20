@@ -1,0 +1,97 @@
+<div class="contact-wrapper container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="contact-card glassmorphic shadow-lg p-5 rounded-4">
+
+        <!-- Title -->
+        <div class="text-center mb-4">
+          <h2 class="fw-bold text-accent">📬 Contact Us</h2>
+          <p class="text-muted">We'd love to hear from you. Fill out the form and we’ll respond shortly.</p>
+        </div>
+
+        <!-- Contact Form -->
+        <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
+
+          <!-- Name -->
+          <div class="mb-3">
+            <label for="name" class="form-label fw-semibold">Name</label>
+            <input
+              type="text"
+              id="name"
+              class="form-control input-3d"
+              placeholder="First and Last Name"
+              required
+              name="name"
+              [(ngModel)]="formData.name">
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <input
+              type="email"
+              id="email"
+              class="form-control input-3d"
+              placeholder="name@example.com"
+              required
+              name="email"
+              [(ngModel)]="formData.email">
+          </div>
+
+          <!-- Subject -->
+          <div class="mb-3">
+            <label for="subject" class="form-label fw-semibold">Subject</label>
+            <input
+              type="text"
+              id="subject"
+              class="form-control input-3d"
+              placeholder="Let us know how we can help"
+              required
+              name="subject"
+              [(ngModel)]="formData.subject">
+          </div>
+
+          <!-- Help Type -->
+          <div class="mb-4">
+            <label class="form-label fw-semibold">How Can We Help?</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="helpType" id="membership" value="membership"
+                     [(ngModel)]="formData.helpType" checked>
+              <label class="form-check-label" for="membership">
+                I Have Questions About Membership
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="helpType" id="shares" value="shares"
+                     [(ngModel)]="formData.helpType">
+              <label class="form-check-label" for="shares">
+                I Need Help Purchasing Shares
+              </label>
+            </div>
+          </div>
+
+          <!-- Message -->
+          <div class="mb-4">
+            <label for="message" class="form-label fw-semibold">Message</label>
+            <textarea
+              class="form-control input-3d"
+              id="message"
+              rows="5"
+              placeholder="Type your message here..."
+              required
+              name="message"
+              [(ngModel)]="formData.message"></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-accent btn-lg">
+              <i class="fas fa-paper-plane me-2"></i> Send Message
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

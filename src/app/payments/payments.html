@@ -1,0 +1,46 @@
+<div class="container my-5 py-5 rounded shadow bg-light animate__animated animate__fadeIn">
+  <h2 class="text-center mb-4 fw-bold text-success">
+    💳 Complete Your Payment
+  </h2>
+
+  <div *ngIf="registrationData; else noData">
+    <!-- Registration Summary -->
+    <div class="card border-success mb-4 shadow-sm glass-card">
+      <div class="card-header bg-success text-white fw-semibold">
+        <i class="fas fa-clipboard-check me-2"></i> Registration Summary
+      </div>
+      <div class="card-body">
+        <p><strong>👤 Name:</strong> {{ registrationData.firstName }} {{ registrationData.lastName }}</p>
+        <p><strong>📧 Email:</strong> {{ registrationData.email }}</p>
+        <p><strong>💰 Total to Pay:</strong> <span class="text-success fw-bold">$627.30</span></p>
+      </div>
+    </div>
+
+    <!-- PayPal Section -->
+    <div class="text-center my-4">
+      <div *ngIf="!paypalLoaded && !paypalLoadError" class="text-muted">
+        <div class="spinner-border text-success" role="status"></div>
+        <p class="mt-2">Loading PayPal checkout...</p>
+      </div>
+
+      <div *ngIf="paypalLoadError" class="alert alert-danger">
+        ❌ Failed to load PayPal checkout. Please check your network or client ID.
+      </div>
+
+      <!-- ✅ Always keep this in the DOM -->
+      <div id="paypal-button-container" class="d-flex justify-content-center" style="min-height: 50px;"></div>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="paymentCompleted" class="alert alert-success text-center mt-4">
+      <h5 class="mb-1">✅ Payment Successful</h5>
+      <p class="mb-0">Thank you for your payment! Your registration is now complete.</p>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <div class="alert alert-warning text-center">
+      ⚠️ No registration data found. Please register first.
+    </div>
+  </ng-template>
+</div>

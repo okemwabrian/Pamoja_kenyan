@@ -1,0 +1,61 @@
+<div class="container my-5">
+  <h2 class="mb-4 text-primary">Double Family Membership Registration</h2>
+
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" novalidate>
+    
+    <fieldset class="border rounded p-4 mb-4">
+      <legend class="float-none w-auto px-3 text-secondary">Personal Information</legend>
+
+      <div *ngFor="let field of personalInfoFields" class="mb-3">
+        <label [for]="field.name" class="form-label">{{ field.label }}</label>
+
+        <input
+          [type]="field.type || 'text'"
+          class="form-control"
+          [formControlName]="field.name"
+          [id]="field.name"
+          [attr.placeholder]="field.placeholder"
+          [attr.accept]="field.accept ? field.accept : null"
+        />
+
+        <div *ngIf="registrationForm.get(field.name)?.invalid && registrationForm.get(field.name)?.touched" class="invalid-feedback d-block">
+          <div *ngIf="registrationForm.get(field.name)?.errors?.['required']">
+            {{ field.label }} is required.
+          </div>
+          <div *ngIf="registrationForm.get(field.name)?.errors?.['email']">
+            Please enter a valid email.
+          </div>
+        </div>
+
+        <small *ngIf="field.helpText" class="form-text text-muted">{{ field.helpText }}</small>
+      </div>
+    </fieldset>
+
+    <fieldset class="border rounded p-4 mb-4">
+      <legend class="float-none w-auto px-3 text-secondary">Address</legend>
+
+      <div *ngFor="let field of addressFields" class="mb-3">
+        <label [for]="field.name" class="form-label">{{ field.label }}</label>
+
+        <input
+          [type]="field.type || 'text'"
+          class="form-control"
+          [formControlName]="field.name"
+          [id]="field.name"
+          [attr.placeholder]="field.placeholder"
+          [attr.accept]="field.accept ? field.accept : null"
+        />
+
+        <div *ngIf="registrationForm.get(field.name)?.invalid && registrationForm.get(field.name)?.touched" class="invalid-feedback d-block">
+          <div *ngIf="registrationForm.get(field.name)?.errors?.['required']">
+            {{ field.label }} is required.
+          </div>
+        </div>
+
+        <small *ngIf="field.helpText" class="form-text text-muted">{{ field.helpText }}</small>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>

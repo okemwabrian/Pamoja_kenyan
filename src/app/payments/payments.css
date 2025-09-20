@@ -1,0 +1,25 @@
+.container {
+  background-color: #ffffffcc;
+  border-radius: 12px;
+}
+
+.card-header {
+  font-size: 1.1rem;
+}
+
+.spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,96 @@
+<header class="logo-header text-center py-3 mb-4" [@bannerAppear]>
+  <img src="/images/logo.png" alt="Pamoja Kenya Logo" class="logo-img">
+</header>
+
+<div class="container py-5" [@fadeInStagger]>
+
+  <!-- Banner Section -->
+  <section class="home-banner text-center p-5 rounded mb-5">
+    <h1 class="display-4 fw-bold">Pamoja Kenya MN taking the lead at the time of need.</h1>
+    <p class="lead mt-3">
+      Pamoja Kenya supports your family when you or a loved one passes away by providing funds for the cost of a funeral, burial, and other related unexpected expenses irrespective of where your family member lives.
+    </p>
+  </section>
+
+  <!-- Steps Section -->
+  <section class="home-steps mb-5">
+    <h2 class="text-center fw-bold mb-4">Two Easy Steps</h2>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-success">
+          <div class="card-body">
+            <h3 class="card-title text-success">Membership - Become a New Member</h3>
+            <p class="card-text text-secondary">Every member is important to us hence are valued …</p>
+            <button class="btn btn-success" (click)="onSignup()">Sign‑up Here</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-info">
+          <div class="card-body">
+            <h3 class="card-title text-info">Top Up Shares</h3>
+            <p class="card-text text-secondary">We own our actions and follow‑through with our commitment …</p>
+            <button class="btn btn-info" (click)="onBuyShares()">Buy Shares Here</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-secondary">
+          <div class="card-body">
+            <h3 class="card-title text-secondary">Receive Benefits</h3>
+            <p class="card-text text-secondary">We actively engage with all people and communities…</p>
+            <button class="btn btn-outline-secondary" (click)="onReadMore()">Read More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us Section -->
+  <section class="why-choose-us text-center bg-white p-5 rounded shadow-sm mb-5">
+    <h2 class="fw-bold text-success mb-4">Why Choose Pamoja Kenya MN?</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <h5 class="text-primary">Trusted by Families</h5>
+        <p class="text-muted">We’ve helped hundreds of families navigate tough times with dignity and support.</p>
+      </div>
+      <div class="col-md-4">
+        <h5 class="text-primary">Transparent & Affordable</h5>
+        <p class="text-muted">No hidden fees, no surprises — just real help when it matters most.</p>
+      </div>
+      <div class="col-md-4">
+        <h5 class="text-primary">Nationwide Reach</h5>
+        <p class="text-muted">Support available whether your loved ones are in Kenya, the US, or beyond.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upgrade Section -->
+  <section class="upgrade-info text-center p-4 rounded mb-5 border border-success">
+    <h2 class="fw-bold text-success mb-3">Upgrade To Double Family Membership</h2>
+    <p class="mb-4">Current members can upgrade their single family membership at any time.</p>
+    <button class="btn btn-success btn-lg" (click)="onUpgrade()">Upgrade Here</button>
+  </section>
+
+  
+
+  <!-- Testimonial Section -->
+  <section class="testimonial p-4 rounded shadow-sm mb-5">
+    <blockquote class="blockquote text-center fst-italic mb-3">
+      "A testimonial from a client who benefited from your product or service. Testimonials can be a highly effective way of establishing credibility and increasing your company's reputation."
+    </blockquote>
+    <footer class="blockquote-footer text-center text-muted">Client Name – Location</footer>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="footer text-center small">
+    <h3 class="text-success mb-3">Contact Us</h3>
+    <p>P.O. Box 473 Shakopee, MN 55379</p>
+    <p>Phone: (612) 261-5786 / (612) 483‑2041 / (612) 644‑3222</p>
+    <p>Mon‑Fri By Appointment</p>
+    <p><a href="#" class="text-success text-decoration-none">Privacy Policy</a></p>
+    <small class="d-block mt-3">&copy; 2025 All Rights Reserved.</small>
+  </footer>
+
+</div>

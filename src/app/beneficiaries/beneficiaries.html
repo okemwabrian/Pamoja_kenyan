@@ -1,0 +1,69 @@
+<h2>Beneficiary Change Request Form</h2>
+
+<table mat-table [dataSource]="maskedBeneficiaries" class="mat-elevation-z8 full-width">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let beneficiary">{{ beneficiary.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="phone">
+    <th mat-header-cell *matHeaderCellDef>Phone Number</th>
+    <td mat-cell *matCellDef="let beneficiary">{{ beneficiary.phone }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef>Email</th>
+    <td mat-cell *matCellDef="let beneficiary">{{ beneficiary.email }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<!-- Hidden number of beneficiaries -->
+<input type="hidden" [value]="beneficiaries.length" name="totalBeneficiaries">
+
+<!-- Request Form -->
+<form #beneficiaryForm="ngForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Full Name</mat-label>
+    <input matInput name="fullName" [(ngModel)]="formData.fullName" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" name="email" [(ngModel)]="formData.email" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Current Beneficiary Name(s)</mat-label>
+    <input matInput name="currentNames" [(ngModel)]="formData.currentNames" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>New Beneficiary Name(s)</mat-label>
+    <input matInput name="newNames" [(ngModel)]="formData.newNames" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Street Address</mat-label>
+    <input matInput name="address" [(ngModel)]="formData.address">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>City</mat-label>
+    <input matInput name="city" [(ngModel)]="formData.city">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>State</mat-label>
+    <input matInput name="state" [(ngModel)]="formData.state">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Zip/Postal</mat-label>
+    <input matInput name="zip" [(ngModel)]="formData.zip">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Submit Request</button>
+</form>

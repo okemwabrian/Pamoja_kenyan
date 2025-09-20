@@ -1,0 +1,121 @@
+/* Using Animate.css (ensure it's loaded in index.html) */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+
+/* ===============================
+   🎯 HERO SECTION STYLES
+================================== */
+.hero-section {
+  background-color: #0a3d62 !important;         /* Deep navy */
+  color: #d1d8e0 !important;                    /* Soft gray */
+}
+
+.hero-section .text-success {
+  color: #74b9ff !important;                    /* Sky blue */
+}
+
+.hero-section h1 i {
+  color: #0984e3 !important;                    /* Bright blue */
+}
+
+.text-glow {
+  text-shadow: 0 0 8px #00ffcc, 0 0 12px #00ffcc;
+}
+
+/* ===============================
+   🙌 WHO WE ARE SECTION
+================================== */
+.section-content {
+  background-color: #f0f4f8 !important;         /* Light blue-gray */
+  color: #2d3436 !important;                    /* Charcoal */
+}
+
+.section-content h2.fw-bold.text-danger {
+  color: #0984e3 !important;
+}
+
+.section-content .text-success {
+  color: #74b9ff !important;
+}
+
+.section-content .text-danger {
+  color: #0984e3 !important;
+}
+
+/* ===============================
+   🧊 3D GLASS CARDS (Mission + Why)
+================================== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.glass-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
+}
+
+.section-content .border-start.border-success {
+  border-color: #74b9ff !important;
+  background-color: #ecf0f1 !important;
+  color: #2d3436 !important;
+}
+
+.section-content .border-start.border-danger {
+  border-color: #0984e3 !important;
+  background-color: #ecf0f1 !important;
+  color: #2d3436 !important;
+}
+
+/* ===============================
+   🟨 TEXT ENHANCEMENTS
+================================== */
+.text-highlight {
+  color: #00ffaa;
+  font-weight: 600;
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, #00ffcc, #ff0077);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===============================
+   🔥 CTA SECTION
+================================== */
+.bg-gradient-danger {
+  background: linear-gradient(to right, #ff416c, #ff4b2b);
+}
+
+.bg-dark-cta {
+  background-color: #0a3d62 !important;
+  color: #d1d8e0 !important;
+}
+
+.bg-dark-cta h3 .text-success {
+  color: #74b9ff !important;
+}
+
+.bg-dark-cta h3 .text-danger {
+  color: #0984e3 !important;
+}
+
+.bg-dark-cta .btn-danger {
+  background-color: #0984e3 !important;
+  border-color: #0984e3 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(9, 132, 227, 0.4);
+}
+
+.bg-dark-cta .btn-danger:hover {
+  background-color: #065aab !important;
+  border-color: #065aab !important;
+  color: #fff !important;
+}
+
+/* ===============================
+   ✨ ANIMATIONS
+================================== */

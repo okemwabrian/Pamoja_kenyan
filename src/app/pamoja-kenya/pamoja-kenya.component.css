@@ -1,0 +1,146 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+/* pamoja-kenya.component.css */
+
+/* ---------- Root Styling ---------- */
+:root {
+  --primary: #00ffab;
+  --primary-dark: #00e69d;
+  --bg-dark: #0f0f1c;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --text-light: #f8f8f8;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-dark);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-light);
+}
+
+/* ---------- Sidenav Container ---------- */
+.sidenav-container {
+  height: 100vh;
+  background: var(--bg-dark);
+}
+
+/* ---------- Sidebar Styling (Glass + 3D) ---------- */
+.sidenav {
+  width: 240px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-right: 1px solid var(--glass-border);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  transform-style: preserve-3d;
+  transition: all 0.4s ease;
+}
+
+.mat-toolbar {
+  background: transparent;
+  color: var(--primary);
+  font-weight: bold;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* ---------- Navigation List Styling ---------- */
+.mat-nav-list a {
+  color: var(--text-light);
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin: 4px 0;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.mat-nav-list a:hover {
+  background-color: rgba(0, 255, 171, 0.1);
+  color: var(--primary);
+  transform: translateX(5px);
+}
+
+/* ---------- Top Toolbar (Smart Floating) ---------- */
+mat-sidenav-content mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  color: var(--primary);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 2px 12px rgba(0, 255, 171, 0.05);
+}
+
+/* ---------- Container Inside Content ---------- */
+.container {
+  padding: 2rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ---------- Responsive Adjustments ---------- */
+@media (max-width: 768px) {
+  .sidenav {
+    width: 100%;
+    box-shadow: none;
+    border-right: none;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+}
+
+/* ---------- Animation ---------- */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Logo Styles ---------- */
+.logo-img {
+  max-width: 100px;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 255, 171, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+.toolbar-logo {
+  height: 32px;
+  width: auto;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Optional: Active Link Highlight */
+.mat-nav-list a.active {
+  background-color: rgba(0, 255, 171, 0.15);
+  font-weight: bold;
+  color: var(--primary);
+}
+

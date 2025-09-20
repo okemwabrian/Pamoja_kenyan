@@ -1,0 +1,115 @@
+/* contact.css */
+
+/* ---------- Root Variables ---------- */
+:root {
+  --bg-dark: #0f0f1c;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --accent: #00ffab;
+  --accent-hover: #00e6a0;
+  --text-light: #f0f0f0;
+  --text-muted: #aaa;
+  --input-bg: rgba(255, 255, 255, 0.06);
+}
+
+/* ---------- Body Styling ---------- */
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ---------- Contact Wrapper ---------- */
+.contact-wrapper {
+  perspective: 1200px;
+  padding-bottom: 3rem;
+}
+
+/* ---------- Contact Card (Glassmorphic) ---------- */
+.contact-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.contact-card:hover {
+  transform: rotateX(1.5deg) rotateY(1.5deg);
+  box-shadow: 0 40px 80px rgba(0, 255, 171, 0.3);
+}
+
+/* ---------- Accent Text ---------- */
+.text-accent {
+  color: var(--accent);
+}
+
+/* ---------- Form Controls (3D Input Fields) ---------- */
+.input-3d {
+  background: var(--input-bg);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.02),
+              inset -3px -3px 6px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+.input-3d:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent), 0 0 10px var(--accent-hover);
+}
+
+.input-3d::placeholder {
+  color: var(--text-muted);
+}
+
+/* ---------- Radio Buttons ---------- */
+.form-check-input:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.form-check-label {
+  color: var(--text-light);
+}
+
+/* ---------- Submit Button ---------- */
+.btn-accent {
+  background-color: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 255, 171, 0.3);
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-hover);
+  box-shadow: 0 6px 20px rgba(0, 255, 171, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-accent:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* ---------- Responsive Typography ---------- */
+h2 {
+  font-size: 2rem;
+}
+
+@media (min-width: 768px) {
+  h2 {
+    font-size: 2.5rem;
+  }
+}

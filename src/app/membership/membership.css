@@ -1,0 +1,56 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+/* Gradient Text (Updated) */
+.text-gradient {
+  background: linear-gradient(45deg, #ff6b6b, #5f27cd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Highlight Text */
+.text-highlight {
+  color: #ffb142;
+  font-weight: 600;
+}
+
+/* Glassmorphic Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(95, 39, 205, 0.15); /* Purple shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 14px 45px rgba(255, 107, 107, 0.25); /* Coral shadow on hover */
+}
+
+/* Optional: Update buttons to match new theme */
+.btn-outline-dark {
+  border-color: #5f27cd;
+  color: #5f27cd;
+}
+.btn-outline-dark:hover {
+  background-color: #5f27cd;
+  color: white;
+}
+
+.btn-outline-danger {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+.btn-outline-danger:hover {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.btn-outline-success {
+  border-color: #ffb142;
+  color: #ffb142;
+}
+.btn-outline-success:hover {
+  background-color: #ffb142;
+  color: white;
+}
