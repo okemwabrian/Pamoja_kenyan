@@ -1,0 +1,71 @@
+<div class="container mt-5" style="max-width: 480px;">
+  <div class="text-center mb-4">
+    <img src="images/logo.png" alt="Pamoja Kenya Logo" class="logo-img" />
+    <h2 class="fw-bold text-success">Register for Pamoja Kenya</h2>
+  </div>
+
+  <form (ngSubmit)="register()" #registerForm="ngForm" novalidate>
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        class="form-control"
+        [(ngModel)]="username"
+        required
+        placeholder="Enter your username"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="form-control"
+        [(ngModel)]="email"
+        required
+        placeholder="Enter your email"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-control"
+        [(ngModel)]="password"
+        required
+        placeholder="Enter a password"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="confirmPassword">Confirm Password</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        class="form-control"
+        [(ngModel)]="confirmPassword"
+        required
+        placeholder="Confirm your password"
+      />
+    </div>
+
+    <div *ngIf="errorMessage" class="text-danger mb-3">{{ errorMessage }}</div>
+
+    <button type="submit" class="btn btn-success w-100 fw-bold">Register</button>
+  </form>
+
+  <div class="text-center mt-4">
+    <p>
+      Already have an account?
+      <a routerLink="/login" class="text-danger fw-semibold">Login</a>
+    </p>
+  </div>
+</div>

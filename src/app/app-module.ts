@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -24,6 +25,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { Upgrade } from './upgrade/upgrade';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Login } from './login/login';
+import { Register } from './register/register';
+import { Header } from './header/header';
 
 @NgModule({
   declarations: [
@@ -38,7 +42,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     Shares,
     SingleApplication,
     PamojaKenyaComponent,
-    Upgrade
+    Upgrade,
+    Login,
+    Register,
+    Header
   ],
   imports: [
     BrowserModule,
@@ -59,7 +66,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-     BrowserAnimationsModule
+     BrowserAnimationsModule,
+     ReactiveFormsModule,
+     HttpClientModule
     
   ],
   providers: [

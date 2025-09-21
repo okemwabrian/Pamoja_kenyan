@@ -1,0 +1,46 @@
+.logo-img {
+  max-width: 100px;
+  margin-bottom: 10px;
+}
+/* Simple 3D card effect */
+.container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.container:hover {
+  transform: translateZ(30px) rotateX(5deg) rotateY(-5deg);
+  box-shadow:
+    0 8px 12px rgba(0, 0, 0, 0.15),
+    0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Buttons with subtle 3D press effect */
+button {
+  background: linear-gradient(145deg, #4CAF50, #388E3C);
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 5px 0 #2E7D32;
+  color: white;
+  font-weight: 700;
+  padding: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+button:active {
+  transform: translateZ(-4px);
+  box-shadow: none;
+}
+
+button:hover {
+  filter: brightness(1.1);
+}
