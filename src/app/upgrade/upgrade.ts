@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import {
   trigger,
   transition,
   style,
   animate
 } from '@angular/animations';
-import { Router } from '@angular/router';
-
+import { Router, RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-upgrade',
-  standalone: false,
+  standalone: true,
   templateUrl: './upgrade.html',
-  styleUrl: './upgrade.css',
+  styleUrls: ['./upgrade.css'],
   animations: [
     trigger('formAppear', [
       transition(':enter', [
@@ -21,63 +22,60 @@ import { Router } from '@angular/router';
         animate('500ms ease-out', style({ opacity: 1, transform: 'scale(1) translateZ(0)' }))
       ])
     ])
+  ],
+  imports: [
+    CommonModule,         // ✅ Needed for *ngIf, *ngFor, etc.
+    ReactiveFormsModule,  // ✅ Needed for formGroup, formControlName
+    RouterModule          // ✅ Needed for routerLink (if used)
   ]
 })
 export class Upgrade implements OnInit {
   registrationForm!: FormGroup;
   message: string = '';
+  backendErrors: any = null;
 
-  constructor(private fb: FormBuilder, private router: Router) {}
-
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group({
-      // Personal Info
-      firstName: ['', Validators.required],
-      middleName: [''],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      confirmEmail: ['', [Validators.required, Validators.email]],
+  first_name: ['', Validators.required],
+  middle_name: [''],
+  last_name: ['', Validators.required],
+  email: ['', [Validators.required, Validators.email]],
+  confirm_email: ['', [Validators.required, Validators.email]],
+  address1: ['', Validators.required],
+  address2: [''],
+  city: ['', Validators.required],
+  state_province: ['', Validators.required],
+  zip_code: ['', Validators.required],
+  phone_main: ['', Validators.required],
+  phone_optional: [''],
+  minnesota_id: [null, Validators.required],  // File input
+  spouse: [''],
+  spouse_phone: [''],
+  authorized_rep: [''],
+  authorized_rep_phone: [''],
+  existing_member_id: ['', Validators.required],
+  declaration_accepted: [false, Validators.requiredTrue]
+}, { validators: this.emailMatchValidator });
 
-      // Address
-      address1: ['', Validators.required],
-      address2: [''],
-      city: ['', Validators.required],
-      stateProvince: ['', Validators.required],
-      zip: ['', Validators.required],
-
-      // Contact
-      phoneMain: ['', Validators.required],
-      phoneOptional: [''],
-      minnesotaId: [null, Validators.required],  // Handled via file input
-
-      // Spouse / Authorized Rep
-      spouse: [''],
-      spousePhone: [''],
-      authorizedRep: [''],
-      authorizedRepPhone: [''],
-
-      // Declaration + Membership
-      declarationAccepted: [false, Validators.requiredTrue],
-      existingMemberId: ['', Validators.required]
-    }, {
-      validators: [this.emailMatchValidator]
-    });
   }
 
-  // ✅ Email match validator
   emailMatchValidator(group: AbstractControl): { [key: string]: boolean } | null {
     const email = group.get('email')?.value;
-    const confirmEmail = group.get('confirmEmail')?.value;
+    const confirmEmail = group.get('confirm_email')?.value;
+
     return email === confirmEmail ? null : { emailMismatch: true };
   }
 
-  // ✅ Handle file input separately
   get minnesotaIdControl(): AbstractControl | null {
     return this.registrationForm.get('minnesotaId');
   }
 
-  // ✅ File input change handler (optional if using ngModel or reactive approach)
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input?.files?.length) {
@@ -88,43 +86,58 @@ export class Upgrade implements OnInit {
   }
 
   onSubmit(): void {
-  if (this.registrationForm.invalid) {
-    this.message = 'Please fix errors before submitting.';
-    this.registrationForm.markAllAsTouched();
-    this.scrollToFirstError();
-    return;
-  }
+    this.backendErrors = null;
+    if (this.registrationForm.invalid) {
+      this.message = 'Please fix errors before submitting.';
+      this.registrationForm.markAllAsTouched();
+      this.scrollToFirstError();
+      return;
+    }
 
-  const formData = new FormData();
-  const values = this.registrationForm.value;
+    const formData = new FormData();
+    const values = this.registrationForm.value;
 
-  // Append each control to FormData
-  for (const key in values) {
-    if (key === 'minnesotaId') {
-      const file = values[key];
-      if (file instanceof File) {
-        formData.append('minnesotaId', file);
+    for (const key in values) {
+      if (!values.hasOwnProperty(key)) continue;
+
+      const value = values[key];
+
+      if (key === 'minnesotaId') {
+        if (value instanceof File) {
+          formData.append('minnesota_id', value);
+        }
+      } else {
+        if (value === null || value === undefined || value === '') continue;
+
+        if (typeof value === 'boolean') {
+          formData.append(this.camelToSnakeCase(key), value ? 'true' : 'false');
+        } else {
+          formData.append(this.camelToSnakeCase(key), value);
+        }
       }
-    } else {
-      formData.append(key, values[key]);
     }
+
+    this.http.post('http://localhost:8000/api/upgrades/upgrade/', formData).subscribe({
+      next: () => {
+        this.router.navigate(['/payments'], {
+          queryParams: {
+            upgradeType: 'double-family',
+            amount: 500
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Submission error:', error);
+        if (error.error) {
+          this.backendErrors = error.error;
+          console.error('Backend validation errors:', this.backendErrors);
+        }
+        this.message = 'There was an error submitting your upgrade. Please check the form and try again.';
+        this.scrollToFirstError();
+      }
+    });
   }
 
-  // Optional: Save formData to a service if needed
-
-  // Navigate to payment page with query parameters
-  this.router.navigate(['/payments'], {
-    queryParams: {
-      upgradeType: 'double-family',
-      amount: 500
-    }
-  });
-
-  // Optionally reset form or show a message
-  // this.registrationForm.reset();
-}
-
-  // Optional: scroll to first error field for better UX
   private scrollToFirstError(): void {
     const firstInvalidControl: HTMLElement | null = document.querySelector(
       '.ng-invalid[formControlName]'
@@ -133,5 +146,9 @@ export class Upgrade implements OnInit {
       firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       firstInvalidControl.focus();
     }
+  }
+
+  private camelToSnakeCase(str: string): string {
+    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
   }
 }

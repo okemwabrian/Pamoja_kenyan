@@ -4,9 +4,12 @@
     <h2 class="fw-bold text-success">Register for Pamoja Kenya</h2>
   </div>
 
-  <form (ngSubmit)="register()" #registerForm="ngForm" novalidate>
+  <!-- FORM -->
+  <form #registerForm="ngForm" (ngSubmit)="register()" novalidate>
+
+    <!-- Username -->
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="username">Username</label>
+      <label for="username" class="form-label fw-semibold">Username</label>
       <input
         type="text"
         id="username"
@@ -18,8 +21,9 @@
       />
     </div>
 
+    <!-- Email -->
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="email">Email</label>
+      <label for="email" class="form-label fw-semibold">Email</label>
       <input
         type="email"
         id="email"
@@ -31,8 +35,9 @@
       />
     </div>
 
+    <!-- Password -->
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="password">Password</label>
+      <label for="password" class="form-label fw-semibold">Password</label>
       <input
         type="password"
         id="password"
@@ -40,12 +45,14 @@
         class="form-control"
         [(ngModel)]="password"
         required
+        minlength="6"
         placeholder="Enter a password"
       />
     </div>
 
+    <!-- Confirm Password -->
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="confirmPassword">Confirm Password</label>
+      <label for="confirmPassword" class="form-label fw-semibold">Confirm Password</label>
       <input
         type="password"
         id="confirmPassword"
@@ -57,11 +64,23 @@
       />
     </div>
 
-    <div *ngIf="errorMessage" class="text-danger mb-3">{{ errorMessage }}</div>
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger text-center">
+      {{ errorMessage }}
+    </div>
 
-    <button type="submit" class="btn btn-success w-100 fw-bold">Register</button>
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success text-center">
+      {{ successMessage }}
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-success w-100 fw-bold">
+      Register
+    </button>
   </form>
 
+  <!-- Link to Login -->
   <div class="text-center mt-4">
     <p>
       Already have an account?

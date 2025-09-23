@@ -18,15 +18,15 @@ import { PamojaKenyaComponent } from './pamoja-kenya/pamoja-kenya.component';
 import { AuthGuard } from './auth/auth-guard';
 
 const routes: Routes = [
-  // Public Routes
-  { path: '', component: Home },
-  { path: 'login', component: Login },
-  { path: 'register', component: Register },
+  // Public routes
+  { path: '', component: Home },                      // Home page, no sidebar
+  { path: 'login', component: Login },                // Login page, no sidebar
+  { path: 'register', component: Register },          // Register page, no sidebar
 
-  // Protected Routes (inside layout)
+  // Protected routes with layout
   {
     path: '',
-    component: PamojaKenyaComponent,
+    component: PamojaKenyaComponent,  // layout with sidebar
     canActivate: [AuthGuard],
     children: [
       { path: 'about', component: About },
@@ -37,13 +37,14 @@ const routes: Routes = [
       { path: 'payments', loadComponent: () => import('./payments/payments').then(m => m.Payments) },
       { path: 'beneficiaries', component: Beneficiaries },
       { path: 'upgrade', component: Upgrade },
-      { path: 'contact', component: Contact }
+      { path: 'contact', component: Contact },
     ]
   },
 
-  // Wildcard redirect
+  // Wildcard
   { path: '**', redirectTo: '' }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

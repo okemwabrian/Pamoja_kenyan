@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RegistrationService } from '../services/registration';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-single-application',
@@ -12,11 +12,12 @@ import { RegistrationService } from '../services/registration';
 export class SingleApplication implements OnInit {
   registrationForm!: FormGroup;
   message: string = '';
+  fileToUpload: File | null = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private registrationService: RegistrationService
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -33,7 +34,7 @@ export class SingleApplication implements OnInit {
       zip: ['', Validators.required],
       phoneMain: ['', Validators.required],
       phoneOptional: [''],
-      minnesotaId: [null],
+      minnesotaId: [null],  // File input handled separately
       spouse: [''],
       spousePhone: [''],
       authorizedRep: [''],
@@ -42,22 +43,50 @@ export class SingleApplication implements OnInit {
     });
   }
 
+  // File input change event
+  handleFileInput(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.fileToUpload = file;
+      this.registrationForm.patchValue({ minnesotaId: file });
+    }
+  }
+
   onSubmit(): void {
-    if (this.registrationForm.valid) {
-      console.log('✅ Form Submitted:', this.registrationForm.value);
-      this.message = 'Registration submitted successfully! Redirecting to payment...';
-
-      // Store data in service
-      this.registrationService.setData(this.registrationForm.value);
-
-      // Navigate to payment page
-      this.router.navigate(['/payments']);
-
-    } else {
+    if (this.registrationForm.invalid) {
       this.message = 'Please fill all required fields correctly.';
       this.registrationForm.markAllAsTouched();
       console.log('Invalid Controls:', this.findInvalidControls());
+      return;
     }
+
+    const formData = new FormData();
+    const formValues = this.registrationForm.value;
+
+    // Append form fields
+    Object.keys(formValues).forEach(key => {
+      if (key !== 'minnesotaId') {
+        formData.append(this.camelToSnake(key), formValues[key]);
+      }
+    });
+
+    // Append file if available
+    if (this.fileToUpload) {
+      formData.append('minnesota_id', this.fileToUpload);
+    }
+
+    // Submit to backend
+    this.http.post('http://127.0.0.1:8000/api/single-application/apply/', formData).subscribe({
+      next: (response: any) => {
+        console.log('✅ Success:', response);
+        this.message = 'Registration submitted successfully! Redirecting to payment...';
+        this.router.navigate(['/payments']);
+      },
+      error: error => {
+        console.error('❌ Submission failed:', error);
+        this.message = 'Something went wrong. Please try again.';
+      }
+    });
   }
 
   findInvalidControls(): string[] {
@@ -69,5 +98,9 @@ export class SingleApplication implements OnInit {
       }
     }
     return invalid;
+  }
+
+  camelToSnake(str: string): string {
+    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
   }
 }

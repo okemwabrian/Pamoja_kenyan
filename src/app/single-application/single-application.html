@@ -7,7 +7,6 @@
   </div>
 
   <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-
     <!-- Personal Info -->
     <fieldset class="border rounded-3 p-3 mb-4">
       <legend class="w-auto px-2 text-success">Personal Information</legend>
@@ -76,7 +75,13 @@
         </div>
         <div class="col-md-12">
           <label class="form-label">Upload Minnesota ID</label>
-          <input formControlName="minnesotaId" type="file" class="form-control" />
+          <!-- ✅ Updated input to use handleFileInput -->
+          <input
+            type="file"
+            class="form-control"
+            (change)="handleFileInput($event)"
+            accept=".jpg,.jpeg,.png,.webp,.pdf"
+          />
           <div class="form-text">Accepted formats: JPG, PDF, PNG, WEBP. Max: 314MB</div>
         </div>
       </div>

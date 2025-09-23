@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-
+import { HttpClient } from '@angular/common/http';
 
 interface FormField {
   name: string;
@@ -9,14 +8,14 @@ interface FormField {
   helpText?: string;
   placeholder?: string;
   type: string;
-  accept?: string;   // optional property for file inputs
+  accept?: string;
 }
 
 @Component({
   selector: 'app-double-application',
   standalone: false,
   templateUrl: './double-application.html',
-  styleUrl: './double-application.css'
+  styleUrls: ['./double-application.css']
 })
 export class DoubleApplication {
   registrationForm: FormGroup;
@@ -27,8 +26,7 @@ export class DoubleApplication {
     { name: 'last_name', label: 'Last Name', placeholder: 'Enter last name', type: 'text' },
     { name: 'email', label: 'Email', placeholder: 'Enter email', type: 'email' },
     { name: 'confirm_email', label: 'Confirm Email', placeholder: 'Confirm your email', type: 'email' },
-    // example file input with accept
-    { name: 'photo_id', label: 'Photo ID', placeholder: '', type: 'file', accept: 'image/*,.pdf' }
+    { name: 'photo_id', label: 'Photo ID', type: 'file', accept: 'image/*,.pdf' }
   ];
 
   addressFields: FormField[] = [
@@ -39,7 +37,7 @@ export class DoubleApplication {
     { name: 'zip_postal', label: 'Zip/Postal Code', placeholder: 'Enter zip or postal code', type: 'text' }
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.registrationForm = this.fb.group({
       first_name: ['', Validators.required],
       middle_name: [''],
@@ -55,12 +53,35 @@ export class DoubleApplication {
     });
   }
 
-  onSubmit() {
-    if (this.registrationForm.valid) {
-      // submit logic here
-      console.log('Form submitted:', this.registrationForm.value);
-    } else {
-      this.registrationForm.markAllAsTouched();
+  // Capture file input changes
+  onFileChange(event: any) {
+    const file = event.target.files?.[0];
+    if (file) {
+      this.registrationForm.patchValue({ photo_id: file });
     }
+  }
+
+  onSubmit() {
+    if (this.registrationForm.invalid) {
+      this.registrationForm.markAllAsTouched();
+      return;
+    }
+
+    const formData = new FormData();
+    for (const key in this.registrationForm.value) {
+      const value = this.registrationForm.value[key];
+      formData.append(key, value);
+    }
+
+    this.http.post('http://localhost:8000/api/double-registration/', formData).subscribe({
+      next: (response) => {
+        alert('✅ Application submitted successfully!');
+        this.registrationForm.reset();
+      },
+      error: (error) => {
+        console.error('❌ Submission error:', error);
+        alert('❌ Failed to submit application.');
+      }
+    });
   }
 }

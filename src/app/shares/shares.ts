@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 interface SharePurchase {
   fullName: string;
@@ -24,10 +25,9 @@ export class Shares {
     comments: ''
   };
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) { }
 
   onSubmit() {
-    // Validate required fields
     if (
       !this.formData.fullName ||
       !this.formData.email ||
@@ -39,19 +39,32 @@ export class Shares {
       return;
     }
 
-    const totalAmount = this.formData.shares * 10; // Assuming $10per share
+    const payload = {
+      full_name: this.formData.fullName,
+      email: this.formData.email,
+      shares: this.formData.shares,
+      payment_method: this.formData.paymentMethod,
+      comments: this.formData.comments,
+    };
 
-    // Navigate to the payment page with query parameters
-    this.router.navigate(['/payments'], {
-      queryParams: {
-        name: this.formData.fullName,
-        email: this.formData.email,
-        shares: this.formData.shares,
-        method: this.formData.paymentMethod,
-        amount: totalAmount
-      }
-    });
+    this.http.post<any>('http://localhost:8000/api/shares/purchase/', payload)
+      .subscribe({
+        next: (res) => {
+          alert(res.message || 'Shares purchased successfully!');
+          this.router.navigate(['/payments'], {
+            queryParams: {
+              name: this.formData.fullName,
+              email: this.formData.email,
+              shares: this.formData.shares,
+              method: this.formData.paymentMethod,
+              amount: (this.formData.shares ?? 0) * 10 // $10 per share assumed
+            }
+          });
 
-    console.log('✅ Form submitted:', this.formData);
+        },
+        error: (err) => {
+          alert('Error: ' + (err.error?.message || 'Could not process purchase.'));
+        }
+      });
   }
 }

@@ -1,158 +1,192 @@
-<div class="container my-5" [@formAppear]>
-<div class="container my-5">
-  <h2 class="text-success mb-4">Upgrade to Double Family Membership</h2>
-
-  <!-- Flash Messages -->
-  <div *ngIf="message" class="alert alert-info">
-    {{ message }}
-  </div>
-
-  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-
-    <!-- Personal Info -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Personal Information</legend>
-      <div class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label">First Name</label>
-          <input formControlName="firstName" type="text" class="form-control" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Middle Name</label>
-          <input formControlName="middleName" type="text" class="form-control" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Last Name</label>
-          <input formControlName="lastName" type="text" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Email</label>
-          <input formControlName="email" type="email" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Confirm Email</label>
-          <input formControlName="confirmEmail" type="email" class="form-control" />
+<!-- 📌 START OF FORM BODY -->
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+  <!-- Personal Info -->
+  <fieldset class="border rounded-3 p-3 mb-4">
+    <legend class="w-auto px-2 text-success">Personal Information</legend>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label">First Name</label>
+        <input formControlName="first_name" type="text" class="form-control" />
+        <div *ngIf="registrationForm.get('first_name')?.touched && registrationForm.get('first_name')?.invalid" class="text-danger">
+          First Name is required.
         </div>
       </div>
-    </fieldset>
-
-    <!-- Address -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Address</legend>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Address Line 1</label>
-          <input formControlName="address1" type="text" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Address Line 2</label>
-          <input formControlName="address2" type="text" class="form-control" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">City</label>
-          <input formControlName="city" type="text" class="form-control" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">State / Province</label>
-          <input formControlName="stateProvince" type="text" class="form-control" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">ZIP / Postal</label>
-          <input formControlName="zip" type="text" class="form-control" />
+      <div class="col-md-4">
+        <label class="form-label">Middle Name</label>
+        <input formControlName="middle_name" type="text" class="form-control" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Last Name</label>
+        <input formControlName="last_name" type="text" class="form-control" />
+        <div *ngIf="registrationForm.get('last_name')?.touched && registrationForm.get('last_name')?.invalid" class="text-danger">
+          Last Name is required.
         </div>
       </div>
-    </fieldset>
-
-    <!-- Contact -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Contact</legend>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Primary Phone</label>
-          <input formControlName="phoneMain" type="tel" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Optional Phone</label>
-          <input formControlName="phoneOptional" type="tel" class="form-control" />
-        </div>
-        <div class="col-md-12">
-          <label class="form-label">Upload Minnesota ID</label>
-          <input formControlName="minnesotaId" type="file" class="form-control" />
-          <div class="form-text">Accepted formats: JPG, PDF, PNG, WEBP. Max: 314MB</div>
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input formControlName="email" type="email" class="form-control" />
+        <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.invalid" class="text-danger">
+          Valid Email is required.
         </div>
       </div>
-    </fieldset>
-
-    <!-- Spouse / Authorized Rep -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Spouse / Authorized Representative</legend>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Spouse</label>
-          <input formControlName="spouse" type="text" class="form-control" />
+      <div class="col-md-6">
+        <label class="form-label">Confirm Email</label>
+        <input formControlName="confirm_email" type="email" class="form-control" />
+        <div *ngIf="registrationForm.hasError('emailMismatch') && registrationForm.get('confirm_email')?.touched" class="text-danger">
+          Emails do not match.
         </div>
-        <div class="col-md-6">
-          <label class="form-label">Spouse Phone</label>
-          <input formControlName="spousePhone" type="text" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Authorized Rep</label>
-          <input formControlName="authorizedRep" type="text" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Authorized Rep Phone</label>
-          <input formControlName="authorizedRepPhone" type="text" class="form-control" />
+        <div *ngIf="registrationForm.get('confirm_email')?.touched && registrationForm.get('confirm_email')?.invalid" class="text-danger">
+          Valid Confirm Email is required.
         </div>
       </div>
-    </fieldset>
+    </div>
+  </fieldset>
 
-    <!-- Existing Member Info -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Existing Membership</legend>
-      <div class="mb-3">
-        <label class="form-label">Existing Member ID</label>
-        <input formControlName="existingMemberId" type="text" class="form-control" placeholder="Enter your current Member ID" />
+  <!-- Address -->
+  <fieldset class="border rounded-3 p-3 mb-4">
+    <legend class="w-auto px-2 text-success">Address</legend>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Address Line 1</label>
+        <input formControlName="address1" type="text" class="form-control" />
+        <div *ngIf="registrationForm.get('address1')?.touched && registrationForm.get('address1')?.invalid" class="text-danger">
+          Address Line 1 is required.
+        </div>
       </div>
-    </fieldset>
-
-    <!-- Declaration -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-danger">Declaration</legend>
-      <p>
-        I declare that the information provided above is accurate, true, and correct...
-      </p>
-      <p>
-        Upon registration, I agree to remain a Pamoja Kenya member for at least five (5) years after benefiting...
-      </p>
-      <div class="form-check">
-        <input class="form-check-input" formControlName="declarationAccepted" type="checkbox" id="declaration" />
-        <label class="form-check-label" for="declaration">
-          I have read the Pamoja Constitution and agree to the conditions.
-        </label>
+      <div class="col-md-6">
+        <label class="form-label">Address Line 2</label>
+        <input formControlName="address2" type="text" class="form-control" />
       </div>
-    </fieldset>
-
-    <!-- Payment Summary -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Payment Summary</legend>
-      <p class="mb-3">– Payment MUST be made in full before your upgrade is complete.</p>
-
-      <div class="mb-3">
-        <label class="form-label">Quantity</label>
-        <input type="number" class="form-control" value="1" readonly />
+      <div class="col-md-4">
+        <label class="form-label">City</label>
+        <input formControlName="city" type="text" class="form-control" />
+        <div *ngIf="registrationForm.get('city')?.touched && registrationForm.get('city')?.invalid" class="text-danger">
+          City is required.
+        </div>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label">Membership</label>
-        <input type="text" class="form-control" value="Double Family Membership Upgrade: $500.00" readonly />
+      <div class="col-md-4">
+        <label class="form-label">State / Province</label>
+        <input formControlName="state_province" type="text" class="form-control" />
+        <div *ngIf="registrationForm.get('state_province')?.touched && registrationForm.get('state_province')?.invalid" class="text-danger">
+          State / Province is required.
+        </div>
       </div>
+      <div class="col-md-4">
+        <label class="form-label">ZIP / Postal</label>
+        <input formControlName="zip_code" type="text" class="form-control" />
+        <div *ngIf="registrationForm.get('zip_code')?.touched && registrationForm.get('zip_code')?.invalid" class="text-danger">
+          ZIP / Postal is required.
+        </div>
+      </div>
+    </div>
+  </fieldset>
 
-      <p><strong>Total:</strong> <span class="text-danger">$500.00</span></p>
-    </fieldset>
+  <!-- Contact -->
+  <fieldset class="border rounded-3 p-3 mb-4">
+    <legend class="w-auto px-2 text-success">Contact</legend>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Primary Phone</label>
+        <input formControlName="phone_main" type="tel" class="form-control" />
+        <div *ngIf="registrationForm.get('phone_main')?.touched && registrationForm.get('phone_main')?.invalid" class="text-danger">
+          Primary Phone is required.
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Optional Phone</label>
+        <input formControlName="phone_optional" type="tel" class="form-control" />
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Upload Minnesota ID</label>
+        <input type="file" class="form-control" (change)="onFileChange($event)" accept=".jpg,.jpeg,.png,.pdf,.webp" />
+        <div class="form-text">Accepted formats: JPG, PDF, PNG, WEBP. Max: 314MB</div>
+        <div *ngIf="minnesotaIdControl?.touched && minnesotaIdControl?.invalid" class="text-danger">
+          Minnesota ID file is required.
+        </div>
+      </div>
+    </div>
+  </fieldset>
 
-    <!-- Submit and Back Buttons -->
-    <button type="submit" class="btn btn-success px-4">Continue to Payment</button>
-    <a routerLink="/" class="btn btn-secondary ms-3">Back to Home</a>
-  </form>
-</div>
-</div>
+  <!-- Spouse / Authorized Rep -->
+  <fieldset class="border rounded-3 p-3 mb-4">
+    <legend class="w-auto px-2 text-success">Spouse / Authorized Representative</legend>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Spouse</label>
+        <input formControlName="spouse" type="text" class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Spouse Phone</label>
+        <input formControlName="spouse_phone" type="text" class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Authorized Rep</label>
+        <input formControlName="authorized_rep" type="text" class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Authorized Rep Phone</label>
+        <input formControlName="authorized_rep_phone" type="text" class="form-control" />
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Existing Member Info -->
+  <fieldset class="border rounded-3 p-3 mb-4">
+    <legend class="w-auto px-2 text-success">Existing Membership</legend>
+    <div class="mb-3">
+      <label class="form-label">Existing Member ID</label>
+      <input
+        formControlName="existing_member_id"
+        type="text"
+        class="form-control"
+        placeholder="Enter your current Member ID"
+      />
+      <div *ngIf="registrationForm.get('existing_member_id')?.touched && registrationForm.get('existing_member_id')?.invalid" class="text-danger">
+        Existing Member ID is required.
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Declaration -->
+  <fieldset class="border rounded-3 p-3 mb-4">
+    <legend class="w-auto px-2 text-danger">Declaration</legend>
+    <p>
+      I declare that the information provided above is accurate, true, and correct...
+    </p>
+    <p>
+      Upon registration, I agree to remain a Pamoja Kenya member for at least five (5) years after benefiting...
+    </p>
+    <div class="form-check">
+      <input class="form-check-input" formControlName="declaration_accepted" type="checkbox" id="declaration" />
+      <label class="form-check-label" for="declaration">
+        I have read the Pamoja Constitution and agree to the conditions.
+      </label>
+      <div *ngIf="registrationForm.get('declaration_accepted')?.touched && registrationForm.get('declaration_accepted')?.invalid" class="text-danger">
+        You must accept the declaration.
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Payment Summary -->
+  <fieldset class="border rounded-3 p-3 mb-4">
+    <legend class="w-auto px-2 text-success">Payment Summary</legend>
+    <p class="mb-3">– Payment MUST be made in full before your upgrade is complete.</p>
+
+    <div class="mb-3">
+      <label class="form-label">Quantity</label>
+      <input type="number" class="form-control" value="1" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Membership</label>
+      <input type="text" class="form-control" value="Double Family Membership Upgrade: $500.00" readonly />
+    </div>
+
+    <p><strong>Total:</strong> <span class="text-danger">$500.00</span></p>
+  </fieldset>
+
+  <!-- Submit and Back Buttons -->
+  <button type="submit" class="btn btn-success px-4">Continue to Payment</button>
+  <a routerLink="/" class="btn btn-secondary ms-3">Back to Home</a>
+</form>
+<!-- 📌 END OF FORM BODY -->

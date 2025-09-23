@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { About } from './about/about';
@@ -42,10 +42,11 @@ import { Header } from './header/header';
     Shares,
     SingleApplication,
     PamojaKenyaComponent,
-    Upgrade,
+    //Upgrade,
     Login,
-    Register,
-    Header
+    
+    Header,
+    
   ],
   imports: [
     BrowserModule,
@@ -68,7 +69,9 @@ import { Header } from './header/header';
     MatListModule,
      BrowserAnimationsModule,
      ReactiveFormsModule,
-     HttpClientModule
+     HttpClientModule,
+     MatSnackBarModule,
+      Register,
     
   ],
   providers: [

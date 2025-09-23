@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegistrationService } from '../services/registration';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-payments',
@@ -18,7 +19,8 @@ export class Payments implements OnInit, AfterViewInit {
 
   constructor(
     private router: Router,
-    private registrationService: RegistrationService
+    private registrationService: RegistrationService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +67,7 @@ export class Payments implements OnInit, AfterViewInit {
               shape: 'rect',
               label: 'paypal'
             },
-            fundingSource: undefined, // allows all eligible funding sources
+            fundingSource: undefined,
             createOrder: (_data: any, actions: any) => {
               console.log('✅ createOrder called');
               return actions.order.create({
@@ -85,7 +87,7 @@ export class Payments implements OnInit, AfterViewInit {
               this.paypalLoadError = true;
             }
           }).render('#paypal-button-container');
-        }, 0); // Ensures DOM update after *ngIf
+        }, 0);
       })
       .catch(err => {
         this.paypalLoadError = true;
@@ -119,6 +121,22 @@ export class Payments implements OnInit, AfterViewInit {
     console.log('✅ Payment successful!', details);
     this.paymentCompleted = true;
 
-    // Optionally send registrationData + payment details to backend
+    const payload = {
+      payer_name: `${details.payer.name.given_name} ${details.payer.name.surname}`,
+      payer_email: details.payer.email_address,
+      paypal_order_id: details.id,
+      amount: details.purchase_units[0].amount.value,
+      currency: details.purchase_units[0].amount.currency_code,
+      registration_data: this.registrationData
+    };
+
+    this.http.post('http://localhost:8000/api/payments/', payload).subscribe({
+      next: (res) => {
+        console.log('✅ Payment recorded in backend:', res);
+      },
+      error: (err) => {
+        console.error('❌ Failed to record payment in backend:', err);
+      }
+    });
   }
 }

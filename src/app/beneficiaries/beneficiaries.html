@@ -20,14 +20,12 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<!-- Hidden number of beneficiaries -->
 <input type="hidden" [value]="beneficiaries.length" name="totalBeneficiaries">
 
-<!-- Request Form -->
 <form #beneficiaryForm="ngForm" (ngSubmit)="onSubmit()">
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Full Name</mat-label>
-    <input matInput name="fullName" [(ngModel)]="formData.fullName" required>
+    <input matInput name="full_name" [(ngModel)]="formData.full_name" required>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="full-width">
@@ -37,12 +35,12 @@
 
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Current Beneficiary Name(s)</mat-label>
-    <input matInput name="currentNames" [(ngModel)]="formData.currentNames" required>
+    <input matInput name="current_names" [(ngModel)]="formData.current_names" required>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>New Beneficiary Name(s)</mat-label>
-    <input matInput name="newNames" [(ngModel)]="formData.newNames" required>
+    <input matInput name="new_names" [(ngModel)]="formData.new_names" required>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="full-width">
