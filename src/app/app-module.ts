@@ -7,6 +7,8 @@ import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppRoutingModule } from './app-routing-module';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatRippleModule } from '@angular/material/core';
 import { App } from './app';
 import { About } from './about/about';
 import { Beneficiaries } from './beneficiaries/beneficiaries';
@@ -60,12 +62,14 @@ import { Header } from './header/header';
     MatIconModule,
     MatListModule,
     MatFormFieldModule,
+    MatRippleModule,
     MatInputModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
     MatSidenavModule,
+    MatMenuModule,
     MatListModule,
      BrowserAnimationsModule,
      ReactiveFormsModule,

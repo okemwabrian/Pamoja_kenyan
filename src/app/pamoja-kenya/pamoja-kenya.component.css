@@ -1,208 +1,126 @@
-.sidenav-container {
+/* Basic reset and fonts */
+html, body {
   height: 100%;
-}
-
-.sidenav {
-  width: 200px;
-}
-
-.sidenav .mat-toolbar {
-  background: inherit;
-}
-
-.mat-toolbar.mat-primary {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-/* pamoja-kenya.component.css */
-
-/* ---------- Root Styling ---------- */
-:root {
-  --primary: #00ffab;
-  --primary-dark: #00e69d;
-  --bg-dark: #0f0f1c;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --text-light: #f8f8f8;
-}
-
-body {
   margin: 0;
-  background-color: var(--bg-dark);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--text-light);
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: #121212; /* dark background */
+  color: #f8f8f8;
 }
 
-/* ---------- Sidenav Container ---------- */
-.sidenav-container {
-  height: 100vh;
-  background: var(--bg-dark);
-}
-
-/* ---------- Sidebar Styling (Glass + 3D) ---------- */
-.sidenav {
-  width: 240px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-right: 1px solid var(--glass-border);
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-  transform-style: preserve-3d;
-  transition: all 0.4s ease;
-}
-
-.mat-toolbar {
-  background: transparent;
-  color: var(--primary);
-  font-weight: bold;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-/* ---------- Navigation List Styling ---------- */
-.mat-nav-list a {
-  color: var(--text-light);
-  font-weight: 500;
-  padding: 12px 20px;
-  border-radius: 8px;
-  margin: 4px 0;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.mat-nav-list a:hover {
-  background-color: rgba(0, 255, 171, 0.1);
-  color: var(--primary);
-  transform: translateX(5px);
-}
-
-/* ---------- Top Toolbar (Smart Floating) ---------- */
-mat-sidenav-content mat-toolbar {
+/* Toolbar Styling */
+.top-navbar {
   position: sticky;
   top: 0;
-  z-index: 10;
-  background-color: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  color: var(--primary);
-  border-bottom: 1px solid var(--glass-border);
-  box-shadow: 0 2px 12px rgba(0, 255, 171, 0.05);
+  z-index: 1000;
+  background: rgba(18, 18, 18, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 56px;
+  box-sizing: border-box;
 }
 
-/* ---------- Container Inside Content ---------- */
-.container {
-  padding: 2rem;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-/* ---------- Responsive Adjustments ---------- */
-@media (max-width: 768px) {
-  .sidenav {
-    width: 100%;
-    box-shadow: none;
-    border-right: none;
-  }
-
-  .container {
-    padding: 1rem;
-  }
-}
-
-/* ---------- Animation ---------- */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ---------- Logo Styles ---------- */
-.logo-img {
-  max-width: 100px;
-  height: auto;
-  filter: drop-shadow(0 2px 4px rgba(0, 255, 171, 0.2));
-  transition: transform 0.3s ease;
-}
-
-.logo-img:hover {
-  transform: scale(1.05);
-}
-
+/* Logo */
 .toolbar-logo {
   height: 32px;
   width: auto;
-  margin-right: 0.5rem;
-  vertical-align: middle;
+  margin-right: 12px;
+  user-select: none;
 }
 
-/* Optional: Active Link Highlight */
-.mat-nav-list a.active {
-  background-color: rgba(0, 255, 171, 0.15);
-  font-weight: bold;
-  color: var(--primary);
-}
-/* Toolbar logo */
-.toolbar-logo {
-  height: 40px;
-  width: auto;
-  vertical-align: middle;
+/* Title */
+.top-navbar > span {
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 56px;
 }
 
-/* Margin right for spacing between logo and text */
-.me-2 {
-  margin-right: 0.5rem;
+/* Nav Links - visible on desktop */
+.nav-links {
+  display: flex;
+  gap: 12px;
+  margin-left: 24px;
+  flex-grow: 1;
 }
 
-/* Sidebar styles */
-.sidenav-container {
-  height: 100vh;
+.nav-links a {
+  color: #f8f8f8;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  line-height: 48px;
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
 }
 
-.sidenav {
-  width: 250px;
-  background-color: #2c3e50; /* Dark blue-ish background */
-  color: white;
+.nav-links a:hover {
+  color: #00ffaa;
+  background-color: rgba(0, 255, 170, 0.1);
+  transform: translateY(-2px);
 }
 
-.sidebar-logo img.logo-img {
-  height: 60px;
-  width: auto;
+.nav-links a.active-link {
+  font-weight: 700;
+  color: #00ffaa;
+  text-decoration: underline;
+}
+
+/* Auth Buttons styling */
+.top-navbar button {
+  margin-left: 12px;
+}
+
+/* Hamburger Button - hidden on desktop */
+.hamburger-button {
+  display: none;
+  margin-left: auto; /* push to right */
+  color: #f8f8f8;
+}
+
+/* Main content styling */
+.main-content {
+  padding: 24px;
+  max-width: 1200px;
   margin: 0 auto;
-  display: block;
+  box-sizing: border-box;
 }
 
-/* Sidebar header text */
-.sidebar-logo h5 {
-  color: #ecf0f1;
-  font-weight: 600;
-}
+/* Responsive styles */
+@media (max-width: 768px) {
 
-/* Active link styles */
-.mat-nav-list .mat-list-item.active {
-  background-color: #1abc9c; /* Teal highlight */
-  color: white;
-}
+  /* Hide nav links on small screens */
+  .nav-links {
+    display: none;
+  }
 
-/* Content container padding */
-.container {
-  padding: 20px;
-}
-/* Fade-in animation for the menu button */
-.menu-button {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
+  /* Show hamburger button on small screens */
+  .hamburger-button {
+    display: inline-flex;
+  }
 
-.menu-button.show {
-  opacity: 1;
-}
+  /* Adjust toolbar flex wrapping */
+  .top-navbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 16px;
+  }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .sidenav {
-    width: 200px;
+  /* Logo and title on the left */
+  .toolbar-logo {
+    margin-bottom: 8px;
+  }
+
+  .top-navbar > span {
+    flex-grow: 1;
+    margin-bottom: 8px;
+  }
+
+  /* Auth buttons get some margin tweaks */
+  .top-navbar button {
+    margin-left: 0;
+    margin-top: 6px;
   }
 }
-

@@ -1,68 +1,55 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-toolbar color="primary" class="top-navbar">
 
-  <!-- Sidebar -->
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false">
+  <!-- Logo and Title -->
+  <img src="/images/logo.png" alt="Logo" class="toolbar-logo me-2" />
+  <span class="me-auto fw-bold">PamojaKenya</span>
 
-    <!-- Sidebar Header with Logo -->
-    <div class="sidebar-logo text-center my-3">
-      <img src="/images/logo.png" alt="PamojaKenya Logo" class="logo-img" />
-      <h5 class="mt-2 text-light fw-semibold">PamojaKenya</h5>
-    </div>
+  <!-- Hamburger Menu Button (shown on small screens) -->
+  <button mat-icon-button
+          class="hamburger-button"
+          [matMenuTriggerFor]="navMenu"
+          aria-label="Toggle navigation menu">
+    <mat-icon>menu</mat-icon>
+  </button>
 
-    <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard/about" routerLinkActive="active" (click)="onNavItemClicked(drawer)">About Us</a>
-      <a mat-list-item routerLink="/dashboard/shares" routerLinkActive="active" (click)="onNavItemClicked(drawer)">Shares</a>
-      <a mat-list-item routerLink="/dashboard/contact" routerLinkActive="active" (click)="onNavItemClicked(drawer)">Contact</a>
-      <a mat-list-item routerLink="/dashboard/beneficiaries" routerLinkActive="active" (click)="onNavItemClicked(drawer)">Beneficiaries</a>
-    </mat-nav-list>
-  </mat-sidenav>
+  <!-- Nav Links (hidden on small screens) -->
+  <nav class="nav-links">
+    <a mat-button routerLink="/about" routerLinkActive="active-link">About Us</a>
+    <a mat-button routerLink="/shares" routerLinkActive="active-link">Shares</a>
+    <a mat-button routerLink="/contact" routerLinkActive="active-link">Contact</a>
+    <a mat-button routerLink="/beneficiaries" routerLinkActive="active-link">Beneficiaries</a>
+  </nav>
 
-  <!-- Content Area -->
-  <mat-sidenav-content>
+  <!-- Auth Buttons -->
+  <ng-container *ngIf="(isLoggedIn$ | async); else guestLinks">
+    <button mat-button (click)="logout()" color="warn">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </ng-container>
 
-    <!-- Top Toolbar -->
-    <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        [class.show]="(isHandset$ | async)"
-        class="menu-button">
-        <mat-icon>menu</mat-icon>
-      </button>
+  <ng-template #guestLinks>
+    <button mat-button routerLink="/login" color="accent">
+      <mat-icon>login</mat-icon>
+      Login
+    </button>
+    <button mat-button routerLink="/register" color="accent">
+      <mat-icon>person_add</mat-icon>
+      Register
+    </button>
+  </ng-template>
 
-      <img src="/images/logo.png" alt="Logo" class="toolbar-logo me-2" />
-      <span class="me-auto">PamojaKenya</span>
+</mat-toolbar>
 
-      <!-- Conditional Auth Buttons -->
-      <ng-container *ngIf="(isLoggedIn$ | async); else guestLinks">
-        <button mat-button (click)="logout()" color="warn">
-          <mat-icon>logout</mat-icon>
-          Logout
-        </button>
-      </ng-container>
+<!-- Menu Definition for Hamburger -->
+<mat-menu #navMenu="matMenu">
+  <button mat-menu-item routerLink="/about">About Us</button>
+  <button mat-menu-item routerLink="/shares">Shares</button>
+  <button mat-menu-item routerLink="/contact">Contact</button>
+  <button mat-menu-item routerLink="/beneficiaries">Beneficiaries</button>
+</mat-menu>
 
-      <!-- If not logged in -->
-      <ng-template #guestLinks>
-        <button mat-button routerLink="/login" color="accent">
-          <mat-icon>login</mat-icon>
-          Login
-        </button>
-        <button mat-button routerLink="/register" color="accent">
-          <mat-icon>person_add</mat-icon>
-          Register
-        </button>
-      </ng-template>
-    </mat-toolbar>
-
-    <!-- Routed Content -->
-    <div class="container">
-      <router-outlet></router-outlet>
-    </div>
-
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<!-- Main Page Content -->
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,23 @@
+/* styles.css or component.css */
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .navbar {
+    font-size: 14px;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1025px) {
+  .navbar {
+    font-size: 16px;
+  }
+}
