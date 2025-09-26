@@ -19,9 +19,19 @@ import { AuthGuard } from './auth/auth-guard';
 
 const routes: Routes = [
   // Public routes
-  { path: '', component: Home },                      // Home page, no sidebar
-  { path: 'login', component: Login },                // Login page, no sidebar
-  { path: 'register', component: Register },          // Register page, no sidebar
+  { path: '', component: Home },                      
+  { path: 'login', component: Login },                
+  { path: 'register', component: Register },  
+  { path: 'about', component: About }, 
+  { path: 'contact', component: Contact },   
+  { path: 'single-application', component: SingleApplication },
+  { path: 'shares', component: Shares },
+      { path: 'membership', component: Membership },
+      { path: 'double-application', component: DoubleApplication },
+      { path: 'payments', loadComponent: () => import('./payments/payments').then(m => m.Payments) },
+      { path: 'beneficiaries', component: Beneficiaries },
+      { path: 'upgrade', component: Upgrade },
+    
 
   // Protected routes with layout
   {
@@ -29,15 +39,9 @@ const routes: Routes = [
     component: PamojaKenyaComponent,  // layout with sidebar
     canActivate: [AuthGuard],
     children: [
-      { path: 'about', component: About },
-      { path: 'shares', component: Shares },
-      { path: 'membership', component: Membership },
-      { path: 'single-application', component: SingleApplication },
-      { path: 'double-application', component: DoubleApplication },
-      { path: 'payments', loadComponent: () => import('./payments/payments').then(m => m.Payments) },
-      { path: 'beneficiaries', component: Beneficiaries },
-      { path: 'upgrade', component: Upgrade },
-      { path: 'contact', component: Contact },
+      
+      
+      
     ]
   },
 
