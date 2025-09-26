@@ -3,13 +3,14 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, RouterModule],
 })
 export class Register {
   username: string = '';
@@ -22,6 +23,7 @@ export class Register {
   constructor(private router: Router, private http: HttpClient) {}
 
   register() {
+    console.log('Register method called');
     this.errorMessage = '';
     this.successMessage = '';
 

@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { RegistrationService } from '../services/registration';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-single-application',
-  standalone: false,
+  standalone: true,
   templateUrl: './single-application.html',
-  styleUrl: './single-application.css'
+  styleUrl: './single-application.css',
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class SingleApplication implements OnInit {
   registrationForm!: FormGroup;
@@ -17,7 +20,8 @@ export class SingleApplication implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private registrationService: RegistrationService
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +79,9 @@ export class SingleApplication implements OnInit {
       formData.append('minnesota_id', this.fileToUpload);
     }
 
+    // Store form data for payments page
+    this.registrationService.setData(formValues);
+
     // Submit to backend
     this.http.post('http://127.0.0.1:8000/api/single-application/apply/', formData).subscribe({
       next: (response: any) => {
@@ -92,7 +99,7 @@ export class SingleApplication implements OnInit {
   findInvalidControls(): string[] {
     const invalid = [];
     const controls = this.registrationForm.controls;
-    for (const name in controls) {
+    for (const name of Object.keys(controls)) {
       if (controls[name].invalid) {
         invalid.push(name);
       }

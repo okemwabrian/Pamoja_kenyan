@@ -3,19 +3,23 @@ import { Router } from '@angular/router';
 import { RegistrationService } from '../services/registration';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-payments',
   standalone: true,
   templateUrl: './payments.html',
   styleUrls: ['./payments.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, RouterModule]
 })
 export class Payments implements OnInit, AfterViewInit {
   registrationData: any = null;
   paymentCompleted: boolean = false;
   paypalLoaded: boolean = false;
   paypalLoadError: boolean = false;
+  private readonly apiUrl = environment.production ? 'https://api.pamojakenyamn.com' : 'http://localhost:8000';
+  private readonly paypalClientId = environment.production ? 'PROD_CLIENT_ID' : 'AcKeWOPTHodpfp9ana6qegVblvkw5AlwDZb-iTlvzTQHPADeoNjkV9w8ChY2khzu59kuHaBlshC33yMg';
 
   constructor(
     private router: Router,
@@ -24,38 +28,27 @@ export class Payments implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('Payments component loaded');
     this.registrationData = this.registrationService.getData();
-
     if (!this.registrationData) {
-      console.warn('No registration data found. Redirecting...');
       this.router.navigate(['/single-application']);
     }
   }
 
   ngAfterViewInit(): void {
     if (!this.registrationData) return;
-
-    console.log('AfterViewInit: loading PayPal script...');
+    
     this.loadPayPalScript()
       .then(() => {
-        console.log('✅ PayPal SDK script loaded');
         this.paypalLoaded = true;
-
-        // Delay rendering to allow *ngIf to render container
         setTimeout(() => {
           const container = document.getElementById('paypal-button-container');
-          console.log('paypal-button-container element:', container);
-
           if (!container) {
-            console.error('❌ Error: paypal-button-container not found in DOM');
             this.paypalLoadError = true;
             return;
           }
 
           const paypal = (window as any).paypal;
-          if (!paypal || !paypal.Buttons) {
-            console.error('❌ window.paypal.Buttons is undefined');
+          if (!paypal?.Buttons) {
             this.paypalLoadError = true;
             return;
           }
@@ -67,9 +60,7 @@ export class Payments implements OnInit, AfterViewInit {
               shape: 'rect',
               label: 'paypal'
             },
-            fundingSource: undefined,
             createOrder: (_data: any, actions: any) => {
-              console.log('✅ createOrder called');
               return actions.order.create({
                 purchase_units: [{
                   amount: { value: '627.30' }
@@ -77,66 +68,61 @@ export class Payments implements OnInit, AfterViewInit {
               });
             },
             onApprove: (_data: any, actions: any) => {
-              console.log('✅ onApprove called');
               return actions.order.capture().then((details: any) => {
                 this.onPaymentSuccess(details);
               });
             },
-            onError: (err: any) => {
-              console.error('❌ PayPal Buttons error:', err);
+            onError: () => {
               this.paypalLoadError = true;
             }
           }).render('#paypal-button-container');
         }, 0);
       })
-      .catch(err => {
+      .catch(() => {
         this.paypalLoadError = true;
-        console.error('❌ Failed to load PayPal SDK script', err);
       });
   }
 
   loadPayPalScript(): Promise<void> {
     return new Promise((resolve, reject) => {
       if ((window as any).paypal) {
-        console.log('ℹ️ PayPal already available');
         resolve();
         return;
       }
 
       const script = document.createElement('script');
-      script.src = 'https://www.paypal.com/sdk/js?client-id=AcKeWOPTHodpfp9ana6qegVblvkw5AlwDZb-iTlvzTQHPADeoNjkV9w8ChY2khzu59kuHaBlshC33yMg&currency=USD&components=buttons,funding-eligibility';
-      script.onload = () => {
-        console.log('✅ PayPal script onload');
-        resolve();
-      };
-      script.onerror = (err) => {
-        console.error('❌ Error loading PayPal script', err);
-        reject(err);
-      };
+      script.src = `https://www.paypal.com/sdk/js?client-id=${this.paypalClientId}&currency=USD&components=buttons,funding-eligibility`;
+      script.integrity = 'sha384-...';
+      script.crossOrigin = 'anonymous';
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('PayPal script failed to load'));
       document.body.appendChild(script);
     });
   }
 
   onPaymentSuccess(details: any): void {
-    console.log('✅ Payment successful!', details);
     this.paymentCompleted = true;
 
     const payload = {
-      payer_name: `${details.payer.name.given_name} ${details.payer.name.surname}`,
-      payer_email: details.payer.email_address,
-      paypal_order_id: details.id,
-      amount: details.purchase_units[0].amount.value,
-      currency: details.purchase_units[0].amount.currency_code,
+      payer_name: this.sanitizeInput(`${details.payer?.name?.given_name || ''} ${details.payer?.name?.surname || ''}`),
+      payer_email: this.sanitizeInput(details.payer?.email_address || ''),
+      paypal_order_id: this.sanitizeInput(details.id || ''),
+      amount: details.purchase_units?.[0]?.amount?.value || '0',
+      currency: details.purchase_units?.[0]?.amount?.currency_code || 'USD',
       registration_data: this.registrationData
     };
 
-    this.http.post('http://localhost:8000/api/payments/', payload).subscribe({
-      next: (res) => {
-        console.log('✅ Payment recorded in backend:', res);
+    this.http.post(`${this.apiUrl}/api/payments/`, payload).subscribe({
+      next: () => {
+        // Payment recorded successfully
       },
-      error: (err) => {
-        console.error('❌ Failed to record payment in backend:', err);
+      error: () => {
+        // Handle payment recording error
       }
     });
+  }
+
+  private sanitizeInput(input: string): string {
+    return input.replace(/[\r\n\t]/g, '').trim();
   }
 }

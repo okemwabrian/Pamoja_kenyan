@@ -12,7 +12,14 @@ export class RegistrationService {
 
   getData(): any {
     const raw = localStorage.getItem(this.key);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    
+    try {
+      return JSON.parse(raw);
+    } catch (error) {
+      console.error('Failed to parse registration data:', error);
+      return null;
+    }
   }
 
   clearData(): void {

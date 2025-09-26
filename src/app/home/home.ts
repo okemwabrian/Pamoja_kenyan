@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  standalone: false,
+  standalone: true,
   templateUrl: './home.html',
   styleUrl: './home.css',
+  imports: [CommonModule, RouterModule],
   animations: [
     trigger('fadeInStagger', [
       transition(':enter', [
@@ -30,7 +33,7 @@ export class Home {
   constructor(private router: Router) {}
 
   onSignup() {
-    this.router.navigate(['/signup']);
+    this.router.navigate(['/single-application']);
   }
 
   onBuyShares() {

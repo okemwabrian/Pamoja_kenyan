@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface SharePurchase {
   fullName: string;
@@ -12,9 +14,10 @@ interface SharePurchase {
 
 @Component({
   selector: 'app-shares',
-  standalone: false,
+  standalone: true,
   templateUrl: './shares.html',
-  styleUrls: ['./shares.css']
+  styleUrls: ['./shares.css'],
+  imports: [CommonModule, FormsModule]
 })
 export class Shares {
   formData: SharePurchase = {

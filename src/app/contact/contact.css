@@ -1,115 +1,245 @@
-/* contact.css */
-
-/* ---------- Root Variables ---------- */
+/* Vintage Fall Contact Form */
 :root {
-  --bg-dark: #0f0f1c;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --accent: #00ffab;
-  --accent-hover: #00e6a0;
-  --text-light: #f0f0f0;
-  --text-muted: #aaa;
-  --input-bg: rgba(255, 255, 255, 0.06);
+  --primary-orange: #E2A16F;
+  --primary-beige: #FFF0DD;
+  --primary-grey: #D1D3D4;
+  --primary-teal: #86B0BD;
+  --primary-dark: #B8956A;
+  --bg-gradient: linear-gradient(135deg, #FFF0DD 0%, #F5E6D3 50%, #E8D5C4 100%);
+  --glass-bg: rgba(226, 161, 111, 0.1);
+  --glass-border: rgba(226, 161, 111, 0.3);
+  --text-dark: #5A4A3A;
+  --text-muted: #86B0BD;
+  --input-bg: rgba(255, 240, 221, 0.7);
+  --shadow-orange: rgba(226, 161, 111, 0.4);
 }
 
-/* ---------- Body Styling ---------- */
-body {
-  background-color: var(--bg-dark);
-  color: var(--text-light);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* ---------- Contact Wrapper ---------- */
 .contact-wrapper {
-  perspective: 1200px;
-  padding-bottom: 3rem;
+  background: var(--bg-gradient);
+  min-height: 100vh;
+  perspective: 1500px;
+  padding: 2rem 0;
 }
 
-/* ---------- Contact Card (Glassmorphic) ---------- */
 .contact-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 
+    0 25px 50px rgba(90, 74, 58, 0.2),
+    0 0 0 1px rgba(226, 161, 111, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform-style: preserve-3d;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(226, 161, 111, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.contact-card:hover::before {
+  left: 100%;
 }
 
 .contact-card:hover {
-  transform: rotateX(1.5deg) rotateY(1.5deg);
-  box-shadow: 0 40px 80px rgba(0, 255, 171, 0.3);
+  transform: rotateX(2deg) rotateY(2deg) translateZ(10px);
+  box-shadow: 
+    0 35px 70px rgba(90, 74, 58, 0.3),
+    0 0 30px var(--shadow-orange),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-/* ---------- Accent Text ---------- */
+.floating-title {
+  animation: float 3s ease-in-out infinite;
+  text-shadow: 0 0 20px var(--primary-orange);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
 .text-accent {
-  color: var(--accent);
+  color: var(--primary-orange);
+  background: linear-gradient(45deg, var(--primary-orange), var(--primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
 }
 
-/* ---------- Form Controls (3D Input Fields) ---------- */
+.text-muted {
+  color: var(--text-muted);
+}
+
+.form-label {
+  color: var(--text-dark);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
 .input-3d {
   background: var(--input-bg);
-  color: var(--text-light);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.02),
-              inset -3px -3px 6px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
+  color: var(--text-dark);
+  border: 2px solid rgba(226, 161, 111, 0.3);
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  box-shadow: 
+    inset 3px 3px 8px rgba(209, 211, 212, 0.3),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.8),
+    0 1px 3px rgba(90, 74, 58, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  font-family: 'Georgia', serif;
 }
 
 .input-3d:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent), 0 0 10px var(--accent-hover);
+  background: rgba(255, 240, 221, 0.9);
+  border-color: var(--primary-orange);
+  box-shadow: 
+    0 0 0 3px rgba(226, 161, 111, 0.3),
+    0 0 20px rgba(226, 161, 111, 0.4),
+    inset 2px 2px 6px rgba(209, 211, 212, 0.2);
+  transform: translateY(-2px);
 }
 
 .input-3d::placeholder {
   color: var(--text-muted);
 }
 
-/* ---------- Radio Buttons ---------- */
 .form-check-input:checked {
-  background-color: var(--accent);
-  border-color: var(--accent);
+  background-color: var(--primary-orange);
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 10px rgba(226, 161, 111, 0.5);
 }
 
 .form-check-label {
-  color: var(--text-light);
+  color: var(--text-dark);
+  font-family: 'Georgia', serif;
 }
 
-/* ---------- Submit Button ---------- */
+.btn-3d {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
 .btn-accent {
-  background-color: var(--accent);
-  color: #000;
+  background: linear-gradient(135deg, var(--primary-orange), var(--primary-dark));
+  color: white;
   border: none;
-  border-radius: 12px;
-  padding: 0.75rem 1.25rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 255, 171, 0.3);
+  border-radius: 16px;
+  padding: 1rem 2rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-family: 'Georgia', serif;
+  box-shadow: 
+    0 8px 25px rgba(226, 161, 111, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn-accent:hover::before {
+  left: 100%;
 }
 
 .btn-accent:hover {
-  background-color: var(--accent-hover);
-  box-shadow: 0 6px 20px rgba(0, 255, 171, 0.4);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-orange));
+  box-shadow: 
+    0 12px 35px rgba(226, 161, 111, 0.5),
+    0 0 25px rgba(226, 161, 111, 0.4);
+  transform: translateY(-3px) rotateX(5deg);
 }
 
 .btn-accent:active {
-  transform: translateY(1px);
-  box-shadow: none;
+  transform: translateY(-1px) rotateX(2deg);
+  box-shadow: 0 4px 15px rgba(226, 161, 111, 0.4);
 }
 
-/* ---------- Responsive Typography ---------- */
-h2 {
-  font-size: 2rem;
+.btn-accent:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
 
-@media (min-width: 768px) {
-  h2 {
-    font-size: 2.5rem;
+.alert-3d {
+  border-radius: 16px;
+  border: none;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 25px rgba(90, 74, 58, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  animation: slideIn 0.5s ease-out;
+  font-family: 'Georgia', serif;
+}
+
+.alert-success {
+  background: rgba(134, 176, 189, 0.2);
+  color: #4A6B5C;
+  border-left: 4px solid var(--primary-teal);
+}
+
+.alert-danger {
+  background: rgba(226, 161, 111, 0.2);
+  color: var(--primary-dark);
+  border-left: 4px solid var(--primary-orange);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact-card {
+    margin: 1rem;
+    padding: 2rem !important;
+  }
+  
+  .contact-card:hover {
+    transform: translateZ(5px);
+  }
+}
+
+/* Loading Animation */
+.fa-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

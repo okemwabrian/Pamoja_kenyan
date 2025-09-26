@@ -34,12 +34,12 @@
       <li class="mb-3">
         <strong class="text-highlight">Step 2:</strong> Choose your membership type and submit your application:
         <div class="mt-3">
-          <a routerLink="/single-application" class="btn btn-outline-dark me-3 shadow-sm">
-            <i class="fas fa-user me-2 text-success"></i> Single Family Application
-          </a>
-          <a routerLink="/double-application" class="btn btn-outline-danger shadow-sm">
-            <i class="fas fa-users me-2 text-danger"></i> Double Family Application
-          </a>
+          <button class="btn btn-primary me-3 shadow-sm" (click)="onSingleApplication()">
+            <i class="fas fa-user me-2"></i> Single Family Application
+          </button>
+          <button class="btn btn-outline-primary shadow-sm" (click)="onDoubleApplication()">
+            <i class="fas fa-users me-2"></i> Double Family Application
+          </button>
         </div>
       </li>
     </ol>

@@ -14,7 +14,9 @@
 
   <!-- Nav Links (hidden on small screens) -->
   <nav class="nav-links">
+    <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Home</a>
     <a mat-button routerLink="/about" routerLinkActive="active-link">About Us</a>
+    <a mat-button routerLink="/membership" routerLinkActive="active-link">Membership</a>
     <a mat-button routerLink="/shares" routerLinkActive="active-link">Shares</a>
     <a mat-button routerLink="/contact" routerLinkActive="active-link">Contact</a>
     <a mat-button routerLink="/beneficiaries" routerLinkActive="active-link">Beneficiaries</a>
@@ -43,8 +45,12 @@
 
 <!-- Menu Definition for Hamburger -->
 <mat-menu #navMenu="matMenu">
+  <button mat-menu-item routerLink="/">Home</button>
   <button mat-menu-item routerLink="/about">About Us</button>
+  <button mat-menu-item routerLink="/membership">Membership</button>
   <button mat-menu-item routerLink="/shares">Shares</button>
+  <button mat-menu-item routerLink="/single-application">Apply</button>
+  <button mat-menu-item routerLink="/upgrade">Upgrade</button>
   <button mat-menu-item routerLink="/contact">Contact</button>
   <button mat-menu-item routerLink="/beneficiaries">Beneficiaries</button>
 </mat-menu>

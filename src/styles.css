@@ -1,4 +1,254 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Vintage Fall Color Palette */
+:root {
+  /* Primary Colors */
+  --primary-dark: #B8956A;
+  --primary-medium: #E2A16F;
+  --primary-light: #F4C2A1;
+  --primary-lighter: #FFF0DD;
+  
+  /* Background Colors */
+  --bg-light: #FFF0DD;
+  --bg-white: #ffffff;
+  --bg-card: #FFF0DD;
+  
+  /* Text Colors */
+  --text-dark: #5A4A3A;
+  --text-medium: #86B0BD;
+  --text-light: #D1D3D4;
+  
+  /* Status Colors */
+  --success-bg: #F0F8F5;
+  --success-border: #86B0BD;
+  --success-text: #4A6B5C;
+  --error-bg: #FDF2F2;
+  --error-border: #E2A16F;
+  --error-text: #B8956A;
+  --warning-bg: #FFF8F0;
+  --warning-border: #E2A16F;
+  --warning-text: #B8956A;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Base Styles */
+html, body { 
+  height: 100%; 
+  background: linear-gradient(135deg, var(--bg-light) 0%, #F5E6D3 100%);
+}
+
+body { 
+  margin: 0; 
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: var(--text-dark);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary-medium) !important;
+  border-color: var(--primary-medium) !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+.btn-outline-primary {
+  color: var(--primary-medium) !important;
+  border-color: var(--primary-medium) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-medium) !important;
+  border-color: var(--primary-medium) !important;
+}
+
+/* Cards */
+.card {
+  border: 1px solid var(--primary-light);
+  background-color: var(--bg-card);
+  box-shadow: 0 4px 15px rgba(226, 161, 111, 0.2);
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
+  color: white;
+  font-weight: 600;
+}
+
+/* Forms */
+.form-control:focus {
+  border-color: var(--primary-medium);
+  box-shadow: 0 0 0 0.2rem rgba(226, 161, 111, 0.25);
+}
+
+.form-select:focus {
+  border-color: var(--primary-medium);
+  box-shadow: 0 0 0 0.2rem rgba(226, 161, 111, 0.25);
+}
+
+/* Alerts */
+.alert-success {
+  background-color: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success-text);
+}
+
+.alert-danger {
+  background-color: var(--error-bg);
+  border-color: var(--error-border);
+  color: var(--error-text);
+}
+
+.alert-warning {
+  background-color: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning-text);
+}
+
+/* Navigation */
+.navbar {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium)) !important;
+  box-shadow: 0 2px 10px rgba(226, 161, 111, 0.3);
+}
+
+.navbar-brand, .nav-link {
+  color: white !important;
+}
+
+.nav-link:hover {
+  color: var(--primary-lighter) !important;
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--primary-medium) !important;
+}
+
+.text-secondary {
+  color: var(--text-medium) !important;
+}
+
+/* Background Colors */
+.bg-primary {
+  background-color: var(--primary-medium) !important;
+}
+
+.bg-light {
+  background-color: var(--bg-light) !important;
+}
+
+/* Spinners */
+.spinner-border {
+  color: var(--primary-light);
+}
+
+/* Teal Primary Classes */
+.text-primary {
+  color: var(--primary-medium) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-medium) !important;
+  border-color: var(--primary-medium) !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+.btn-outline-primary {
+  color: var(--primary-medium) !important;
+  border-color: var(--primary-medium) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-medium) !important;
+  border-color: var(--primary-medium) !important;
+}
+
+.border-primary {
+  border-color: var(--primary-light) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-medium) !important;
+}
+
+/* Keep success classes for alerts */
+.text-success {
+  color: #059669 !important;
+}
+
+.alert-success {
+  background-color: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+/* Links */
+a {
+  color: var(--primary-medium);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* Container Styling */
+.container {
+  background: rgba(255, 240, 221, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+}
+
+/* Professional Card Styling */
+.professional-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--primary-light);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.professional-card-header {
+  background-color: var(--primary-medium);
+  color: white;
+  font-weight: 600;
+  padding: 1rem;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Table Styling */
+.table {
+  background-color: var(--bg-white);
+}
+
+.table th {
+  background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
+  color: white;
+  border-color: var(--primary-light);
+}
+
+.table td {
+  border-color: var(--text-light);
+}
+
+/* Modal Styling */
+.modal-header {
+  background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
+  color: white;
+}
+
+.modal-content {
+  border: 1px solid var(--primary-light);
+  background-color: var(--bg-card);
+}

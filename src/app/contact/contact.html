@@ -9,6 +9,14 @@
           <p class="text-muted">We'd love to hear from you. Fill out the form and we’ll respond shortly.</p>
         </div>
 
+        <!-- Success/Error Messages -->
+        <div *ngIf="successMessage" class="alert alert-success alert-3d mb-4">
+          <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger alert-3d mb-4">
+          <i class="fas fa-exclamation-triangle me-2"></i>{{ errorMessage }}
+        </div>
+
         <!-- Contact Form -->
         <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
 
@@ -85,8 +93,9 @@
 
           <!-- Submit Button -->
           <div class="d-grid">
-            <button type="submit" class="btn btn-accent btn-lg">
-              <i class="fas fa-paper-plane me-2"></i> Send Message
+            <button type="submit" class="btn btn-accent btn-lg btn-3d" [disabled]="isSubmitting">
+              <i class="fas" [class.fa-paper-plane]="!isSubmitting" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting" class="me-2"></i>
+              {{ isSubmitting ? 'Sending...' : 'Send Message' }}
             </button>
           </div>
 

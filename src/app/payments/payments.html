@@ -1,25 +1,24 @@
-<div class="container my-5 py-5 rounded shadow bg-light animate__animated animate__fadeIn">
-  <h2 class="text-center mb-4 fw-bold text-success">
+<div class="container my-5 py-5 rounded shadow bg-light">
+  <h2 class="text-center mb-4 fw-bold">
     💳 Complete Your Payment
   </h2>
 
-  <div *ngIf="registrationData; else noData">
-    <!-- Registration Summary -->
-    <div class="card border-success mb-4 shadow-sm glass-card">
-      <div class="card-header bg-success text-white fw-semibold">
-        <i class="fas fa-clipboard-check me-2"></i> Registration Summary
+  <div>
+    <!-- Payment Summary -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header">
+        <i class="fas fa-clipboard-check me-2"></i> Payment Summary
       </div>
       <div class="card-body">
-        <p><strong>👤 Name:</strong> {{ registrationData.firstName }} {{ registrationData.lastName }}</p>
-        <p><strong>📧 Email:</strong> {{ registrationData.email }}</p>
-        <p><strong>💰 Total to Pay:</strong> <span class="text-success fw-bold">$627.30</span></p>
+        <p class="mb-2"><strong>📋 Service:</strong> <span class="text-secondary">Membership Registration</span></p>
+        <p class="mb-0"><strong>💰 Total to Pay:</strong> <span class="fw-bold text-primary">$627.30</span></p>
       </div>
     </div>
 
     <!-- PayPal Section -->
     <div class="text-center my-4">
-      <div *ngIf="!paypalLoaded && !paypalLoadError" class="text-muted">
-        <div class="spinner-border text-success" role="status"></div>
+      <div *ngIf="!paypalLoaded && !paypalLoadError" class="text-secondary">
+        <div class="spinner-border" role="status"></div>
         <p class="mt-2">Loading PayPal checkout...</p>
       </div>
 
@@ -37,10 +36,4 @@
       <p class="mb-0">Thank you for your payment! Your registration is now complete.</p>
     </div>
   </div>
-
-  <ng-template #noData>
-    <div class="alert alert-warning text-center">
-      ⚠️ No registration data found. Please register first.
-    </div>
-  </ng-template>
 </div>

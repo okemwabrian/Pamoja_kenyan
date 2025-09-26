@@ -2,12 +2,16 @@ import { Component } from '@angular/core';
 import { AuthService } from '../auth';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  standalone: false,
+  standalone: true,
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrls: ['./login.css'],
+  imports: [CommonModule, FormsModule, RouterModule]
 })
 export class Login {
   identifier: string = '';
@@ -21,6 +25,7 @@ export class Login {
   ) {}
 
   login() {
+    console.log('Login method called');
     this.errorMessage = '';
 
     if (this.identifier && this.password) {

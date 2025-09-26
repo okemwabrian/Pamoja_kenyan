@@ -3,41 +3,33 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { About } from './about/about';
 import { Beneficiaries } from './beneficiaries/beneficiaries';
-import { Contact } from './contact/contact';
 import { DoubleApplication } from './double-application/double-application';
-import { Home } from './home/home';
-import { Membership } from './membership/membership';
-import { Payments } from './payments/payments';
-import { Shares } from './shares/shares';
-import { SingleApplication } from './single-application/single-application';
-import { Upgrade } from './upgrade/upgrade';
-import { Login } from './login/login';
-import { Register } from './register/register';
+
 
 import { PamojaKenyaComponent } from './pamoja-kenya/pamoja-kenya.component';
-import { AuthGuard } from './auth/auth-guard';
+import { authGuard } from './auth-guard';
 
 const routes: Routes = [
   // Public routes
-  { path: '', component: Home },                      
-  { path: 'login', component: Login },                
-  { path: 'register', component: Register },  
-  { path: 'about', component: About }, 
-  { path: 'contact', component: Contact },   
-  { path: 'single-application', component: SingleApplication },
-  { path: 'shares', component: Shares },
-      { path: 'membership', component: Membership },
-      { path: 'double-application', component: DoubleApplication },
-      { path: 'payments', loadComponent: () => import('./payments/payments').then(m => m.Payments) },
-      { path: 'beneficiaries', component: Beneficiaries },
-      { path: 'upgrade', component: Upgrade },
+  { path: '', loadComponent: () => import('./home/home').then(m => m.Home) },
+  { path: 'login', loadComponent: () => import('./login/login').then(m => m.Login) },
+  { path: 'register', loadComponent: () => import('./register/register').then(m => m.Register) },
+  { path: 'about', component: About },
+  { path: 'contact', loadComponent: () => import('./contact/contact').then(m => m.Contact) },
+  { path: 'single-application', loadComponent: () => import('./single-application/single-application').then(m => m.SingleApplication) },
+  { path: 'shares', loadComponent: () => import('./shares/shares').then(m => m.Shares) },
+  { path: 'membership', loadComponent: () => import('./membership/membership').then(m => m.Membership) },
+  { path: 'double-application', component: DoubleApplication },
+  { path: 'payments', loadComponent: () => import('./payments/payments').then(m => m.Payments) },
+  { path: 'beneficiaries', component: Beneficiaries },
+  { path: 'upgrade', loadComponent: () => import('./upgrade/upgrade').then(m => m.Upgrade) },
     
 
   // Protected routes with layout
   {
     path: '',
-    component: PamojaKenyaComponent,  // layout with sidebar
-    canActivate: [AuthGuard],
+    component: PamojaKenyaComponent,  
+    canActivate: [authGuard],
     children: [
       
       
