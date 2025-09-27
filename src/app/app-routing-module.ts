@@ -9,7 +9,7 @@ import { DoubleApplication } from './double-application/double-application';
 import { PamojaKenyaComponent } from './pamoja-kenya/pamoja-kenya.component';
 import { authGuard } from './auth-guard';
 
-const routes: Routes = [
+export const routes: Routes = [
   // Public routes
   { path: '', loadComponent: () => import('./home/home').then(m => m.Home) },
   { path: 'login', loadComponent: () => import('./login/login').then(m => m.Login) },
