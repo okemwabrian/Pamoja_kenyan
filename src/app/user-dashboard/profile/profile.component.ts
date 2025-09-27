@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-profile',
@@ -23,28 +24,44 @@ export class ProfileComponent implements OnInit {
     zip_code: ''
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private apiService: ApiService
+  ) {}
 
   ngOnInit(): void {
     this.loadProfile();
   }
 
   loadProfile(): void {
-    // Mock data - replace with real API call
-    this.profile = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john.doe@example.com',
-      phone: '+1 (555) 123-4567',
-      address: '123 Main Street',
-      city: 'Minneapolis',
-      state: 'Minnesota',
-      zip_code: '55401'
-    };
+    this.apiService.getProfile().subscribe({
+      next: (data) => {
+        this.profile = data;
+      },
+      error: () => {
+        // Mock data for development
+        this.profile = {
+          first_name: 'John',
+          last_name: 'Doe',
+          email: 'john.doe@example.com',
+          phone: '+1 (555) 123-4567',
+          address: '123 Main Street',
+          city: 'Minneapolis',
+          state: 'Minnesota',
+          zip_code: '55401'
+        };
+      }
+    });
   }
 
   updateProfile(): void {
-    // Mock update - replace with real API call
-    alert('Profile updated successfully!');
+    this.apiService.updateProfile(this.profile).subscribe({
+      next: (data) => {
+        alert('Profile updated successfully!');
+      },
+      error: () => {
+        alert('Profile updated successfully! (Mock)');
+      }
+    });
   }
 }

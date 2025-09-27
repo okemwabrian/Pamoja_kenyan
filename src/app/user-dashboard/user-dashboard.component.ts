@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -20,11 +20,12 @@ export class UserDashboardComponent implements OnInit {
   };
 
   recentActivities: any[] = [];
-  private apiUrl = 'http://localhost:8000';
+
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
@@ -33,12 +34,7 @@ export class UserDashboardComponent implements OnInit {
   }
 
   loadUserStats(): void {
-    const token = localStorage.getItem('authToken');
-    const options = token ? {
-      headers: { 'Authorization': `Bearer ${token}` }
-    } : {};
-    
-    this.http.get(`${this.apiUrl}/api/auth/stats/`, options).subscribe({
+    this.apiService.getUserStats().subscribe({
       next: (data: any) => {
         this.userStats = data;
       },

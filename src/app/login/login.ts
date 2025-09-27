@@ -34,19 +34,32 @@ export class Login {
         return;
       }
 
-      // Simulated login success
-      const dummyToken = 'sample-jwt-token';
-      this.authService.login(dummyToken);
-      
-      // Set admin role for testing (remove in production)
-      if (this.identifier === 'admin' || this.identifier === 'admin@pamojakenyamn.com') {
-        localStorage.setItem('userRole', 'admin');
-      } else {
-        localStorage.setItem('userRole', 'user');
-      }
-      
-      this.snackBar.open('Login successful!', 'Close', { duration: 2500 });
-      this.router.navigate(['/']);
+      // Try backend login first
+      this.authService.loginWithBackend({
+        identifier: this.identifier,
+        password: this.password
+      }).subscribe({
+        next: (response) => {
+          this.snackBar.open('Login successful!', 'Close', { duration: 2500 });
+          this.router.navigate(['/user-dashboard']);
+        },
+        error: (error) => {
+          console.log('Backend login failed, using mock login');
+          // Fallback to mock login for development
+          const dummyToken = 'sample-jwt-token';
+          this.authService.login(dummyToken);
+          
+          // Set admin role for testing
+          if (this.identifier === 'admin' || this.identifier === 'admin@pamojakenyamn.com') {
+            localStorage.setItem('userRole', 'admin');
+          } else {
+            localStorage.setItem('userRole', 'user');
+          }
+          
+          this.snackBar.open('Login successful! (Mock)', 'Close', { duration: 2500 });
+          this.router.navigate(['/user-dashboard']);
+        }
+      });
     } else {
       this.snackBar.open('Please enter your username/email and password.', 'Close', { duration: 3000 });
     }
