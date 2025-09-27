@@ -91,8 +91,10 @@ export class SingleApplication implements OnInit {
         this.message = 'Application submitted successfully! Redirecting to payment...';
         
         // Store application ID for payment
-        localStorage.setItem('applicationId', response.id);
-        localStorage.setItem('applicationAmount', '627.30');
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          localStorage.setItem('applicationId', response.id);
+          localStorage.setItem('applicationAmount', '627.30');
+        }
         
         setTimeout(() => {
           this.router.navigate(['/payments']);
@@ -103,8 +105,10 @@ export class SingleApplication implements OnInit {
         this.message = 'Application submitted successfully! (Mock) Redirecting to payment...';
         
         // Mock success for development
-        localStorage.setItem('applicationId', '1');
-        localStorage.setItem('applicationAmount', '627.30');
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          localStorage.setItem('applicationId', '1');
+          localStorage.setItem('applicationAmount', '627.30');
+        }
         
         setTimeout(() => {
           this.router.navigate(['/payments']);

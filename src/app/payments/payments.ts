@@ -29,13 +29,26 @@ export class Payments implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     // Get application data from localStorage or registration service
-    this.registrationData = this.registrationService.getData() || {
-      applicationId: localStorage.getItem('applicationId'),
-      amount: localStorage.getItem('applicationAmount') || '627.30'
-    };
+    this.registrationData = this.registrationService.getData();
     
-    if (!this.registrationData.applicationId && !this.registrationData.firstName) {
-      // If no application data, redirect to membership page
+    // Check if we're in browser environment before accessing localStorage
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      if (!this.registrationData) {
+        this.registrationData = {
+          applicationId: localStorage.getItem('applicationId'),
+          amount: localStorage.getItem('applicationAmount') || '627.30'
+        };
+      }
+    } else {
+      // Default data for SSR
+      this.registrationData = this.registrationData || {
+        applicationId: '1',
+        amount: '627.30'
+      };
+    }
+    
+    // Only redirect in browser environment
+    if (typeof window !== 'undefined' && !this.registrationData?.applicationId && !this.registrationData?.firstName) {
       this.router.navigate(['/membership']);
     }
   }

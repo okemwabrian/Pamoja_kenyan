@@ -99,8 +99,10 @@ export class DoubleApplication {
         alert('Application submitted successfully! Redirecting to payment...');
         
         // Store application ID for payment
-        localStorage.setItem('applicationId', response.id);
-        localStorage.setItem('applicationAmount', '1254.60');
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          localStorage.setItem('applicationId', response.id);
+          localStorage.setItem('applicationAmount', '1254.60');
+        }
         
         setTimeout(() => {
           this.router.navigate(['/payments']);
@@ -111,8 +113,10 @@ export class DoubleApplication {
         alert('Application submitted successfully! (Mock) Redirecting to payment...');
         
         // Mock success for development
-        localStorage.setItem('applicationId', '2');
-        localStorage.setItem('applicationAmount', '1254.60');
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          localStorage.setItem('applicationId', '2');
+          localStorage.setItem('applicationAmount', '1254.60');
+        }
         
         setTimeout(() => {
           this.router.navigate(['/payments']);

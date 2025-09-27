@@ -7,10 +7,16 @@ export class RegistrationService {
   private key = 'registrationData';
 
   setData(data: any): void {
-    localStorage.setItem(this.key, JSON.stringify(data));
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.setItem(this.key, JSON.stringify(data));
+    }
   }
 
   getData(): any {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return null;
+    }
+    
     const raw = localStorage.getItem(this.key);
     if (!raw) return null;
     
@@ -23,6 +29,8 @@ export class RegistrationService {
   }
 
   clearData(): void {
-    localStorage.removeItem(this.key);
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.removeItem(this.key);
+    }
   }
 }
