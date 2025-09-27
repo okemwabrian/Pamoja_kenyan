@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
-  imports: [CommonModule, FormsModule, RouterModule]
+  imports: [CommonModule, FormsModule, RouterModule, MatSnackBarModule]
 })
 export class Login {
   identifier: string = '';

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Dashboard Access</title>
+</head>
+<body>
+    <h1>Test Dashboard Access</h1>
+    <p>Follow these steps to test the user dashboard:</p>
+    
+    <h2>Method 1: Direct Login Test</h2>
+    <ol>
+        <li>Open browser console (F12)</li>
+        <li>Run: <code>localStorage.setItem('authToken', 'test-token')</code></li>
+        <li>Run: <code>localStorage.setItem('userRole', 'user')</code></li>
+        <li>Refresh the page</li>
+        <li>Look for "My Dashboard" in navigation</li>
+        <li>Go to: <a href="http://localhost:4200/user-dashboard">http://localhost:4200/user-dashboard</a></li>
+    </ol>
+    
+    <h2>Method 2: Login Form Test</h2>
+    <ol>
+        <li>Go to: <a href="http://localhost:4200/login">http://localhost:4200/login</a></li>
+        <li>Enter username: <strong>testuser</strong></li>
+        <li>Enter password: <strong>password123</strong></li>
+        <li>Click Login</li>
+        <li>Check navigation for "My Dashboard"</li>
+    </ol>
+    
+    <h2>Method 3: Admin Test</h2>
+    <ol>
+        <li>Go to: <a href="http://localhost:4200/login">http://localhost:4200/login</a></li>
+        <li>Enter username: <strong>admin</strong></li>
+        <li>Enter password: <strong>admin123</strong></li>
+        <li>Click Login</li>
+        <li>Should see both "My Dashboard" and "Admin" links</li>
+    </ol>
+</body>
+</html>

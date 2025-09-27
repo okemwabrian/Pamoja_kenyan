@@ -28,14 +28,15 @@ export class AuthService {
 
   login(token: string): void {
     if (this.isBrowser) {
-      localStorage.setItem('auth_token', token);
+      localStorage.setItem('authToken', token);
     }
     this.loggedIn.next(true);
   }
 
   logout(): void {
     if (this.isBrowser) {
-      localStorage.removeItem('auth_token');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userRole');
     }
     this.loggedIn.next(false);
   }
@@ -48,14 +49,14 @@ export class AuthService {
     if (!this.isBrowser) {
       return null;
     }
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('authToken');
   }
 
   private hasToken(): boolean {
     if (!this.isBrowser) {
       return false;
     }
-    return !!localStorage.getItem('auth_token');
+    return !!localStorage.getItem('authToken');
   }
 
   // New register method calling backend API
