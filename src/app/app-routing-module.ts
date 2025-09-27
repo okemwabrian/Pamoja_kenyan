@@ -23,6 +23,58 @@ const routes: Routes = [
   { path: 'payments', loadComponent: () => import('./payments/payments').then(m => m.Payments) },
   { path: 'beneficiaries', component: Beneficiaries },
   { path: 'upgrade', loadComponent: () => import('./upgrade/upgrade').then(m => m.Upgrade) },
+  { 
+    path: 'user-dashboard', 
+    loadComponent: () => import('./user-dashboard/user-dashboard.component').then(m => m.UserDashboardComponent),
+    canActivate: [() => {
+      if (typeof window !== 'undefined') {
+        return !!localStorage.getItem('authToken');
+      }
+      return false;
+    }]
+  },
+  { 
+    path: 'user-dashboard/applications', 
+    loadComponent: () => import('./user-dashboard/my-applications/my-applications.component').then(m => m.MyApplicationsComponent),
+    canActivate: [() => {
+      if (typeof window !== 'undefined') {
+        return !!localStorage.getItem('authToken');
+      }
+      return false;
+    }]
+  },
+  { 
+    path: 'user-dashboard/payments', 
+    loadComponent: () => import('./user-dashboard/payment-history/payment-history.component').then(m => m.PaymentHistoryComponent),
+    canActivate: [() => {
+      if (typeof window !== 'undefined') {
+        return !!localStorage.getItem('authToken');
+      }
+      return false;
+    }]
+  },
+  { 
+    path: 'user-dashboard/profile', 
+    loadComponent: () => import('./user-dashboard/profile/profile.component').then(m => m.ProfileComponent),
+    canActivate: [() => {
+      if (typeof window !== 'undefined') {
+        return !!localStorage.getItem('authToken');
+      }
+      return false;
+    }]
+  },
+  { 
+    path: 'admin', 
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
+    canActivate: [() => {
+      if (typeof window !== 'undefined') {
+        const userRole = localStorage.getItem('userRole');
+        const isLoggedIn = localStorage.getItem('authToken');
+        return isLoggedIn && userRole === 'admin';
+      }
+      return false;
+    }]
+  },
     
 
   // Protected routes with layout

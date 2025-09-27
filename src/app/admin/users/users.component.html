@@ -1,0 +1,60 @@
+<div class="admin-users">
+  <div class="page-header">
+    <h1>User Management</h1>
+    <button class="btn-back" routerLink="/admin">← Back to Dashboard</button>
+  </div>
+
+  <div class="users-container">
+    <div class="table-header">
+      <h2>All Users</h2>
+      <div class="user-count">Total: {{ users.length }}</div>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading users...</p>
+    </div>
+
+    <div class="table-container" *ngIf="!loading">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users" [class.inactive]="!user.is_active">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="role-badge" [class.admin]="user.role === 'admin'">
+                {{ user.role }}
+              </span>
+            </td>
+            <td>{{ user.created_at | date:'short' }}</td>
+            <td>
+              <span class="status-badge" [class.active]="user.is_active" [class.inactive]="!user.is_active">
+                {{ user.is_active ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn-toggle" (click)="toggleUserStatus(user)">
+                {{ user.is_active ? 'Deactivate' : 'Activate' }}
+              </button>
+              <button class="btn-delete" (click)="deleteUser(user.id)" *ngIf="user.role !== 'admin'">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

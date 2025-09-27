@@ -37,8 +37,15 @@ export class Login {
       // Simulated login success
       const dummyToken = 'sample-jwt-token';
       this.authService.login(dummyToken);
+      
+      // Set admin role for testing (remove in production)
+      if (this.identifier === 'admin' || this.identifier === 'admin@pamojakenyamn.com') {
+        localStorage.setItem('userRole', 'admin');
+      } else {
+        localStorage.setItem('userRole', 'user');
+      }
+      
       this.snackBar.open('Login successful!', 'Close', { duration: 2500 });
-
       this.router.navigate(['/']);
     } else {
       this.snackBar.open('Please enter your username/email and password.', 'Close', { duration: 3000 });

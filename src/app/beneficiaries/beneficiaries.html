@@ -1,6 +1,12 @@
-<h2>Beneficiary Change Request Form</h2>
+<div class="table-container">
+  <h2>Beneficiary Change Request Form</h2>
 
-<table mat-table [dataSource]="maskedBeneficiaries" class="mat-elevation-z8 full-width">
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading beneficiaries...</p>
+  </div>
+
+  <table *ngIf="!isLoading" mat-table [dataSource]="maskedBeneficiaries" class="mat-elevation-z8 full-width">
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
     <td mat-cell *matCellDef="let beneficiary">{{ beneficiary.name }}</td>
@@ -18,11 +24,11 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+  </table>
+</div>
 
-<input type="hidden" [value]="beneficiaries.length" name="totalBeneficiaries">
-
-<form #beneficiaryForm="ngForm" (ngSubmit)="onSubmit()">
+<div class="form-container">
+  <form #beneficiaryForm="ngForm" (ngSubmit)="onSubmit()">
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Full Name</mat-label>
     <input matInput name="full_name" [(ngModel)]="formData.full_name" required>
@@ -63,5 +69,6 @@
     <input matInput name="zip" [(ngModel)]="formData.zip">
   </mat-form-field>
 
-  <button mat-raised-button color="primary" type="submit">Submit Request</button>
-</form>
+    <button mat-raised-button color="primary" type="submit">Submit Request</button>
+  </form>
+</div>

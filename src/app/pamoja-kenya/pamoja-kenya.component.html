@@ -20,6 +20,8 @@
     <a mat-button routerLink="/shares" routerLinkActive="active-link">Shares</a>
     <a mat-button routerLink="/contact" routerLinkActive="active-link">Contact</a>
     <a mat-button routerLink="/beneficiaries" routerLinkActive="active-link">Beneficiaries</a>
+    <a mat-button routerLink="/user-dashboard" routerLinkActive="active-link" *ngIf="isLoggedIn()">My Dashboard</a>
+    <a mat-button routerLink="/admin" routerLinkActive="active-link" *ngIf="isAdmin()">Admin</a>
   </nav>
 
   <!-- Auth Buttons -->
@@ -53,6 +55,8 @@
   <button mat-menu-item routerLink="/upgrade">Upgrade</button>
   <button mat-menu-item routerLink="/contact">Contact</button>
   <button mat-menu-item routerLink="/beneficiaries">Beneficiaries</button>
+  <button mat-menu-item routerLink="/user-dashboard" *ngIf="isLoggedIn()">My Dashboard</button>
+  <button mat-menu-item routerLink="/admin" *ngIf="isAdmin()">Admin Panel</button>
 </mat-menu>
 
 <!-- Main Page Content -->

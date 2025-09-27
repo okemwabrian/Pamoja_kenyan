@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -12,6 +12,7 @@ export class Beneficiaries implements OnInit {
   beneficiaries: any[] = [];
   maskedBeneficiaries: any[] = [];
   displayedColumns: string[] = ['name', 'phone', 'email'];
+  isLoading = true;
 
   // ✅ snake_case to match Django serializer
   formData = {
@@ -25,16 +26,42 @@ export class Beneficiaries implements OnInit {
     zip: ''
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.http.get<any[]>('http://localhost:8000/api/beneficiaries/list/').subscribe(data => {
-      this.beneficiaries = data;
-      this.maskedBeneficiaries = data.map(b => ({
-        name: this.maskName(b.name),
-        phone: this.maskPhone(b.phone),
-        email: this.maskEmail(b.email)
-      }));
+    this.loadBeneficiaries();
+  }
+
+  loadBeneficiaries(): void {
+    this.http.get<any[]>('http://localhost:8000/api/beneficiaries/list/').subscribe({
+      next: (data) => {
+        this.beneficiaries = data;
+        this.maskedBeneficiaries = data.map(b => ({
+          name: this.maskName(b.name),
+          phone: this.maskPhone(b.phone),
+          email: this.maskEmail(b.email)
+        }));
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // Mock data for development
+        const mockData = [
+          { name: 'Ian Doe', phone: '+16125551234', email: 'ian@gmail.com' },
+          { name: 'Jane Smith', phone: '+16125555678', email: 'jane@example.com' }
+        ];
+        this.beneficiaries = mockData;
+        this.maskedBeneficiaries = mockData.map(b => ({
+          name: this.maskName(b.name),
+          phone: this.maskPhone(b.phone),
+          email: this.maskEmail(b.email)
+        }));
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 

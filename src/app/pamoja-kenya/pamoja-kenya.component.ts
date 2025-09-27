@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Inject, PLATFORM_ID } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../auth';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-pamoja-kenya',
@@ -15,6 +16,11 @@ export class PamojaKenyaComponent {
   private breakpointObserver = inject(BreakpointObserver);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private isBrowser: boolean;
+
+  constructor(@Inject(PLATFORM_ID) platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   // Observable to check if device is handset (mobile)
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -30,6 +36,22 @@ export class PamojaKenyaComponent {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  // Check if user is logged in
+  isLoggedIn(): boolean {
+    if (!this.isBrowser) {
+      return false;
+    }
+    return !!localStorage.getItem('authToken');
+  }
+
+  // Check if current user is admin
+  isAdmin(): boolean {
+    if (!this.isBrowser) {
+      return false;
+    }
+    return localStorage.getItem('userRole') === 'admin';
   }
 
   // This method can be used if you still want to close drawer on navigation in handset

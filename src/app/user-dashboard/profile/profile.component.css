@@ -1,0 +1,72 @@
+.profile-page {
+  padding: 2rem;
+  background: linear-gradient(135deg, #FFF0DD 0%, #F5E6D3 50%, #E8D5C4 100%);
+  min-height: 100vh;
+  font-family: 'Georgia', serif;
+}
+
+.profile-form {
+  background: rgba(255, 240, 221, 0.8);
+  border: 1px solid rgba(226, 161, 111, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(226, 161, 111, 0.2);
+  max-width: 800px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #5A4A3A;
+  font-weight: 600;
+}
+
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid rgba(226, 161, 111, 0.3);
+  border-radius: 8px;
+  font-family: 'Georgia', serif;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Georgia', serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #E2A16F, #B8956A);
+  color: white;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #86B0BD, #6A9AAA);
+  color: white;
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}

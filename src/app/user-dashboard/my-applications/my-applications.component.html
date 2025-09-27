@@ -1,0 +1,16 @@
+<div class="my-applications">
+  <h2>My Applications</h2>
+  <div class="applications-list">
+    <div *ngFor="let app of applications" class="application-card">
+      <div class="app-header">
+        <h3>{{ app.application_type | titlecase }} Family Application</h3>
+        <span class="status-badge" [class]="app.status">{{ app.status | titlecase }}</span>
+      </div>
+      <div class="app-details">
+        <p><strong>Amount:</strong> ${{ app.amount }}</p>
+        <p><strong>Submitted:</strong> {{ app.created_at | date:'medium' }}</p>
+        <p><strong>Status:</strong> {{ app.status | titlecase }}</p>
+      </div>
+    </div>
+  </div>
+</div>

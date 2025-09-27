@@ -1,0 +1,58 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <p>Welcome to Pamoja Kenya Admin Panel</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-content">
+        <h3>{{ stats.totalUsers }}</h3>
+        <p>Total Users</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">📋</div>
+      <div class="stat-content">
+        <h3>{{ stats.totalApplications }}</h3>
+        <p>Applications</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">💳</div>
+      <div class="stat-content">
+        <h3>{{ stats.totalPayments }}</h3>
+        <p>Payments</p>
+      </div>
+    </div>
+
+    <div class="stat-card pending">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <h3>{{ stats.pendingApplications }}</h3>
+        <p>Pending</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+      <button class="action-btn" routerLink="/admin/users">
+        <i class="fas fa-users"></i>
+        Manage Users
+      </button>
+      <button class="action-btn" routerLink="/admin/applications">
+        <i class="fas fa-file-alt"></i>
+        View Applications
+      </button>
+      <button class="action-btn" routerLink="/admin/payments">
+        <i class="fas fa-credit-card"></i>
+        Payment Records
+      </button>
+    </div>
+  </div>
+</div>

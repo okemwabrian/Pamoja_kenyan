@@ -1,0 +1,17 @@
+<div class="payment-history">
+  <h2>Payment History</h2>
+  <div class="payments-list">
+    <div *ngFor="let payment of payments" class="payment-card">
+      <div class="payment-header">
+        <h3>Payment #{{ payment.id }}</h3>
+        <span class="status-badge" [class]="payment.status">{{ payment.status | titlecase }}</span>
+      </div>
+      <div class="payment-details">
+        <p><strong>Amount:</strong> ${{ payment.amount }}</p>
+        <p><strong>Method:</strong> {{ payment.payment_method | titlecase }}</p>
+        <p><strong>Date:</strong> {{ payment.created_at | date:'medium' }}</p>
+        <p *ngIf="payment.transaction_id"><strong>Transaction ID:</strong> {{ payment.transaction_id }}</p>
+      </div>
+    </div>
+  </div>
+</div>
