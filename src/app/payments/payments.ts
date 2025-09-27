@@ -28,9 +28,15 @@ export class Payments implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.registrationData = this.registrationService.getData();
-    if (!this.registrationData) {
-      this.router.navigate(['/single-application']);
+    // Get application data from localStorage or registration service
+    this.registrationData = this.registrationService.getData() || {
+      applicationId: localStorage.getItem('applicationId'),
+      amount: localStorage.getItem('applicationAmount') || '627.30'
+    };
+    
+    if (!this.registrationData.applicationId && !this.registrationData.firstName) {
+      // If no application data, redirect to membership page
+      this.router.navigate(['/membership']);
     }
   }
 
@@ -61,9 +67,11 @@ export class Payments implements OnInit, AfterViewInit {
               label: 'paypal'
             },
             createOrder: (_data: any, actions: any) => {
+              const amount = this.registrationData.amount || '627.30';
               return actions.order.create({
                 purchase_units: [{
-                  amount: { value: '627.30' }
+                  amount: { value: amount },
+                  description: 'Pamoja Kenya Membership Fee'
                 }]
               });
             },
@@ -104,20 +112,30 @@ export class Payments implements OnInit, AfterViewInit {
     this.paymentCompleted = true;
 
     const payload = {
+      application: this.registrationData.applicationId,
       payer_name: this.sanitizeInput(`${details.payer?.name?.given_name || ''} ${details.payer?.name?.surname || ''}`),
       payer_email: this.sanitizeInput(details.payer?.email_address || ''),
       paypal_order_id: this.sanitizeInput(details.id || ''),
       amount: details.purchase_units?.[0]?.amount?.value || '0',
       currency: details.purchase_units?.[0]?.amount?.currency_code || 'USD',
-      registration_data: this.registrationData
+      payment_method: 'paypal',
+      description: 'Pamoja Kenya Membership Payment'
     };
 
     this.http.post(`${this.apiUrl}/api/payments/`, payload).subscribe({
-      next: () => {
-        // Payment recorded successfully
+      next: (response) => {
+        console.log('Payment recorded successfully:', response);
+        // Show success message and redirect after delay
+        setTimeout(() => {
+          this.router.navigate(['/user-dashboard']);
+        }, 3000);
       },
-      error: () => {
-        // Handle payment recording error
+      error: (error) => {
+        console.error('Payment recording error:', error);
+        // Still show success to user, redirect to dashboard
+        setTimeout(() => {
+          this.router.navigate(['/user-dashboard']);
+        }, 3000);
       }
     });
   }

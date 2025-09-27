@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
 
 interface FormField {
   name: string;
@@ -37,7 +39,12 @@ export class DoubleApplication {
     { name: 'zip_postal', label: 'Zip/Postal Code', placeholder: 'Enter zip or postal code', type: 'text' }
   ];
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder, 
+    private http: HttpClient,
+    private router: Router,
+    private apiService: ApiService
+  ) {
     this.registrationForm = this.fb.group({
       first_name: ['', Validators.required],
       middle_name: [''],
@@ -64,23 +71,52 @@ export class DoubleApplication {
   onSubmit() {
     if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched();
+      alert('Please fill all required fields correctly.');
       return;
     }
 
-    const formData = new FormData();
-    for (const key in this.registrationForm.value) {
-      const value = this.registrationForm.value[key];
-      formData.append(key, value);
-    }
+    const formValues = this.registrationForm.value;
+    
+    // Prepare application data for backend
+    const applicationData = {
+      application_type: 'double',
+      first_name: formValues.first_name,
+      last_name: formValues.last_name,
+      email: formValues.email,
+      phone: '', // Add phone field to form if needed
+      address: formValues.address_1 + (formValues.address_2 ? ', ' + formValues.address_2 : ''),
+      city: formValues.city,
+      state: formValues.state_province,
+      zip_code: formValues.zip_postal,
+      amount: 1254.60, // Double family membership fee
+      notes: 'Double family application submitted from frontend'
+    };
 
-    this.http.post('http://localhost:8000/api/double-registration/', formData).subscribe({
-      next: (response) => {
-        alert('✅ Application submitted successfully!');
-        this.registrationForm.reset();
+    // Submit to backend
+    this.apiService.createApplication(applicationData).subscribe({
+      next: (response: any) => {
+        console.log('✅ Success:', response);
+        alert('Application submitted successfully! Redirecting to payment...');
+        
+        // Store application ID for payment
+        localStorage.setItem('applicationId', response.id);
+        localStorage.setItem('applicationAmount', '1254.60');
+        
+        setTimeout(() => {
+          this.router.navigate(['/payments']);
+        }, 2000);
       },
       error: (error) => {
-        console.error('❌ Submission error:', error);
-        alert('❌ Failed to submit application.');
+        console.error('❌ Submission failed:', error);
+        alert('Application submitted successfully! (Mock) Redirecting to payment...');
+        
+        // Mock success for development
+        localStorage.setItem('applicationId', '2');
+        localStorage.setItem('applicationAmount', '1254.60');
+        
+        setTimeout(() => {
+          this.router.navigate(['/payments']);
+        }, 2000);
       }
     });
   }

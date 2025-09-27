@@ -11,7 +11,7 @@
       </div>
       <div class="card-body">
         <p class="mb-2"><strong>📋 Service:</strong> <span class="text-secondary">Membership Registration</span></p>
-        <p class="mb-0"><strong>💰 Total to Pay:</strong> <span class="fw-bold text-primary">$627.30</span></p>
+        <p class="mb-0"><strong>💰 Total to Pay:</strong> <span class="fw-bold text-primary">${{ registrationData?.amount || '627.30' }}</span></p>
       </div>
     </div>
 
@@ -32,8 +32,15 @@
 
     <!-- Success Message -->
     <div *ngIf="paymentCompleted" class="alert alert-success text-center mt-4">
-      <h5 class="mb-1">✅ Payment Successful</h5>
-      <p class="mb-0">Thank you for your payment! Your registration is now complete.</p>
+      <h5 class="mb-1">✅ Payment Successful!</h5>
+      <p class="mb-2">Thank you for your payment! Your membership application is now complete.</p>
+      <p class="mb-0"><small>Redirecting to your dashboard in 3 seconds...</small></p>
+    </div>
+    
+    <!-- Navigation Links -->
+    <div class="text-center mt-4" *ngIf="!paymentCompleted">
+      <p class="text-muted">Need help? <a routerLink="/contact" class="text-decoration-none">Contact Support</a></p>
+      <p class="text-muted">Want to go back? <a routerLink="/membership" class="text-decoration-none">Return to Membership</a></p>
     </div>
   </div>
 </div>

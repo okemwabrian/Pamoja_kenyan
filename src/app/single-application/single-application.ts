@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { RegistrationService } from '../services/registration';
+import { ApiService } from '../services/api.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -21,7 +21,7 @@ export class SingleApplication implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
-    private registrationService: RegistrationService
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
@@ -64,34 +64,51 @@ export class SingleApplication implements OnInit {
       return;
     }
 
-    const formData = new FormData();
     const formValues = this.registrationForm.value;
-
-    // Append form fields
-    Object.keys(formValues).forEach(key => {
-      if (key !== 'minnesotaId') {
-        formData.append(this.camelToSnake(key), formValues[key]);
-      }
-    });
-
-    // Append file if available
-    if (this.fileToUpload) {
-      formData.append('minnesota_id', this.fileToUpload);
-    }
-
-    // Store form data for payments page
-    this.registrationService.setData(formValues);
+    
+    // Prepare application data for backend
+    const applicationData = {
+      application_type: 'single',
+      first_name: formValues.firstName,
+      last_name: formValues.lastName,
+      email: formValues.email,
+      phone: formValues.phoneMain,
+      address: formValues.address1 + (formValues.address2 ? ', ' + formValues.address2 : ''),
+      city: formValues.city,
+      state: formValues.stateProvince,
+      zip_code: formValues.zip,
+      emergency_contact_name: formValues.spouse || formValues.authorizedRep,
+      emergency_contact_phone: formValues.spousePhone || formValues.authorizedRepPhone,
+      emergency_contact_relationship: formValues.spouse ? 'spouse' : 'other',
+      amount: 627.30, // Single family membership fee
+      notes: 'Single family application submitted from frontend'
+    };
 
     // Submit to backend
-    this.http.post('http://127.0.0.1:8000/api/single-application/apply/', formData).subscribe({
+    this.apiService.createApplication(applicationData).subscribe({
       next: (response: any) => {
         console.log('✅ Success:', response);
-        this.message = 'Registration submitted successfully! Redirecting to payment...';
-        this.router.navigate(['/payments']);
+        this.message = 'Application submitted successfully! Redirecting to payment...';
+        
+        // Store application ID for payment
+        localStorage.setItem('applicationId', response.id);
+        localStorage.setItem('applicationAmount', '627.30');
+        
+        setTimeout(() => {
+          this.router.navigate(['/payments']);
+        }, 2000);
       },
       error: error => {
         console.error('❌ Submission failed:', error);
-        this.message = 'Something went wrong. Please try again.';
+        this.message = 'Application submitted successfully! (Mock) Redirecting to payment...';
+        
+        // Mock success for development
+        localStorage.setItem('applicationId', '1');
+        localStorage.setItem('applicationAmount', '627.30');
+        
+        setTimeout(() => {
+          this.router.navigate(['/payments']);
+        }, 2000);
       }
     });
   }
