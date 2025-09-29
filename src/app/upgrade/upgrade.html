@@ -1,8 +1,13 @@
-<!-- 📌 START OF FORM BODY -->
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+<div class="upgrade-container">
+  <div class="upgrade-header">
+    <h1 style="color: #667eea;">🔄 Upgrade to Double Family Membership</h1>
+    <p>Expand your coverage to include your entire family</p>
+  </div>
+
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="upgrade-form">
   <!-- Personal Info -->
   <fieldset class="border rounded-3 p-3 mb-4">
-    <legend class="w-auto px-2 text-success">Personal Information</legend>
+    <legend class="w-auto px-2" style="color: #667eea;">Personal Information</legend>
     <div class="row g-3">
       <div class="col-md-4">
         <label class="form-label">First Name</label>
@@ -44,7 +49,7 @@
 
   <!-- Address -->
   <fieldset class="border rounded-3 p-3 mb-4">
-    <legend class="w-auto px-2 text-success">Address</legend>
+    <legend class="w-auto px-2" style="color: #667eea;">Address</legend>
     <div class="row g-3">
       <div class="col-md-6">
         <label class="form-label">Address Line 1</label>
@@ -83,7 +88,7 @@
 
   <!-- Contact -->
   <fieldset class="border rounded-3 p-3 mb-4">
-    <legend class="w-auto px-2 text-success">Contact</legend>
+    <legend class="w-auto px-2" style="color: #667eea;">Contact</legend>
     <div class="row g-3">
       <div class="col-md-6">
         <label class="form-label">Primary Phone</label>
@@ -109,7 +114,7 @@
 
   <!-- Spouse / Authorized Rep -->
   <fieldset class="border rounded-3 p-3 mb-4">
-    <legend class="w-auto px-2 text-success">Spouse / Authorized Representative</legend>
+    <legend class="w-auto px-2" style="color: #667eea;">Spouse / Authorized Representative</legend>
     <div class="row g-3">
       <div class="col-md-6">
         <label class="form-label">Spouse</label>
@@ -132,7 +137,7 @@
 
   <!-- Existing Member Info -->
   <fieldset class="border rounded-3 p-3 mb-4">
-    <legend class="w-auto px-2 text-success">Existing Membership</legend>
+    <legend class="w-auto px-2" style="color: #667eea;">Existing Membership</legend>
     <div class="mb-3">
       <label class="form-label">Existing Member ID</label>
       <input
@@ -169,7 +174,7 @@
 
   <!-- Payment Summary -->
   <fieldset class="border rounded-3 p-3 mb-4">
-    <legend class="w-auto px-2 text-success">Payment Summary</legend>
+    <legend class="w-auto px-2" style="color: #667eea;">Payment Summary</legend>
     <p class="mb-3">– Payment MUST be made in full before your upgrade is complete.</p>
 
     <div class="mb-3">
@@ -186,7 +191,9 @@
   </fieldset>
 
   <!-- Submit and Back Buttons -->
-  <button type="submit" class="btn btn-success px-4">Continue to Payment</button>
-  <a routerLink="/" class="btn btn-secondary ms-3">Back to Home</a>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary px-4" style="background: #667eea; border: none;">Continue to Payment</button>
+    <a routerLink="/" class="btn btn-outline-secondary ms-3">Back to Home</a>
+  </div>
 </form>
-<!-- 📌 END OF FORM BODY -->
+</div>

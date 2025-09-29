@@ -61,28 +61,37 @@ export class Register {
       confirm_password: this.confirmPassword, // Needed for Django serializer
     };
 
-    // Try backend registration first
-    this.authService.register({
-      username: this.username,
-      email: this.email,
-      first_name: this.username,
-      last_name: '',
-      password: this.password,
-      password_confirm: this.confirmPassword
-    }).subscribe({
-      next: (response) => {
-        this.successMessage = 'Registration successful! Welcome!';
-        this.router.navigate(['/user-dashboard']);
-      },
-      error: (error) => {
-        console.log('Backend registration failed, trying fallback');
-        // Fallback registration for development
-        this.successMessage = 'Registration successful! (Mock)';
+    console.log('Sending registration request:', payload);
+    
+    // Send registration request to backend
+    this.http.post('http://localhost:8000/api/auth/register/', payload).subscribe({
+      next: (response: any) => {
+        console.log('Registration successful:', response);
+        this.successMessage = 'Registration successful! Please login with your credentials.';
+        
+        // Clear form
         this.username = '';
         this.email = '';
         this.password = '';
         this.confirmPassword = '';
-        this.router.navigate(['/login']);
+        
+        // Redirect to login after 2 seconds
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('Registration failed:', error);
+        
+        if (error.status === 0) {
+          this.errorMessage = 'Unable to connect to server. Please check your connection.';
+        } else if (error.error?.username) {
+          this.errorMessage = 'Username already exists. Please choose a different username.';
+        } else if (error.error?.email) {
+          this.errorMessage = 'Email already registered. Please use a different email.';
+        } else {
+          this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        }
       }
     });
   }

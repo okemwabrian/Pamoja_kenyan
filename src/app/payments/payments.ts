@@ -1,10 +1,9 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { RegistrationService } from '../services/registration';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-payments',
@@ -18,39 +17,48 @@ export class Payments implements OnInit, AfterViewInit {
   paymentCompleted: boolean = false;
   paypalLoaded: boolean = false;
   paypalLoadError: boolean = false;
-  private readonly apiUrl = environment.production ? 'https://api.pamojakenyamn.com' : 'http://localhost:8000';
-  private readonly paypalClientId = environment.production ? 'PROD_CLIENT_ID' : 'AcKeWOPTHodpfp9ana6qegVblvkw5AlwDZb-iTlvzTQHPADeoNjkV9w8ChY2khzu59kuHaBlshC33yMg';
+  private readonly apiUrl = 'http://localhost:8000';
+  private readonly paypalClientId = 'AcKeWOPTHodpfp9ana6qegVblvkw5AlwDZb-iTlvzTQHPADeoNjkV9w8ChY2khzu59kuHaBlshC33yMg';
+
+  paymentData: any = {};
+  paymentType: string = 'membership';
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private registrationService: RegistrationService,
     private http: HttpClient
   ) {}
 
   ngOnInit(): void {
-    // Get application data from localStorage or registration service
-    this.registrationData = this.registrationService.getData();
-    
-    // Check if we're in browser environment before accessing localStorage
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      if (!this.registrationData) {
-        this.registrationData = {
-          applicationId: localStorage.getItem('applicationId'),
-          amount: localStorage.getItem('applicationAmount') || '627.30'
+    // Get payment data from query parameters
+    this.route.queryParams.subscribe(params => {
+      console.log('Payment params:', params);
+      
+      if (params['type']) {
+        this.paymentType = params['type'];
+        this.paymentData = {
+          type: params['type'],
+          name: params['name'],
+          email: params['email'],
+          amount: parseFloat(params['amount']) || 0,
+          description: params['description'] || 'Payment',
+          method: params['method'],
+          shares: params['shares']
+        };
+      } else {
+        // Default membership payment
+        this.registrationData = this.registrationService.getData() || {
+          applicationId: '1',
+          amount: '627.30'
+        };
+        this.paymentData = {
+          type: 'membership',
+          amount: parseFloat(this.registrationData.amount) || 627.30,
+          description: 'Membership Fee'
         };
       }
-    } else {
-      // Default data for SSR
-      this.registrationData = this.registrationData || {
-        applicationId: '1',
-        amount: '627.30'
-      };
-    }
-    
-    // Only redirect in browser environment
-    if (typeof window !== 'undefined' && !this.registrationData?.applicationId && !this.registrationData?.firstName) {
-      this.router.navigate(['/membership']);
-    }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -80,11 +88,11 @@ export class Payments implements OnInit, AfterViewInit {
               label: 'paypal'
             },
             createOrder: (_data: any, actions: any) => {
-              const amount = this.registrationData.amount || '627.30';
+              const amount = this.paymentData.amount?.toString() || '627.30';
               return actions.order.create({
                 purchase_units: [{
                   amount: { value: amount },
-                  description: 'Pamoja Kenya Membership Fee'
+                  description: this.paymentData.description || 'Pamoja Kenya Payment'
                 }]
               });
             },

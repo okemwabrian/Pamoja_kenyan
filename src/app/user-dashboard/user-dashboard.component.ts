@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
+import { DashboardOverview } from './dashboard-overview';
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
-  imports: [CommonModule, RouterModule, HttpClientModule]
+  imports: [CommonModule, RouterModule, HttpClientModule, DashboardOverview]
 })
 export class UserDashboardComponent implements OnInit {
   userStats = {
@@ -29,8 +30,10 @@ export class UserDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUserStats();
-    this.loadRecentActivities();
+    if (typeof window !== 'undefined') {
+      this.loadUserStats();
+      this.loadRecentActivities();
+    }
   }
 
   loadUserStats(): void {

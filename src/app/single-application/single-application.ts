@@ -4,18 +4,22 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
 import { CommonModule } from '@angular/common';
+import { SuccessAnimation } from '../shared/success-animation';
 
 @Component({
   selector: 'app-single-application',
   standalone: true,
   templateUrl: './single-application.html',
   styleUrl: './single-application.css',
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, SuccessAnimation]
 })
 export class SingleApplication implements OnInit {
   registrationForm!: FormGroup;
   message: string = '';
   fileToUpload: File | null = null;
+  isLoading: boolean = false;
+  showSuccess: boolean = false;
+  successMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -30,20 +34,27 @@ export class SingleApplication implements OnInit {
       middleName: [''],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      confirmEmail: ['', [Validators.required, Validators.email]],
       address1: ['', Validators.required],
-      address2: [''],
       city: ['', Validators.required],
       stateProvince: ['', Validators.required],
       zip: ['', Validators.required],
       phoneMain: ['', Validators.required],
-      phoneOptional: [''],
-      minnesotaId: [null],  // File input handled separately
       spouse: [''],
       spousePhone: [''],
       authorizedRep: [''],
-      authorizedRepPhone: [''],
-      declarationAccepted: [false, Validators.requiredTrue]
+      child1: [''],
+      child2: [''],
+      child3: [''],
+      child4: [''],
+      child5: [''],
+      parent1: [''],
+      parent2: [''],
+      spouseParent1: [''],
+      spouseParent2: [''],
+      sibling1: [''],
+      sibling2: [''],
+      declarationAccepted: [false, Validators.requiredTrue],
+      idDocument: [null, Validators.required]
     });
   }
 
@@ -51,8 +62,22 @@ export class SingleApplication implements OnInit {
   handleFileInput(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        this.message = 'File size must be less than 5MB';
+        return;
+      }
+      
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        this.message = 'Please upload a valid image (JPG, PNG) or PDF file';
+        return;
+      }
+      
       this.fileToUpload = file;
-      this.registrationForm.patchValue({ minnesotaId: file });
+      this.registrationForm.patchValue({ idDocument: file });
+      this.message = '';
     }
   }
 
@@ -70,25 +95,42 @@ export class SingleApplication implements OnInit {
     const applicationData = {
       application_type: 'single',
       first_name: formValues.firstName,
+      middle_name: formValues.middleName,
       last_name: formValues.lastName,
       email: formValues.email,
       phone: formValues.phoneMain,
-      address: formValues.address1 + (formValues.address2 ? ', ' + formValues.address2 : ''),
+      address: formValues.address1,
       city: formValues.city,
       state: formValues.stateProvince,
       zip_code: formValues.zip,
+      spouse_name: formValues.spouse,
+      spouse_phone: formValues.spousePhone,
+      authorized_rep: formValues.authorizedRep,
+      child_1: formValues.child1,
+      child_2: formValues.child2,
+      child_3: formValues.child3,
+      child_4: formValues.child4,
+      child_5: formValues.child5,
+      parent_1: formValues.parent1,
+      parent_2: formValues.parent2,
+      spouse_parent_1: formValues.spouseParent1,
+      spouse_parent_2: formValues.spouseParent2,
+      sibling_1: formValues.sibling1,
+      sibling_2: formValues.sibling2,
       emergency_contact_name: formValues.spouse || formValues.authorizedRep,
-      emergency_contact_phone: formValues.spousePhone || formValues.authorizedRepPhone,
+      emergency_contact_phone: formValues.spousePhone,
       emergency_contact_relationship: formValues.spouse ? 'spouse' : 'other',
-      amount: 627.30, // Single family membership fee
+      constitution_agreed: formValues.declarationAccepted,
+      amount: 627.30,
       notes: 'Single family application submitted from frontend'
     };
 
+    this.isLoading = true;
+    
     // Submit to backend
     this.apiService.createApplication(applicationData).subscribe({
       next: (response: any) => {
         console.log('✅ Success:', response);
-        this.message = 'Application submitted successfully! Redirecting to payment...';
         
         // Store application ID for payment
         if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
@@ -96,13 +138,12 @@ export class SingleApplication implements OnInit {
           localStorage.setItem('applicationAmount', '627.30');
         }
         
-        setTimeout(() => {
-          this.router.navigate(['/payments']);
-        }, 2000);
+        this.isLoading = false;
+        this.successMessage = 'Application submitted successfully!';
+        this.showSuccess = true;
       },
       error: error => {
         console.error('❌ Submission failed:', error);
-        this.message = 'Application submitted successfully! (Mock) Redirecting to payment...';
         
         // Mock success for development
         if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
@@ -110,11 +151,15 @@ export class SingleApplication implements OnInit {
           localStorage.setItem('applicationAmount', '627.30');
         }
         
-        setTimeout(() => {
-          this.router.navigate(['/payments']);
-        }, 2000);
+        this.isLoading = false;
+        this.successMessage = 'Application submitted successfully!';
+        this.showSuccess = true;
       }
     });
+  }
+
+  onSuccessComplete() {
+    this.router.navigate(['/payments']);
   }
 
   findInvalidControls(): string[] {

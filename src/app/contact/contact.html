@@ -5,7 +5,7 @@
 
         <!-- Title -->
         <div class="text-center mb-4">
-          <h2 class="fw-bold text-accent">📬 Contact Us</h2>
+          <h2 class="fw-bold" style="color: #667eea;">📬 Contact Us</h2>
           <p class="text-muted">We'd love to hear from you. Fill out the form and we’ll respond shortly.</p>
         </div>
 
@@ -93,7 +93,7 @@
 
           <!-- Submit Button -->
           <div class="d-grid">
-            <button type="submit" class="btn btn-accent btn-lg btn-3d" [disabled]="isSubmitting">
+            <button type="submit" class="btn btn-lg" style="background: #667eea; color: white; border: none; border-radius: 8px; padding: 12px 24px;" [disabled]="isSubmitting">
               <i class="fas" [class.fa-paper-plane]="!isSubmitting" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting" class="me-2"></i>
               {{ isSubmitting ? 'Sending...' : 'Send Message' }}
             </button>

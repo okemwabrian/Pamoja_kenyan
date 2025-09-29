@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-contact',
@@ -23,7 +23,7 @@ export class Contact {
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
-  private readonly apiUrl = environment.production ? 'https://api.pamojakenyamn.com' : 'http://localhost:8000';
+  private readonly apiUrl = 'http://localhost:8000';
 
   constructor(private http: HttpClient) {}
 
@@ -42,7 +42,7 @@ export class Contact {
       message: this.sanitizeInput(this.formData.message)
     };
 
-    this.http.post(`${this.apiUrl}/api/contact/`, payload).subscribe({
+    this.http.post(`${this.apiUrl}/api/auth/contact/`, payload).subscribe({
       next: () => {
         this.successMessage = 'Message sent successfully! We will get back to you soon.';
         this.resetForm();

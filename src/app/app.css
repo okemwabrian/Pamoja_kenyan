@@ -1,23 +1,58 @@
-/* styles.css or component.css */
+.main-content {
+  min-height: calc(100vh - 70px);
+  padding-top: 0;
+  position: relative;
+  z-index: 1;
+}
 
-/* Mobile styles */
-@media (max-width: 767px) {
-  .navbar {
-    flex-direction: column;
-    text-align: center;
+/* Global responsive styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+  
+  .btn {
+    width: 100%;
+    margin: 0.25rem 0;
   }
 }
 
-/* Tablet styles */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .navbar {
-    font-size: 14px;
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.25rem;
   }
-}
-
-/* Desktop styles */
-@media (min-width: 1025px) {
-  .navbar {
-    font-size: 16px;
+  
+  h1 {
+    font-size: 1.25rem;
+  }
+  
+  h2 {
+    font-size: 1.1rem;
   }
 }

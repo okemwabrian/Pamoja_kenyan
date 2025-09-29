@@ -1,152 +1,233 @@
-<div class="container my-5">
-  <h2 class="text-success mb-4">Single Family Membership Registration</h2>
-
-  <!-- Flash Messages -->
-  <div *ngIf="message" class="alert alert-info">
-    {{ message }}
-  </div>
-
-  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-    <!-- Personal Info -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Personal Information</legend>
-      <div class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label">First Name</label>
-          <input formControlName="firstName" type="text" class="form-control" />
+<div class="application-container">
+  <h2>Single Family Membership Application</h2>
+  
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="application-form">
+    
+    <!-- Personal Information -->
+    <div class="form-section">
+      <h3>Personal Information</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" formControlName="firstName" placeholder="Enter first name">
+          <div class="error" *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched">
+            First name is required
+          </div>
         </div>
-        <div class="col-md-4">
-          <label class="form-label">Middle Name</label>
-          <input formControlName="middleName" type="text" class="form-control" />
+        
+        <div class="form-group">
+          <label>Middle Name</label>
+          <input type="text" formControlName="middleName" placeholder="Enter middle name">
         </div>
-        <div class="col-md-4">
-          <label class="form-label">Last Name</label>
-          <input formControlName="lastName" type="text" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Email</label>
-          <input formControlName="email" type="email" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Confirm Email</label>
-          <input formControlName="confirmEmail" type="email" class="form-control" />
+        
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" formControlName="lastName" placeholder="Enter last name">
+          <div class="error" *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched">
+            Last name is required
+          </div>
         </div>
       </div>
-    </fieldset>
-
-    <!-- Address -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Address</legend>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Address Line 1</label>
-          <input formControlName="address1" type="text" class="form-control" />
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" formControlName="email" placeholder="Enter email address">
+          <div class="error" *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+            Valid email is required
+          </div>
         </div>
-        <div class="col-md-6">
-          <label class="form-label">Address Line 2</label>
-          <input formControlName="address2" type="text" class="form-control" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">City</label>
-          <input formControlName="city" type="text" class="form-control" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">State / Province</label>
-          <input formControlName="stateProvince" type="text" class="form-control" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">ZIP / Postal</label>
-          <input formControlName="zip" type="text" class="form-control" />
+        
+        <div class="form-group">
+          <label>Phone Main *</label>
+          <input type="tel" formControlName="phoneMain" placeholder="Enter phone number">
+          <div class="error" *ngIf="registrationForm.get('phoneMain')?.invalid && registrationForm.get('phoneMain')?.touched">
+            Phone number is required
+          </div>
         </div>
       </div>
-    </fieldset>
+    </div>
 
-    <!-- Contact -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Contact</legend>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Primary Phone</label>
-          <input formControlName="phoneMain" type="tel" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Optional Phone</label>
-          <input formControlName="phoneOptional" type="tel" class="form-control" />
-        </div>
-        <div class="col-md-12">
-          <label class="form-label">Upload Minnesota ID</label>
-          <!-- ✅ Updated input to use handleFileInput -->
-          <input
-            type="file"
-            class="form-control"
-            (change)="handleFileInput($event)"
-            accept=".jpg,.jpeg,.png,.webp,.pdf"
-          />
-          <div class="form-text">Accepted formats: JPG, PDF, PNG, WEBP. Max: 314MB</div>
+    <!-- Address Information -->
+    <div class="form-section">
+      <h3>Address Information</h3>
+      
+      <div class="form-group">
+        <label>Address *</label>
+        <input type="text" formControlName="address1" placeholder="Enter address">
+        <div class="error" *ngIf="registrationForm.get('address1')?.invalid && registrationForm.get('address1')?.touched">
+          Address is required
         </div>
       </div>
-    </fieldset>
-
-    <!-- Spouse / Authorized Rep -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Spouse / Authorized Representative</legend>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Spouse</label>
-          <input formControlName="spouse" type="text" class="form-control" />
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" formControlName="city" placeholder="Enter city">
+          <div class="error" *ngIf="registrationForm.get('city')?.invalid && registrationForm.get('city')?.touched">
+            City is required
+          </div>
         </div>
-        <div class="col-md-6">
-          <label class="form-label">Spouse Phone</label>
-          <input formControlName="spousePhone" type="text" class="form-control" />
+        
+        <div class="form-group">
+          <label>State *</label>
+          <input type="text" formControlName="stateProvince" placeholder="Enter state">
+          <div class="error" *ngIf="registrationForm.get('stateProvince')?.invalid && registrationForm.get('stateProvince')?.touched">
+            State is required
+          </div>
         </div>
-        <div class="col-md-6">
-          <label class="form-label">Authorized Rep</label>
-          <input formControlName="authorizedRep" type="text" class="form-control" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Authorized Rep Phone</label>
-          <input formControlName="authorizedRepPhone" type="text" class="form-control" />
+        
+        <div class="form-group">
+          <label>Zip Code *</label>
+          <input type="text" formControlName="zip" placeholder="Enter zip code">
+          <div class="error" *ngIf="registrationForm.get('zip')?.invalid && registrationForm.get('zip')?.touched">
+            Zip code is required
+          </div>
         </div>
       </div>
-    </fieldset>
+    </div>
 
-    <!-- Declaration -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-danger">Declaration</legend>
-      <p>
-        I declare that the information provided above is accurate, true, and correct...
-      </p>
-      <p>
-        Upon registration, I agree to remain a Pamoja Kenya member for at least five (5) years after benefiting...
-      </p>
-      <div class="form-check">
-        <input class="form-check-input" formControlName="declarationAccepted" type="checkbox" id="declaration" />
-        <label class="form-check-label" for="declaration">
-          I have read the Pamoja Constitution and agree to the conditions.
+    <!-- Family Information -->
+    <div class="form-section">
+      <h3>Family Information</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Spouse / Next of Kin</label>
+          <input type="text" formControlName="spouse" placeholder="Enter spouse name">
+        </div>
+        
+        <div class="form-group">
+          <label>Contact Phone (Spouse)</label>
+          <input type="tel" formControlName="spousePhone" placeholder="Enter spouse phone">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Authorized Representative</label>
+        <input type="text" formControlName="authorizedRep" placeholder="Enter authorized representative">
+      </div>
+      
+      <!-- Children -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Child 1</label>
+          <input type="text" formControlName="child1" placeholder="Enter child name">
+        </div>
+        
+        <div class="form-group">
+          <label>Child 2</label>
+          <input type="text" formControlName="child2" placeholder="Enter child name">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Child 3</label>
+          <input type="text" formControlName="child3" placeholder="Enter child name">
+        </div>
+        
+        <div class="form-group">
+          <label>Child 4</label>
+          <input type="text" formControlName="child4" placeholder="Enter child name">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Child 5</label>
+        <input type="text" formControlName="child5" placeholder="Enter child name">
+      </div>
+      
+      <!-- Parents -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Parent 1</label>
+          <input type="text" formControlName="parent1" placeholder="Enter parent name">
+        </div>
+        
+        <div class="form-group">
+          <label>Parent 2</label>
+          <input type="text" formControlName="parent2" placeholder="Enter parent name">
+        </div>
+      </div>
+      
+      <!-- Spouse Parents -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Spouse Parent 1</label>
+          <input type="text" formControlName="spouseParent1" placeholder="Enter spouse parent name">
+        </div>
+        
+        <div class="form-group">
+          <label>Spouse Parent 2</label>
+          <input type="text" formControlName="spouseParent2" placeholder="Enter spouse parent name">
+        </div>
+      </div>
+      
+      <!-- Siblings -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Sibling 1</label>
+          <input type="text" formControlName="sibling1" placeholder="Enter sibling name">
+        </div>
+        
+        <div class="form-group">
+          <label>Sibling 2</label>
+          <input type="text" formControlName="sibling2" placeholder="Enter sibling name">
+        </div>
+      </div>
+    </div>
+
+    <!-- Identification Document -->
+    <div class="form-section">
+      <h3>Identification Document</h3>
+      
+      <div class="form-group">
+        <label>Minnesota ID or Any Valid Identification Card *</label>
+        <input type="file" (change)="handleFileInput($event)" accept="image/*,.pdf" class="file-input">
+        <div class="file-upload-info">
+          <p>📄 Please upload a clear photo or scan of your Minnesota ID or any valid government-issued identification card.</p>
+          <p><small>Accepted formats: JPG, PNG, PDF (Max size: 5MB)</small></p>
+        </div>
+        <div class="error" *ngIf="!fileToUpload && registrationForm.get('declarationAccepted')?.touched">
+          Identification document is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Agreement -->
+    <div class="form-section">
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="declarationAccepted">
+          <span class="checkmark"></span>
+          I have read the Pamoja Constitution and agree to the conditions listed above *
         </label>
+        <div class="error" *ngIf="registrationForm.get('declarationAccepted')?.invalid && registrationForm.get('declarationAccepted')?.touched">
+          You must agree to the constitution
+        </div>
       </div>
-    </fieldset>
+    </div>
 
-    <!-- Payment Summary -->
-    <fieldset class="border rounded-3 p-3 mb-4">
-      <legend class="w-auto px-2 text-success">Payment Summary</legend>
-      <p class="mb-3">– Payment MUST be made in full before your registration is complete.</p>
-
-      <div class="mb-3">
-        <label class="form-label">Quantity</label>
-        <input type="number" class="form-control" value="1" readonly />
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Membership</label>
-        <input type="text" class="form-control" value="Single Family Membership: $627.30" readonly />
-      </div>
-
-      <p><strong>Total:</strong> <span class="text-danger">$627.30</span></p>
-    </fieldset>
-
-    <!-- Payment Button -->
-    <button type="submit" class="btn btn-success px-4">Continue to Payment</button>
-    <a routerLink="/membership" class="btn btn-secondary ms-3">Back to Choices</a>
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button type="submit" class="submit-btn" [disabled]="registrationForm.invalid || isLoading" [class.loading]="isLoading">
+        <span *ngIf="!isLoading">Submit Application</span>
+        <span *ngIf="isLoading">Submitting...</span>
+      </button>
+    </div>
+    
+    <!-- Message Display -->
+    <div *ngIf="message" class="message" [class.success]="message.includes('successful')" [class.error]="!message.includes('successful')">
+      {{ message }}
+    </div>
   </form>
+  
+  <!-- Success Animation -->
+  <app-success-animation 
+    [show]="showSuccess" 
+    [message]="successMessage"
+    (complete)="onSuccessComplete()">
+  </app-success-animation>
 </div>

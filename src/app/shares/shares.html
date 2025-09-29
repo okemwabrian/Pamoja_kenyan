@@ -96,11 +96,7 @@
       <p class="mb-1 fw-semibold">
         <span>Total Payment:</span>
         <span class="text-danger">
-          {{
-            formData.shares && formData.shares > 0
-              ? ('$' + (formData.shares * 100).toFixed(2))
-              : '$0.00'
-          }}
+          {{ formData.shares && formData.shares > 0 ? ('$' + (formData.shares * 100).toFixed(2)) : '$0.00' }}
         </span>
       </p>
       <p class="text-muted mb-0">
@@ -113,7 +109,6 @@
       <button
         type="submit"
         class="btn btn-success btn-lg px-5 py-2 fw-bold"
-        [disabled]="!sharesForm.form.valid"
         style="background-color: #007A3D; border-radius: 10px;"
       >
         Proceed to Payment

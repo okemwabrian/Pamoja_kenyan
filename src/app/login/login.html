@@ -1,45 +1,75 @@
-<div class="container mt-5" style="max-width: 480px;">
-  <div class="text-center mb-4">
-    
-    <h2 class="fw-bold">Login to Pamoja Kenya</h2>
-  </div>
-
-  <form (ngSubmit)="login()" #loginForm="ngForm" novalidate>
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Username or Email</label>
-      <input
-        type="text"
-        [(ngModel)]="identifier"
-        name="identifier"
-        class="form-control"
-        required
-        placeholder="Enter username or email"
-      />
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="images/logo.png" alt="Pamoja Kenya MN" class="login-logo">
+      <h2>Welcome Back</h2>
+      <p>Sign in to your Pamoja Kenya MN account</p>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Password</label>
-      <input
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        class="form-control"
-        required
-        placeholder="Enter password"
-      />
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          name="username"
+          formControlName="username" 
+          placeholder="Enter your username"
+          autocomplete="username"
+          [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+        <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          Username is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password"
+          formControlName="password" 
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          Password is required
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="login-btn" 
+        [disabled]="loginForm.invalid || isLoading"
+        [class.loading]="isLoading">
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading">Signing in...</span>
+      </button>
+
+      <div *ngIf="message" class="message" [ngClass]="{
+        'error': message.includes('Invalid') || message.includes('failed') || message.includes('Unable'),
+        'success': message.includes('Welcome'),
+        'info': message.includes('Credentials filled') || message.includes('fill')
+      }">
+        {{ message }}
+      </div>
+    </form>
+
+    <div class="login-footer">
+      <p>Don't have an account? 
+        <button type="button" class="link-btn" (click)="goToRegister()">
+          Register here
+        </button>
+      </p>
     </div>
 
-    <div *ngIf="errorMessage" class="text-danger mb-3">{{ errorMessage }}</div>
 
-
-    <button type="submit" class="btn btn-primary w-100 fw-bold">Login</button>
-  </form>
-
-  <div class="text-center mt-4">
-    <p>
-      Don't have an account?
-      <a routerLink="/register" class="fw-semibold">Register</a>
-    </p>
-    <a href="#" class="text-muted small">Forgot password?</a>
   </div>
+
+  <!-- Success Animation -->
+  <app-success-animation 
+    [show]="showSuccess" 
+    [message]="successMessage"
+    (complete)="onSuccessComplete()">
+  </app-success-animation>
 </div>

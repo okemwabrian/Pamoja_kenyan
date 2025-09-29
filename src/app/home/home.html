@@ -1,4 +1,4 @@
-<div class="container py-5" [@fadeInStagger]>
+<div class="container py-5">
 
   <!-- Banner Section -->
   <section class="home-banner text-center p-5 rounded mb-5">
@@ -27,7 +27,7 @@
           <div class="card-body">
             <h3 class="card-title text-primary">Membership - Become a New Member</h3>
             <p class="card-text text-secondary">Every member is important to us hence are valued …</p>
-            <button class="btn btn-primary" (click)="onSignup()">Sign‑up Here</button>
+            <a routerLink="/single-application" class="btn btn-primary">Sign‑up Here</a>
           </div>
         </div>
       </div>
@@ -36,16 +36,16 @@
           <div class="card-body">
             <h3 class="card-title text-primary">Top Up Shares</h3>
             <p class="card-text text-secondary">We own our actions and follow‑through with our commitment …</p>
-            <button class="btn btn-primary" (click)="onBuyShares()">Buy Shares Here</button>
+            <a routerLink="/shares" class="btn btn-primary">Buy Shares Here</a>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
-            <h3 class="card-title text-primary">Receive Benefits</h3>
-            <p class="card-text text-secondary">We actively engage with all people and communities…</p>
-            <button class="btn btn-outline-primary" (click)="onReadMore()">Read More</button>
+            <h3 class="card-title text-primary">Make Claims</h3>
+            <p class="card-text text-secondary">Submit benefit claims for death, medical, education, or emergency assistance…</p>
+            <a routerLink="/claims" class="btn btn-outline-primary">Make Claims</a>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
   <section class="upgrade-info text-center p-4 rounded mb-5 border">
     <h2 class="fw-bold mb-3">Upgrade To Double Family Membership</h2>
     <p class="mb-4">Current members can upgrade their single family membership at any time.</p>
-    <button class="btn btn-primary btn-lg" (click)="onUpgrade()">Upgrade Here</button>
+    <a routerLink="/upgrade" class="btn btn-primary btn-lg">Upgrade Here</a>
   </section>
 
   

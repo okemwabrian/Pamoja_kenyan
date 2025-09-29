@@ -10,8 +10,10 @@
         <i class="fas fa-clipboard-check me-2"></i> Payment Summary
       </div>
       <div class="card-body">
-        <p class="mb-2"><strong>📋 Service:</strong> <span class="text-secondary">Membership Registration</span></p>
-        <p class="mb-0"><strong>💰 Total to Pay:</strong> <span class="fw-bold text-primary">${{ registrationData?.amount || '627.30' }}</span></p>
+        <p class="mb-2"><strong>📋 Service:</strong> <span class="text-secondary">{{ paymentData.description || 'Membership Registration' }}</span></p>
+        <p class="mb-2" *ngIf="paymentData.shares"><strong>📊 Shares:</strong> <span class="text-secondary">{{ paymentData.shares }} shares</span></p>
+        <p class="mb-2" *ngIf="paymentData.name"><strong>👤 Name:</strong> <span class="text-secondary">{{ paymentData.name }}</span></p>
+        <p class="mb-0"><strong>💰 Total to Pay:</strong> <span class="fw-bold text-primary">${{ paymentData.amount || registrationData?.amount || '627.30' }}</span></p>
       </div>
     </div>
 

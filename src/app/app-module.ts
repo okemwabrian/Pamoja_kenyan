@@ -1,7 +1,7 @@
-import { NgModule, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/http-interceptor';
-import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -11,11 +11,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppRoutingModule } from './app-routing-module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRippleModule } from '@angular/material/core';
-import { App } from './app';
+
 import { About } from './about/about';
 import { Beneficiaries } from './beneficiaries/beneficiaries';
 
-import { DoubleApplication } from './double-application/double-application';
+
 
 import { PamojaKenyaComponent } from './pamoja-kenya/pamoja-kenya.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -26,19 +26,14 @@ import { MatListModule } from '@angular/material/list';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { Header } from './header/header';
+
 
 @NgModule({
   declarations: [
-    App,
     About,
-    Beneficiaries,
-    DoubleApplication,
-    PamojaKenyaComponent,
-    Header
+    Beneficiaries
   ],
   imports: [
-    BrowserModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
@@ -65,15 +60,12 @@ import { Header } from './header/header';
     
   ],
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
-    provideClientHydration(withEventReplay()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
     }
   ],
-  bootstrap: [App]
+  bootstrap: []
 })
 export class AppModule { }

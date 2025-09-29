@@ -1,0 +1,111 @@
+<div class="claims-container">
+  <h2>Benefit Claims</h2>
+  
+  <!-- Submit New Claim Section -->
+  <div class="claim-form-section">
+    <h3>Submit New Claim</h3>
+    
+    <form [formGroup]="claimForm" (ngSubmit)="onSubmit()" class="claim-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Claim Type *</label>
+          <select formControlName="claim_type">
+            <option value="">Select claim type</option>
+            <option *ngFor="let type of claimTypes" [value]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+          <div class="error" *ngIf="claimForm.get('claim_type')?.invalid && claimForm.get('claim_type')?.touched">
+            Please select a claim type
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Amount Requested *</label>
+          <input type="number" formControlName="amount_requested" placeholder="Enter amount" min="1" step="0.01">
+          <div class="error" *ngIf="claimForm.get('amount_requested')?.invalid && claimForm.get('amount_requested')?.touched">
+            Please enter a valid amount
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea formControlName="description" rows="4" placeholder="Provide detailed description of your claim..."></textarea>
+        <div class="error" *ngIf="claimForm.get('description')?.invalid && claimForm.get('description')?.touched">
+          Description must be at least 10 characters
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Supporting Documents</label>
+        <input type="file" (change)="onFileChange($event)" accept=".pdf,.jpg,.jpeg,.png" class="file-input">
+        <div class="file-info">
+          <p>📄 Upload supporting documents (receipts, medical reports, etc.)</p>
+          <small>Accepted formats: PDF, JPG, PNG (Max 5MB)</small>
+        </div>
+      </div>
+      
+      <button type="submit" class="submit-btn" [disabled]="claimForm.invalid || isLoading" [class.loading]="isLoading">
+        <span *ngIf="!isLoading">Submit Claim</span>
+        <span *ngIf="isLoading">Submitting...</span>
+      </button>
+    </form>
+    
+    <div *ngIf="message" class="message" [class.success]="message.includes('success')" [class.error]="!message.includes('success')">
+      {{ message }}
+    </div>
+  </div>
+  
+  <!-- My Claims Section -->
+  <div class="my-claims-section">
+    <h3>My Claims History</h3>
+    
+    <div *ngIf="userClaims.length === 0" class="no-claims">
+      <p>You haven't submitted any claims yet.</p>
+    </div>
+    
+    <div *ngIf="userClaims.length > 0" class="claims-list">
+      <div *ngFor="let claim of userClaims" class="claim-card">
+        <div class="claim-header">
+          <h4>{{ claim.claim_type }}</h4>
+          <span class="status" [class]="getStatusClass(claim.status)">{{ claim.status }}</span>
+        </div>
+        
+        <div class="claim-details">
+          <div class="detail-row">
+            <span class="label">Amount Requested:</span>
+            <span class="value">${{ claim.amount_requested }}</span>
+          </div>
+          
+          <div class="detail-row" *ngIf="claim.amount_approved">
+            <span class="label">Amount Approved:</span>
+            <span class="value">${{ claim.amount_approved }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Submitted:</span>
+            <span class="value">{{ claim.created_at }}</span>
+          </div>
+          
+          <div class="description">
+            <span class="label">Description:</span>
+            <p>{{ claim.description }}</p>
+          </div>
+          
+          <div *ngIf="claim.admin_notes" class="admin-notes">
+            <span class="label">Admin Notes:</span>
+            <p>{{ claim.admin_notes }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Success Animation -->
+  <app-success-animation 
+    [show]="showSuccess" 
+    [message]="successMessage"
+    (complete)="onSuccessComplete()">
+  </app-success-animation>
+</div>

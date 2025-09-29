@@ -1,0 +1,275 @@
+.announcements-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+}
+
+.announcements-container h2 {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.announcements-section, .events-section {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.announcements-section h3, .events-section h3 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #3498db;
+}
+
+.loading, .no-content {
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.announcements-list, .events-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.announcement-card, .event-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  border-left: 5px solid #3498db;
+}
+
+.announcement-card:hover, .event-card:hover {
+  transform: translateY(-2px);
+}
+
+.priority-urgent {
+  border-left-color: #e74c3c;
+}
+
+.priority-high {
+  border-left-color: #f39c12;
+}
+
+.priority-medium {
+  border-left-color: #3498db;
+}
+
+.priority-low {
+  border-left-color: #95a5a6;
+}
+
+.announcement-header, .event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.announcement-header h4, .event-header h4 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.3rem;
+  flex: 1;
+}
+
+.announcement-meta, .event-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.priority-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+}
+
+.priority-badge.priority-urgent {
+  background: #e74c3c;
+}
+
+.priority-badge.priority-high {
+  background: #f39c12;
+}
+
+.priority-badge.priority-medium {
+  background: #3498db;
+}
+
+.priority-badge.priority-low {
+  background: #95a5a6;
+}
+
+.date, .date-badge {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.date-badge {
+  background: #ecf0f1;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: #2c3e50;
+}
+
+.announcement-content, .event-details {
+  margin-top: 1rem;
+}
+
+.announcement-content p, .event-description p {
+  color: #34495e;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pinned-indicator {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #f1c40f;
+  color: #2c3e50;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.event-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #7f8c8d;
+}
+
+.event-features {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.feature-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.feature-badge.featured {
+  background: #f1c40f;
+  color: #2c3e50;
+}
+
+.feature-badge.registration {
+  background: #3498db;
+  color: white;
+}
+
+.cta-section {
+  margin-top: 3rem;
+}
+
+.cta-card {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+
+.cta-card h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.cta-card p {
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: white;
+  color: #3498db;
+  border: 2px solid white;
+}
+
+.btn-primary:hover {
+  background: transparent;
+  color: white;
+}
+
+.btn-outline {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-outline:hover {
+  background: white;
+  color: #3498db;
+}
+
+@media (max-width: 768px) {
+  .announcements-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  
+  .announcements-section, .events-section {
+    padding: 1.5rem;
+  }
+  
+  .announcement-header, .event-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .announcement-meta, .event-date {
+    align-items: flex-start;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn {
+    width: 200px;
+  }
+}

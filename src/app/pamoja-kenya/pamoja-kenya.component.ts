@@ -3,14 +3,16 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../auth';
-import { Router } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { Header } from '../header/header';
 
 @Component({
   selector: 'app-pamoja-kenya',
   templateUrl: './pamoja-kenya.component.html',
   styleUrls: ['./pamoja-kenya.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule, Header]
 })
 export class PamojaKenyaComponent {
   private breakpointObserver = inject(BreakpointObserver);

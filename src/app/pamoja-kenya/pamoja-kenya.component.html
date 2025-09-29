@@ -1,65 +1,6 @@
-<mat-toolbar color="primary" class="top-navbar">
-
-  <!-- Logo and Title -->
-  <img src="/images/logo.png" alt="Logo" class="toolbar-logo me-2" />
-  <span class="me-auto fw-bold">PamojaKenya</span>
-
-  <!-- Hamburger Menu Button (shown on small screens) -->
-  <button mat-icon-button
-          class="hamburger-button"
-          [matMenuTriggerFor]="navMenu"
-          aria-label="Toggle navigation menu">
-    <mat-icon>menu</mat-icon>
-  </button>
-
-  <!-- Nav Links (hidden on small screens) -->
-  <nav class="nav-links">
-    <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Home</a>
-    <a mat-button routerLink="/about" routerLinkActive="active-link">About Us</a>
-    <a mat-button routerLink="/membership" routerLinkActive="active-link">Membership</a>
-    <a mat-button routerLink="/shares" routerLinkActive="active-link">Shares</a>
-    <a mat-button routerLink="/contact" routerLinkActive="active-link">Contact</a>
-    <a mat-button routerLink="/beneficiaries" routerLinkActive="active-link">Beneficiaries</a>
-    <a mat-button routerLink="/user-dashboard" routerLinkActive="active-link" *ngIf="isLoggedIn()">My Dashboard</a>
-    <a mat-button routerLink="/admin" routerLinkActive="active-link" *ngIf="isAdmin()">Admin</a>
-  </nav>
-
-  <!-- Auth Buttons -->
-  <ng-container *ngIf="(isLoggedIn$ | async); else guestLinks">
-    <button mat-button (click)="logout()" color="warn">
-      <mat-icon>logout</mat-icon>
-      Logout
-    </button>
-  </ng-container>
-
-  <ng-template #guestLinks>
-    <button mat-button routerLink="/login" color="accent">
-      <mat-icon>login</mat-icon>
-      Login
-    </button>
-    <button mat-button routerLink="/register" color="accent">
-      <mat-icon>person_add</mat-icon>
-      Register
-    </button>
-  </ng-template>
-
-</mat-toolbar>
-
-<!-- Menu Definition for Hamburger -->
-<mat-menu #navMenu="matMenu">
-  <button mat-menu-item routerLink="/">Home</button>
-  <button mat-menu-item routerLink="/about">About Us</button>
-  <button mat-menu-item routerLink="/membership">Membership</button>
-  <button mat-menu-item routerLink="/shares">Shares</button>
-  <button mat-menu-item routerLink="/single-application">Apply</button>
-  <button mat-menu-item routerLink="/upgrade">Upgrade</button>
-  <button mat-menu-item routerLink="/contact">Contact</button>
-  <button mat-menu-item routerLink="/beneficiaries">Beneficiaries</button>
-  <button mat-menu-item routerLink="/user-dashboard" *ngIf="isLoggedIn()">My Dashboard</button>
-  <button mat-menu-item routerLink="/admin" *ngIf="isAdmin()">Admin Panel</button>
-</mat-menu>
+<app-header></app-header>
 
 <!-- Main Page Content -->
 <div class="main-content">
-  <router-outlet/>      <!-- Page content renders here -->
+  <router-outlet></router-outlet>
 </div>

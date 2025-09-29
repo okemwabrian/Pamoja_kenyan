@@ -1,0 +1,97 @@
+<div class="events-container">
+  <div class="events-header">
+    <h1>My Events</h1>
+    <p>Your registered events and activities</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading your events...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="events-content">
+    
+    <!-- Upcoming Events -->
+    <div class="events-section">
+      <h2 class="section-title">🎯 Upcoming Events</h2>
+      
+      <div *ngIf="upcomingEvents.length === 0" class="empty-state">
+        <div class="empty-icon">📅</div>
+        <h3>No upcoming events</h3>
+        <p>Check back later for new events and activities!</p>
+      </div>
+      
+      <div class="events-grid">
+        <div *ngFor="let event of upcomingEvents" class="event-card upcoming">
+          <div class="event-badge" *ngIf="event.is_featured">⭐ Featured</div>
+          <div class="event-status registered" *ngIf="event.registered">✅ Registered</div>
+          
+          <div class="event-header">
+            <h3>{{ event.title }}</h3>
+            <div class="event-date">{{ formatDate(event.date) }}</div>
+          </div>
+          
+          <div class="event-body">
+            <p class="event-description">{{ event.description }}</p>
+            <div class="event-location">
+              <span class="location-icon">📍</span>
+              {{ event.location }}
+            </div>
+          </div>
+          
+          <div class="event-actions">
+            <button 
+              *ngIf="!event.registered" 
+              class="action-btn register"
+              (click)="registerForEvent(event.id)">
+              Register Now
+            </button>
+            <span *ngIf="event.registered" class="registered-text">
+              You're registered! 🎉
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Past Events -->
+    <div class="events-section">
+      <h2 class="section-title">📚 Past Events</h2>
+      
+      <div *ngIf="pastEvents.length === 0" class="empty-state">
+        <div class="empty-icon">🕐</div>
+        <h3>No past events</h3>
+        <p>Your event history will appear here.</p>
+      </div>
+      
+      <div class="events-grid">
+        <div *ngFor="let event of pastEvents" class="event-card past">
+          <div class="event-badge completed">Completed</div>
+          
+          <div class="event-header">
+            <h3>{{ event.title }}</h3>
+            <div class="event-date">{{ formatDate(event.date) }}</div>
+          </div>
+          
+          <div class="event-body">
+            <p class="event-description">{{ event.description }}</p>
+            <div class="event-location">
+              <span class="location-icon">📍</span>
+              {{ event.location }}
+            </div>
+          </div>
+          
+          <div class="event-actions">
+            <span class="attendance-status" *ngIf="event.registered">
+              ✅ Attended
+            </span>
+            <span class="attendance-status missed" *ngIf="!event.registered">
+              ❌ Missed
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

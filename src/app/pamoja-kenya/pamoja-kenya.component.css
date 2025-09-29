@@ -132,12 +132,9 @@ html, body {
 
 /* Main content styling */
 .main-content {
-  padding: 24px;
-  padding-top: 88px; /* Account for fixed navbar */
-  max-width: 1200px;
-  margin: 0 auto;
-  box-sizing: border-box;
+  padding-top: 80px; /* Account for fixed navbar */
   min-height: calc(100vh - 64px);
+  position: relative;
 }
 
 /* Responsive styles */

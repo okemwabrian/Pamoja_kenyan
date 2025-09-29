@@ -1,63 +1,253 @@
-<div class="container my-5">
-  <h2 class="mb-4 text-primary">Double Family Membership Registration</h2>
-
-  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" novalidate>
+<div class="application-container">
+  <h2>Double Family Membership Application</h2>
+  
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="application-form">
     
-    <fieldset class="border rounded p-4 mb-4">
-      <legend class="float-none w-auto px-3 text-secondary">Personal Information</legend>
-
-      <div *ngFor="let field of personalInfoFields" class="mb-3">
-        <label [for]="field.name" class="form-label">{{ field.label }}</label>
-
-        <input
-  [type]="field.type || 'text'"
-  class="form-control"
-  [id]="field.name"
-  [formControlName]="field.name"
-  [attr.placeholder]="field.placeholder"
-  [attr.accept]="field.accept ? field.accept : null"
-  (change)="field.type === 'file' ? onFileChange($event) : null"
-/>
-
-
-        <div *ngIf="registrationForm.get(field.name)?.invalid && registrationForm.get(field.name)?.touched" class="invalid-feedback d-block">
-          <div *ngIf="registrationForm.get(field.name)?.errors?.['required']">
-            {{ field.label }} is required.
-          </div>
-          <div *ngIf="registrationForm.get(field.name)?.errors?.['email']">
-            Please enter a valid email.
+    <!-- Personal Information -->
+    <div class="form-section">
+      <h3>Personal Information</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" formControlName="first_name" placeholder="Enter first name">
+          <div class="error" *ngIf="registrationForm.get('first_name')?.invalid && registrationForm.get('first_name')?.touched">
+            First name is required
           </div>
         </div>
-
-        <small *ngIf="field.helpText" class="form-text text-muted">{{ field.helpText }}</small>
-      </div>
-    </fieldset>
-
-    <fieldset class="border rounded p-4 mb-4">
-      <legend class="float-none w-auto px-3 text-secondary">Address</legend>
-
-      <div *ngFor="let field of addressFields" class="mb-3">
-        <label [for]="field.name" class="form-label">{{ field.label }}</label>
-
-        <input
-          [type]="field.type || 'text'"
-          class="form-control"
-          [formControlName]="field.name"
-          [id]="field.name"
-          [attr.placeholder]="field.placeholder"
-          [attr.accept]="field.accept ? field.accept : null"
-        />
-
-        <div *ngIf="registrationForm.get(field.name)?.invalid && registrationForm.get(field.name)?.touched" class="invalid-feedback d-block">
-          <div *ngIf="registrationForm.get(field.name)?.errors?.['required']">
-            {{ field.label }} is required.
+        
+        <div class="form-group">
+          <label>Middle Name</label>
+          <input type="text" formControlName="middle_name" placeholder="Enter middle name">
+        </div>
+        
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" formControlName="last_name" placeholder="Enter last name">
+          <div class="error" *ngIf="registrationForm.get('last_name')?.invalid && registrationForm.get('last_name')?.touched">
+            Last name is required
           </div>
         </div>
-
-        <small *ngIf="field.helpText" class="form-text text-muted">{{ field.helpText }}</small>
       </div>
-    </fieldset>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" formControlName="email" placeholder="Enter email address">
+          <div class="error" *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+            Valid email is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Confirm Email *</label>
+          <input type="email" formControlName="confirm_email" placeholder="Confirm email address">
+          <div class="error" *ngIf="registrationForm.get('confirm_email')?.invalid && registrationForm.get('confirm_email')?.touched">
+            Email confirmation is required
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" formControlName="phone" placeholder="Enter phone number">
+        <div class="error" *ngIf="registrationForm.get('phone')?.invalid && registrationForm.get('phone')?.touched">
+          Phone number is required
+        </div>
+      </div>
+    </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <!-- Address Information -->
+    <div class="form-section">
+      <h3>Address Information</h3>
+      
+      <div class="form-group">
+        <label>Address Line 1 *</label>
+        <input type="text" formControlName="address_1" placeholder="Enter address line 1">
+        <div class="error" *ngIf="registrationForm.get('address_1')?.invalid && registrationForm.get('address_1')?.touched">
+          Address is required
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Address Line 2</label>
+        <input type="text" formControlName="address_2" placeholder="Enter address line 2 (optional)">
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" formControlName="city" placeholder="Enter city">
+          <div class="error" *ngIf="registrationForm.get('city')?.invalid && registrationForm.get('city')?.touched">
+            City is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>State/Province *</label>
+          <input type="text" formControlName="state_province" placeholder="Enter state or province">
+          <div class="error" *ngIf="registrationForm.get('state_province')?.invalid && registrationForm.get('state_province')?.touched">
+            State/Province is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Zip/Postal Code *</label>
+          <input type="text" formControlName="zip_postal" placeholder="Enter zip or postal code">
+          <div class="error" *ngIf="registrationForm.get('zip_postal')?.invalid && registrationForm.get('zip_postal')?.touched">
+            Zip/Postal code is required
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Family Information -->
+    <div class="form-section">
+      <h3>Family Information</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Spouse Name</label>
+          <input type="text" formControlName="spouse_name" placeholder="Enter spouse name">
+        </div>
+        
+        <div class="form-group">
+          <label>Spouse Phone</label>
+          <input type="tel" formControlName="spouse_phone" placeholder="Enter spouse phone">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Authorized Representative</label>
+        <input type="text" formControlName="authorized_rep" placeholder="Enter authorized representative">
+      </div>
+      
+      <!-- Children -->
+      <h4 class="subsection-title">Children</h4>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Child 1</label>
+          <input type="text" formControlName="child_1" placeholder="Enter child name">
+        </div>
+        
+        <div class="form-group">
+          <label>Child 2</label>
+          <input type="text" formControlName="child_2" placeholder="Enter child name">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Child 3</label>
+          <input type="text" formControlName="child_3" placeholder="Enter child name">
+        </div>
+        
+        <div class="form-group">
+          <label>Child 4</label>
+          <input type="text" formControlName="child_4" placeholder="Enter child name">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Child 5</label>
+        <input type="text" formControlName="child_5" placeholder="Enter child name">
+      </div>
+      
+      <!-- Parents -->
+      <h4 class="subsection-title">Parents (Both Sides)</h4>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Parent 1</label>
+          <input type="text" formControlName="parent_1" placeholder="Enter parent name">
+        </div>
+        
+        <div class="form-group">
+          <label>Your Parent 2</label>
+          <input type="text" formControlName="parent_2" placeholder="Enter parent name">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Spouse Parent 1</label>
+          <input type="text" formControlName="spouse_parent_1" placeholder="Enter spouse parent name">
+        </div>
+        
+        <div class="form-group">
+          <label>Spouse Parent 2</label>
+          <input type="text" formControlName="spouse_parent_2" placeholder="Enter spouse parent name">
+        </div>
+      </div>
+      
+      <!-- Siblings -->
+      <h4 class="subsection-title">Siblings</h4>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Sibling 1</label>
+          <input type="text" formControlName="sibling_1" placeholder="Enter sibling name">
+        </div>
+        
+        <div class="form-group">
+          <label>Sibling 2</label>
+          <input type="text" formControlName="sibling_2" placeholder="Enter sibling name">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Sibling 3</label>
+        <input type="text" formControlName="sibling_3" placeholder="Enter sibling name">
+      </div>
+    </div>
+
+    <!-- Identification Document -->
+    <div class="form-section">
+      <h3>Identification Document</h3>
+      
+      <div class="form-group">
+        <label>Minnesota ID or Any Valid Identification Card *</label>
+        <input type="file" (change)="onFileChange($event)" accept="image/*,.pdf" class="file-input">
+        <div class="file-upload-info">
+          <p>📄 Please upload a clear photo or scan of your Minnesota ID or any valid government-issued identification card.</p>
+          <p><small>Accepted formats: JPG, PNG, PDF (Max size: 5MB)</small></p>
+        </div>
+        <div class="error" *ngIf="registrationForm.get('id_document')?.invalid && registrationForm.get('id_document')?.touched">
+          Identification document is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Agreement -->
+    <div class="form-section">
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="constitution_agreed">
+          <span class="checkmark"></span>
+          I have read the Pamoja Constitution and agree to the conditions listed above *
+        </label>
+        <div class="error" *ngIf="registrationForm.get('constitution_agreed')?.invalid && registrationForm.get('constitution_agreed')?.touched">
+          You must agree to the constitution
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button type="submit" class="submit-btn" [disabled]="registrationForm.invalid || isLoading" [class.loading]="isLoading">
+        <span *ngIf="!isLoading">Submit Double Family Application</span>
+        <span *ngIf="isLoading">Submitting...</span>
+      </button>
+    </div>
+    
+    <!-- Message Display -->
+    <div *ngIf="message" class="message" [class.success]="message.includes('successful')" [class.error]="!message.includes('successful')">
+      {{ message }}
+    </div>
   </form>
+  
+  <!-- Success Animation -->
+  <app-success-animation 
+    [show]="showSuccess" 
+    [message]="successMessage"
+    (complete)="onSuccessComplete()">
+  </app-success-animation>
 </div>

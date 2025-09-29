@@ -1,0 +1,179 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>My Profile</h1>
+    <p>Manage your account information and settings</p>
+  </div>
+
+  <div class="profile-tabs">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'profile'"
+      (click)="setActiveTab('profile')">
+      👤 Profile Info
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'password'"
+      (click)="setActiveTab('password')">
+      🔒 Change Password
+    </button>
+  </div>
+
+  <!-- Profile Information Tab -->
+  <div *ngIf="activeTab === 'profile'" class="tab-content">
+    <div class="user-info-card">
+      <div class="user-avatar">
+        <div class="avatar-circle">
+          {{ userInfo.first_name?.charAt(0) }}{{ userInfo.last_name?.charAt(0) }}
+        </div>
+        <div class="user-details">
+          <h3>{{ userInfo.first_name }} {{ userInfo.last_name }}</h3>
+          <p>@{{ userInfo.username }}</p>
+          <span class="user-role">{{ getUserRole() === 'admin' ? 'Administrator' : 'Member' }}</span>
+        </div>
+      </div>
+      
+      <!-- Login Status & Session Info -->
+      <div class="login-status-card">
+        <h4>🔐 Login Status</h4>
+        <div class="status-info">
+          <div class="status-item">
+            <span class="label">Status:</span>
+            <span class="value online">✅ Online</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Username:</span>
+            <span class="value">{{ userInfo.username }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ userInfo.email }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">User ID:</span>
+            <span class="value">#{{ userInfo.id }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Account Type:</span>
+            <span class="value">{{ getUserRole() === 'admin' ? '👑 Administrator' : '👤 Member' }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Last Login:</span>
+            <span class="value">{{ getLastLoginTime() }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Session:</span>
+            <span class="value active">🟢 Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="profile-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" formControlName="first_name" placeholder="Enter first name">
+          <div class="error-message" *ngIf="profileForm.get('first_name')?.invalid && profileForm.get('first_name')?.touched">
+            First name is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" formControlName="last_name" placeholder="Enter last name">
+          <div class="error-message" *ngIf="profileForm.get('last_name')?.invalid && profileForm.get('last_name')?.touched">
+            Last name is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" formControlName="email" placeholder="Enter email address">
+        <div class="error-message" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+          Valid email is required
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" formControlName="phone" placeholder="Enter phone number">
+        </div>
+        
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" formControlName="city" placeholder="Enter city">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Address</label>
+        <textarea formControlName="address" rows="3" placeholder="Enter full address"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>State</label>
+          <input type="text" formControlName="state" placeholder="Enter state">
+        </div>
+        
+        <div class="form-group">
+          <label>ZIP Code</label>
+          <input type="text" formControlName="zip_code" placeholder="Enter ZIP code">
+        </div>
+      </div>
+
+      <button type="submit" class="update-btn" [disabled]="profileForm.invalid || isLoading">
+        {{ isLoading ? 'Updating...' : 'Update Profile' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Change Password Tab -->
+  <div *ngIf="activeTab === 'password'" class="tab-content">
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="password-form">
+      <div class="form-group">
+        <label>Current Password</label>
+        <input type="password" formControlName="current_password" placeholder="Enter current password">
+        <div class="error-message" *ngIf="passwordForm.get('current_password')?.invalid && passwordForm.get('current_password')?.touched">
+          Current password is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" formControlName="new_password" placeholder="Enter new password">
+        <div class="error-message" *ngIf="passwordForm.get('new_password')?.invalid && passwordForm.get('new_password')?.touched">
+          Password must be at least 6 characters
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Confirm New Password</label>
+        <input type="password" formControlName="confirm_password" placeholder="Confirm new password">
+        <div class="error-message" *ngIf="passwordForm.get('confirm_password')?.errors?.['mismatch'] && passwordForm.get('confirm_password')?.touched">
+          Passwords do not match
+        </div>
+      </div>
+
+      <button type="submit" class="update-btn" [disabled]="passwordForm.invalid || isLoading">
+        {{ isLoading ? 'Changing...' : 'Change Password' }}
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="message" class="message" [ngClass]="{
+    'error': message.includes('Please') || message.includes('required'),
+    'success': message.includes('successfully')
+  }">
+    {{ message }}
+  </div>
+
+  <app-success-animation 
+    [show]="showSuccess" 
+    [message]="successMessage"
+    (complete)="onSuccessComplete()">
+  </app-success-animation>
+</div>

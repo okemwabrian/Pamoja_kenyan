@@ -11,6 +11,12 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
+    if (typeof window === 'undefined') {
+      return new HttpHeaders({
+        'Content-Type': 'application/json'
+      });
+    }
+    
     const token = localStorage.getItem('authToken');
     return new HttpHeaders({
       'Content-Type': 'application/json',
