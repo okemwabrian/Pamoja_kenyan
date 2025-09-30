@@ -25,14 +25,14 @@ export class AdminLogin {
     private http: HttpClient
   ) {
     this.loginForm = this.fb.group({
-      username: ['admin', Validators.required],
-      password: ['admin123', Validators.required]
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
   onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+    if (!this.loginForm.value.username || !this.loginForm.value.password) {
+      this.message = 'Please enter both username and password.';
       return;
     }
 
@@ -52,12 +52,23 @@ export class AdminLogin {
         }
 
         this.isLoading = false;
+        // Check if user is actually admin
+        if (!response.user.is_staff) {
+          this.message = 'Access denied. Admin privileges required.';
+          this.isLoading = false;
+          return;
+        }
+        
         this.successMessage = 'Admin login successful!';
         this.showSuccess = true;
       },
       error: (error) => {
         this.isLoading = false;
-        this.message = error.error?.error || 'Login failed. Please try again.';
+        if (error.status === 0) {
+          this.message = 'Cannot connect to server. Please check if backend is running.';
+        } else {
+          this.message = error.error?.error || 'Invalid credentials or not an admin user.';
+        }
       }
     });
   }

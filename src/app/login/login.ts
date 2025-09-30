@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../services/api.service';
 import { SuccessAnimation } from '../shared/success-animation';
 
 @Component({
@@ -22,7 +22,7 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private apiService: ApiService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -33,12 +33,13 @@ export class Login {
   onSubmit() {
     console.log('Form submitted!', this.loginForm.value);
     
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+    if (!this.loginForm.value.username || !this.loginForm.value.password) {
       this.message = 'Please fill in all required fields.';
-      console.log('Form is invalid:', this.loginForm.errors);
       return;
     }
+    
+    // Prevent double submission
+    if (this.isLoading) return;
 
     this.isLoading = true;
     this.message = 'Connecting to server...';
@@ -46,7 +47,7 @@ export class Login {
     const credentials = this.loginForm.value;
     console.log('Sending credentials:', credentials);
 
-    this.http.post('http://localhost:8000/api/auth/login/', credentials).subscribe({
+    this.apiService.login(credentials).subscribe({
       next: (response: any) => {
         console.log('Login successful:', response);
         
@@ -66,8 +67,9 @@ export class Login {
         }
 
         this.isLoading = false;
-        const fullName = response.user.first_name + ' ' + response.user.last_name;
-        this.successMessage = `Welcome back, ${fullName}! Redirecting to your dashboard...`;
+        const fullName = (response.user?.first_name || '') + ' ' + (response.user?.last_name || '');
+        const displayName = fullName.trim() || response.user?.username || 'User';
+        this.successMessage = `Welcome back, ${displayName}! Redirecting...`;
         this.showSuccess = true;
       },
       error: (error) => {
@@ -75,9 +77,13 @@ export class Login {
         this.isLoading = false;
         
         if (error.status === 0) {
-          this.message = 'Unable to connect to server. Is the backend running on http://localhost:8000?';
+          this.message = 'Cannot connect to server. Please check if backend is running.';
+        } else if (error.status === 401) {
+          this.message = 'Invalid username or password. Please check your credentials.';
+        } else if (error.status === 405) {
+          this.message = 'Login endpoint not configured properly on backend.';
         } else {
-          this.message = error.error?.error || `Login failed: ${error.status} ${error.statusText}`;
+          this.message = `Login failed (${error.status}). Please try again.`;
         }
       }
     });
@@ -110,5 +116,20 @@ export class Login {
 
   goToRegister() {
     this.router.navigate(['/register']);
+  }
+
+  // Temporary test login to bypass backend issues
+  testLogin() {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('authToken', 'test-token-123');
+      localStorage.setItem('refreshToken', 'test-refresh-123');
+      localStorage.setItem('userName', 'Test User');
+      localStorage.setItem('userRole', 'user');
+      localStorage.setItem('userId', '1');
+      localStorage.setItem('userEmail', 'test@test.com');
+    }
+    
+    this.successMessage = 'Test login successful! Redirecting...';
+    this.showSuccess = true;
   }
 }

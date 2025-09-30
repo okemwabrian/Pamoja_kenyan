@@ -35,6 +35,7 @@ export class Announcements implements OnInit {
       },
       error: (error) => {
         console.error('Error loading announcements:', error);
+        this.announcements = [];
         this.isLoading = false;
       }
     });
@@ -52,6 +53,7 @@ export class Announcements implements OnInit {
       },
       error: (error) => {
         console.error('Error loading events:', error);
+        this.events = [];
       }
     });
   }

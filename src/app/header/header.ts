@@ -153,7 +153,11 @@ export class Header implements OnInit {
       localStorage.removeItem('userRole');
       localStorage.removeItem('userId');
       localStorage.removeItem('userEmail');
+      localStorage.removeItem('userUsername');
     }
-    this.router.navigate(['/']);
+    this.showUserMenu = false;
+    this.showNotifications = false;
+    this.router.navigate(['/login']);
+    window.location.reload();
   }
 }

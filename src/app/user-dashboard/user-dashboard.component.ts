@@ -3,14 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
-import { DashboardOverview } from './dashboard-overview';
-
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
-  imports: [CommonModule, RouterModule, HttpClientModule, DashboardOverview]
+  imports: [CommonModule, RouterModule, HttpClientModule]
 })
 export class UserDashboardComponent implements OnInit {
   userStats = {

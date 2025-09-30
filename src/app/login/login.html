@@ -40,8 +40,9 @@
       <button 
         type="submit" 
         class="login-btn" 
-        [disabled]="loginForm.invalid || isLoading"
-        [class.loading]="isLoading">
+        [disabled]="isLoading"
+        [class.loading]="isLoading"
+        (click)="onSubmit()">
         <span *ngIf="!isLoading">Sign In</span>
         <span *ngIf="isLoading">Signing in...</span>
       </button>
@@ -55,11 +56,19 @@
       </div>
     </form>
 
+    <!-- Test login button -->
+    <button type="button" class="test-login-btn" (click)="testLogin()">
+      🧪 Test Login (Skip Backend)
+    </button>
+
     <div class="login-footer">
       <p>Don't have an account? 
         <button type="button" class="link-btn" (click)="goToRegister()">
           Register here
         </button>
+      </p>
+      <p>
+        <a routerLink="/forgot-password" class="forgot-link">Forgot your password?</a>
       </p>
     </div>
 

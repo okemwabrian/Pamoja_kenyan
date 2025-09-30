@@ -13,6 +13,7 @@ import { ContentService } from '../services/content.service';
 })
 export class DashboardOverview implements OnInit {
   userStats: any = {};
+  membershipInfo: any = {};
   recentApplications: any[] = [];
   recentClaims: any[] = [];
   recentActivities: any[] = [];
@@ -36,18 +37,32 @@ export class DashboardOverview implements OnInit {
     const token = localStorage.getItem('authToken');
     const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 
-    // Load user stats
-    this.http.get('http://localhost:8000/api/auth/stats/', options).subscribe({
-      next: (stats: any) => {
-        this.userStats = stats;
+    // Load membership info from applications
+    this.http.get('http://localhost:8000/api/applications/my-applications/', options).subscribe({
+      next: (apps: any) => {
+        if (apps && apps.length > 0) {
+          const latestApp = apps[0];
+          this.membershipInfo = {
+            type: latestApp.membership_type || 'Single',
+            shares: this.calculateShares(latestApp.amount),
+            status: latestApp.status || 'Active',
+            totalPaid: latestApp.amount || 0
+          };
+        } else {
+          this.membershipInfo = {
+            type: 'None',
+            shares: 0,
+            status: 'Inactive',
+            totalPaid: 0
+          };
+        }
       },
       error: () => {
-        this.userStats = {
-          applications: 2,
-          claims: 1,
-          payments: 3,
-          membershipStatus: 'Active',
-          totalPaid: 627.30
+        this.membershipInfo = {
+          type: 'None',
+          shares: 0,
+          status: 'Inactive',
+          totalPaid: 0
         };
       }
     });
@@ -58,15 +73,7 @@ export class DashboardOverview implements OnInit {
         this.recentApplications = apps.slice(0, 3);
       },
       error: () => {
-        this.recentApplications = [
-          {
-            id: 1,
-            type: 'Single Family',
-            status: 'Approved',
-            amount: 627.30,
-            created_at: '2025-09-20'
-          }
-        ];
+        this.recentApplications = [];
       }
     });
 
@@ -83,39 +90,34 @@ export class DashboardOverview implements OnInit {
       }
     });
 
-    // Mock recent activities
-    this.recentActivities = [
-      {
-        id: 1,
-        action: 'Application Submitted',
-        description: 'Single family membership application',
-        date: '2025-09-28',
-        type: 'application'
+    // Load recent activities from backend
+    this.http.get('http://localhost:8000/api/activities/', options).subscribe({
+      next: (activities: any) => {
+        this.recentActivities = activities.slice(0, 5);
       },
-      {
-        id: 2,
-        action: 'Payment Made',
-        description: 'Membership fee payment of $627.30',
-        date: '2025-09-27',
-        type: 'payment'
-      },
-      {
-        id: 3,
-        action: 'Profile Updated',
-        description: 'Contact information updated',
-        date: '2025-09-26',
-        type: 'profile'
+      error: () => {
+        this.recentActivities = [];
       }
-    ];
-
-    // Load events from ContentService
-    this.contentService.events$.subscribe(events => {
-      this.events = events;
     });
 
-    // Load announcements from ContentService
-    this.contentService.announcements$.subscribe(announcements => {
-      this.announcements = announcements;
+    // Load events from backend only
+    this.http.get('http://localhost:8000/api/notifications/events/', options).subscribe({
+      next: (events: any) => {
+        this.events = events.slice(0, 3);
+      },
+      error: () => {
+        this.events = [];
+      }
+    });
+
+    // Load announcements from backend only
+    this.http.get('http://localhost:8000/api/notifications/announcements/', options).subscribe({
+      next: (announcements: any) => {
+        this.announcements = announcements.slice(0, 3);
+      },
+      error: () => {
+        this.announcements = [];
+      }
     });
 
     this.isLoading = false;
@@ -161,5 +163,12 @@ export class DashboardOverview implements OnInit {
       case 'low': return 'priority-low';
       default: return 'priority-default';
     }
+  }
+
+  calculateShares(amount: number): number {
+    // $200 = Single membership, $400 = Double membership
+    if (amount >= 400) return 400;
+    if (amount >= 200) return 200;
+    return amount || 0;
   }
 }

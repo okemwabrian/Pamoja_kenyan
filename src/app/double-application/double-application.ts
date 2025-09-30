@@ -150,8 +150,9 @@ export class DoubleApplication {
       emergency_contact_phone: formValues.spouse_phone,
       emergency_contact_relationship: formValues.spouse_name ? 'spouse' : 'other',
       constitution_agreed: formValues.constitution_agreed,
-      amount: 1254.60,
-      notes: 'Double family application submitted from frontend'
+      amount: 400.00,
+      registration_fee: 400.00,
+      notes: 'Double family application submitted from frontend - Registration fee: $400'
     };
 
     this.isLoading = true;
@@ -164,7 +165,7 @@ export class DoubleApplication {
         // Store application ID for payment
         if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
           localStorage.setItem('applicationId', response.id);
-          localStorage.setItem('applicationAmount', '1254.60');
+          localStorage.setItem('applicationAmount', '400.00');
         }
         
         this.isLoading = false;
@@ -177,7 +178,7 @@ export class DoubleApplication {
         // Mock success for development
         if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
           localStorage.setItem('applicationId', '2');
-          localStorage.setItem('applicationAmount', '1254.60');
+          localStorage.setItem('applicationAmount', '400.00');
         }
         
         this.isLoading = false;

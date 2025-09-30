@@ -231,6 +231,18 @@
   color: #3498db;
 }
 
+.admin-btn {
+  background: #e74c3c;
+  color: white;
+  border: 2px solid #e74c3c;
+  font-size: 0.9rem;
+}
+
+.admin-btn:hover {
+  background: transparent;
+  color: #e74c3c;
+}
+
 .notifications-dropdown {
   position: absolute;
   top: 100%;

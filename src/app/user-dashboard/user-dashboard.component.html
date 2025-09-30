@@ -1,1 +1,11 @@
-<app-dashboard-overview></app-dashboard-overview>
+<div class="user-dashboard">
+  <nav class="dashboard-nav">
+    <a routerLink="overview" routerLinkActive="active" class="nav-link">📊 Overview</a>
+    <a routerLink="profile" routerLinkActive="active" class="nav-link">👤 Profile</a>
+    <a routerLink="payments" routerLinkActive="active" class="nav-link">💳 Payments</a>
+    <a routerLink="applications" routerLinkActive="active" class="nav-link">📋 Applications</a>
+  </nav>
+  <div class="dashboard-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

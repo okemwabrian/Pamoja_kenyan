@@ -47,15 +47,19 @@ export class Payments implements OnInit, AfterViewInit {
           shares: params['shares']
         };
       } else {
-        // Default membership payment
-        this.registrationData = this.registrationService.getData() || {
-          applicationId: '1',
-          amount: '627.30'
-        };
+        // Get from localStorage or default
+        if (typeof window !== 'undefined') {
+          const applicationId = localStorage.getItem('applicationId') || '1';
+          const amount = localStorage.getItem('applicationAmount') || '200.00';
+          this.registrationData = { applicationId, amount };
+        } else {
+          this.registrationData = { applicationId: '1', amount: '200.00' };
+        }
+        
         this.paymentData = {
           type: 'membership',
-          amount: parseFloat(this.registrationData.amount) || 627.30,
-          description: 'Membership Fee'
+          amount: parseFloat(this.registrationData.amount),
+          description: 'Membership Registration Fee'
         };
       }
     });

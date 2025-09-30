@@ -1,6 +1,15 @@
 <div class="payment-history">
-  <h2>Payment History</h2>
-  <div class="payments-list">
+  <div class="payment-header">
+    <h2>Payment History</h2>
+    <a routerLink="/payments" class="make-payment-btn">💳 Make Payment</a>
+  </div>
+  
+  <div *ngIf="payments.length === 0" class="empty-state">
+    <p>No payment history found.</p>
+    <a routerLink="/payments" class="action-btn">Make Your First Payment</a>
+  </div>
+  
+  <div class="payments-list" *ngIf="payments.length > 0">
     <div *ngFor="let payment of payments" class="payment-card">
       <div class="payment-header">
         <h3>Payment #{{ payment.id }}</h3>

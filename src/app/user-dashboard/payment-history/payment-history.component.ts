@@ -29,25 +29,7 @@ export class PaymentHistoryComponent implements OnInit {
         this.payments = data;
       },
       error: () => {
-        // Mock data for development
-        this.payments = [
-          {
-            id: 1,
-            amount: 627.30,
-            payment_method: 'paypal',
-            status: 'completed',
-            transaction_id: 'PAY123456789',
-            created_at: '2024-01-15T10:00:00Z'
-          },
-          {
-            id: 2,
-            amount: 1254.60,
-            payment_method: 'stripe',
-            status: 'pending',
-            transaction_id: 'STR987654321',
-            created_at: '2024-01-20T14:30:00Z'
-          }
-        ];
+        this.payments = [];
       }
     });
   }

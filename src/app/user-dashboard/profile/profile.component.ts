@@ -39,28 +39,27 @@ export class ProfileComponent implements OnInit {
         this.profile = data;
       },
       error: () => {
-        // Mock data for development
-        this.profile = {
-          first_name: 'John',
-          last_name: 'Doe',
-          email: 'john.doe@example.com',
-          phone: '+1 (555) 123-4567',
-          address: '123 Main Street',
-          city: 'Minneapolis',
-          state: 'Minnesota',
-          zip_code: '55401'
-        };
+        console.error('Failed to load profile from backend');
       }
     });
   }
 
+  isUpdating = false;
+  message = '';
+
   updateProfile(): void {
+    this.isUpdating = true;
+    this.message = '';
+    
     this.apiService.updateProfile(this.profile).subscribe({
       next: (data) => {
-        alert('Profile updated successfully!');
+        this.message = 'Profile updated successfully!';
+        this.isUpdating = false;
       },
-      error: () => {
-        alert('Profile updated successfully! (Mock)');
+      error: (error) => {
+        console.error('Profile update error:', error);
+        this.message = 'Failed to update profile. Please try again.';
+        this.isUpdating = false;
       }
     });
   }

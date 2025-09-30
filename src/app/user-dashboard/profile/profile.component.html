@@ -42,9 +42,16 @@
       </div>
     </div>
     
+    <div *ngIf="message" class="message" [class.success]="message.includes('successfully')" [class.error]="message.includes('Failed')">
+      {{ message }}
+    </div>
+    
     <div class="form-actions">
-      <button type="submit" class="btn-primary">Update Profile</button>
-      <button type="button" class="btn-secondary" (click)="loadProfile()">Reset</button>
+      <button type="submit" class="btn-primary" [disabled]="isUpdating">
+        <span *ngIf="!isUpdating">Update Profile</span>
+        <span *ngIf="isUpdating">Updating...</span>
+      </button>
+      <button type="button" class="btn-secondary" (click)="loadProfile()" [disabled]="isUpdating">Reset</button>
     </div>
   </form>
 </div>

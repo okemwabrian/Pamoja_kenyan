@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,31 +15,55 @@ export class DashboardComponent implements OnInit {
     totalUsers: 0,
     totalApplications: 0,
     totalPayments: 0,
-    pendingApplications: 0
+    pendingApplications: 0,
+    activeUsers: 0,
+    totalRevenue: 0,
+    recentRegistrations: 0
   };
+  loading = false;
+  error: string | null = null;
 
-  private apiUrl = environment.production ? 'https://api.pamojakenyamn.com' : 'http://localhost:8000';
-
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.loadDashboardStats();
   }
 
   loadDashboardStats(): void {
-    this.http.get(`${this.apiUrl}/api/admin/stats/`).subscribe({
+    this.loading = true;
+    this.error = null;
+    
+    this.apiService.getAdminStats().subscribe({
       next: (data: any) => {
-        this.stats = data;
+        this.stats = { ...this.stats, ...data };
+        this.loading = false;
       },
-      error: () => {
-        // Mock data for development
+      error: (error) => {
+        console.error('Error loading dashboard stats:', error);
+        this.error = 'Failed to load dashboard statistics from backend. Please check if the backend is running.';
         this.stats = {
-          totalUsers: 150,
-          totalApplications: 89,
-          totalPayments: 67,
-          pendingApplications: 12
+          totalUsers: 0,
+          totalApplications: 0,
+          totalPayments: 0,
+          pendingApplications: 0,
+          activeUsers: 0,
+          totalRevenue: 0,
+          recentRegistrations: 0
         };
+        this.loading = false;
       }
     });
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  }
+
+  getGrowthPercentage(current: number, previous: number): number {
+    if (previous === 0) return 0;
+    return Math.round(((current - previous) / previous) * 100);
   }
 }

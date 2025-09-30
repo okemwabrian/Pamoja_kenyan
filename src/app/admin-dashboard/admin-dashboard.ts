@@ -98,15 +98,23 @@ export class AdminDashboard implements OnInit {
     const token = localStorage.getItem('authToken');
     const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 
-    // Load stats
-    this.http.get('http://localhost:8000/api/admin/dashboard-stats/', options).subscribe({
-      next: (data: any) => this.stats = data,
+    // Load stats (using users count)
+    this.http.get('http://localhost:8000/api/admin/users/', options).subscribe({
+      next: (users: any) => {
+        this.stats = {
+          total_users: users.length || 0,
+          total_applications: 0,
+          pending_applications: 0,
+          total_claims: 0,
+          pending_claims: 0
+        };
+      },
       error: () => this.stats = {
-        total_users: 5,
-        total_applications: 12,
-        pending_applications: 3,
-        total_claims: 8,
-        pending_claims: 2
+        total_users: 0,
+        total_applications: 0,
+        pending_applications: 0,
+        total_claims: 0,
+        pending_claims: 0
       }
     });
 
@@ -117,12 +125,8 @@ export class AdminDashboard implements OnInit {
         this.filteredUsers = [...this.users];
       },
       error: () => {
-        this.users = [
-          { id: 1, username: 'admin', email: 'admin@example.com', first_name: 'Admin', last_name: 'User', is_staff: true, is_active: true },
-          { id: 2, username: 'testuser', email: 'test@example.com', first_name: 'Test', last_name: 'User', is_staff: false, is_active: true },
-          { id: 3, username: 'john_doe', email: 'john@example.com', first_name: 'John', last_name: 'Doe', is_staff: false, is_active: true }
-        ];
-        this.filteredUsers = [...this.users];
+        this.users = [];
+        this.filteredUsers = [];
       }
     });
 
@@ -133,11 +137,8 @@ export class AdminDashboard implements OnInit {
         this.filteredApplications = [...this.applications];
       },
       error: () => {
-        this.applications = [
-          { id: 1, applicant: 'Jane Smith', email: 'jane@example.com', type: 'Individual', amount: 627.30, status: 'pending', created_at: '2024-01-15' },
-          { id: 2, applicant: 'Bob Johnson', email: 'bob@example.com', type: 'Family', amount: 1254.60, status: 'approved', created_at: '2024-01-10' }
-        ];
-        this.filteredApplications = [...this.applications];
+        this.applications = [];
+        this.filteredApplications = [];
       }
     });
   }
@@ -212,21 +213,8 @@ export class AdminDashboard implements OnInit {
   }
 
   loadMeetings() {
-    // Mock meetings data
-    this.meetings = [
-      {
-        id: 1,
-        title: 'Monthly Member Meeting',
-        description: 'Regular monthly meeting for all members',
-        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Next week
-        duration: 60,
-        type: 'zoom',
-        max_participants: 100,
-        registered_count: 25,
-        meeting_link: 'https://zoom.us/j/123456789',
-        require_registration: true
-      }
-    ];
+    // No meetings endpoint available, keep empty
+    this.meetings = [];
   }
 
   createMeeting() {

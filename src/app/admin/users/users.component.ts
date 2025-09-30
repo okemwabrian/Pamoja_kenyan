@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { ApiService } from '../../services/api.service';
 
 interface User {
   id: number;
@@ -11,6 +10,9 @@ interface User {
   role: string;
   created_at: string;
   is_active: boolean;
+  first_name?: string;
+  last_name?: string;
+  date_joined?: string;
 }
 
 @Component({
@@ -23,9 +25,9 @@ interface User {
 export class UsersComponent implements OnInit {
   users: User[] = [];
   loading = false;
-  private apiUrl = environment.production ? 'https://api.pamojakenyamn.com' : 'http://localhost:8000';
+  error: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -33,45 +35,68 @@ export class UsersComponent implements OnInit {
 
   loadUsers(): void {
     this.loading = true;
-    this.http.get<User[]>(`${this.apiUrl}/api/admin/users/`).subscribe({
+    this.error = null;
+    
+    this.apiService.getUsers().subscribe({
       next: (data) => {
         this.users = data;
         this.loading = false;
       },
-      error: () => {
-        // Mock data for development
-        this.users = [
-          { id: 1, username: 'john_doe', email: 'john@example.com', role: 'user', created_at: '2024-01-15', is_active: true },
-          { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'user', created_at: '2024-01-20', is_active: true },
-          { id: 3, username: 'admin_user', email: 'admin@pamojakenyamn.com', role: 'admin', created_at: '2024-01-01', is_active: true }
-        ];
+      error: (error) => {
+        console.error('Error loading users:', error);
+        this.error = 'Failed to load users from backend. Please check if the backend is running.';
+        this.users = [];
         this.loading = false;
       }
     });
   }
 
   toggleUserStatus(user: User): void {
+    const originalStatus = user.is_active;
     user.is_active = !user.is_active;
-    this.http.patch(`${this.apiUrl}/api/admin/users/${user.id}/`, { is_active: user.is_active }).subscribe({
+    
+    this.apiService.updateUserStatus(user.id, user.is_active).subscribe({
       next: () => {
-        console.log('User status updated');
+        console.log('User status updated successfully');
       },
-      error: () => {
-        user.is_active = !user.is_active; // Revert on error
+      error: (error) => {
+        console.error('Error updating user status:', error);
+        user.is_active = originalStatus; // Revert on error
+        alert('Failed to update user status. Please try again.');
       }
     });
   }
 
   deleteUser(userId: number): void {
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.http.delete(`${this.apiUrl}/api/admin/users/${userId}/`).subscribe({
+    const user = this.users.find(u => u.id === userId);
+    if (!user) return;
+    
+    if (confirm(`Are you sure you want to delete user "${user.username}"? This action cannot be undone.`)) {
+      this.apiService.deleteUser(userId).subscribe({
         next: () => {
           this.users = this.users.filter(u => u.id !== userId);
+          console.log('User deleted successfully');
         },
-        error: () => {
-          alert('Error deleting user');
+        error: (error) => {
+          console.error('Error deleting user:', error);
+          alert('Failed to delete user. Please try again.');
         }
       });
     }
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  getUserDisplayName(user: User): string {
+    if (user.first_name && user.last_name) {
+      return `${user.first_name} ${user.last_name}`;
+    }
+    return user.username;
   }
 }

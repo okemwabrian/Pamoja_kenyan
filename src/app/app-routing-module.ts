@@ -26,7 +26,18 @@ export const routes: Routes = [
   { path: 'reset-password/:uid/:token', loadComponent: () => import('./reset-password/reset-password').then(m => m.ResetPassword) },
   
   // Protected routes
-  { path: 'user-dashboard', loadComponent: () => import('./user-dashboard/user-dashboard.component').then(m => m.UserDashboardComponent), canActivate: [AuthGuard] },
+  { 
+    path: 'user-dashboard', 
+    loadComponent: () => import('./user-dashboard/user-dashboard.component').then(m => m.UserDashboardComponent), 
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', loadComponent: () => import('./user-dashboard/dashboard-overview').then(m => m.DashboardOverview) },
+      { path: 'profile', loadComponent: () => import('./user-dashboard/profile/profile.component').then(m => m.ProfileComponent) },
+      { path: 'payments', loadComponent: () => import('./user-dashboard/payment-history/payment-history.component').then(m => m.PaymentHistoryComponent) },
+      { path: 'applications', loadComponent: () => import('./user-dashboard/my-applications/my-applications.component').then(m => m.MyApplicationsComponent) }
+    ]
+  },
   { path: 'my-events', loadComponent: () => import('./user-events/user-events').then(m => m.UserEvents), canActivate: [AuthGuard] },
   { path: 'profile', loadComponent: () => import('./profile/profile').then(m => m.Profile), canActivate: [AuthGuard] },
   { path: 'claims', loadComponent: () => import('./claims/claims').then(m => m.Claims), canActivate: [AuthGuard] },
@@ -38,10 +49,11 @@ export const routes: Routes = [
 
   
   // Connection test route
-  { path: 'connection-test', loadComponent: () => import('./connection-test').then(m => m.ConnectionTest) },
+  { path: 'test-connection', loadComponent: () => import('./test-connection.component').then(m => m.TestConnectionComponent) },
   
   // Home route
   { path: '', loadComponent: () => import('./home/home').then(m => m.Home) },
+  { path: 'home', loadComponent: () => import('./home/home').then(m => m.Home) },
   
   // Wildcard
   { path: '**', redirectTo: '' }

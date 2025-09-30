@@ -121,8 +121,9 @@ export class SingleApplication implements OnInit {
       emergency_contact_phone: formValues.spousePhone,
       emergency_contact_relationship: formValues.spouse ? 'spouse' : 'other',
       constitution_agreed: formValues.declarationAccepted,
-      amount: 627.30,
-      notes: 'Single family application submitted from frontend'
+      amount: 200.00,
+      registration_fee: 200.00,
+      notes: 'Single family application submitted from frontend - Registration fee: $200'
     };
 
     this.isLoading = true;
@@ -135,7 +136,7 @@ export class SingleApplication implements OnInit {
         // Store application ID for payment
         if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
           localStorage.setItem('applicationId', response.id);
-          localStorage.setItem('applicationAmount', '627.30');
+          localStorage.setItem('applicationAmount', '200.00');
         }
         
         this.isLoading = false;
@@ -148,7 +149,7 @@ export class SingleApplication implements OnInit {
         // Mock success for development
         if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
           localStorage.setItem('applicationId', '1');
-          localStorage.setItem('applicationAmount', '627.30');
+          localStorage.setItem('applicationAmount', '200.00');
         }
         
         this.isLoading = false;

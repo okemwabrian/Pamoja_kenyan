@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   template: `
     <div class="background-3d">
+      <div class="video-background">
+        <div class="animated-bg"></div>
+      </div>
       <div class="floating-shapes">
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
@@ -26,8 +29,68 @@ import { CommonModule } from '@angular/common';
       height: 100%;
       z-index: -1;
       overflow: hidden;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
-      opacity: 0.3;
+      background: linear-gradient(135deg, 
+        #667eea 0%, 
+        #764ba2 25%, 
+        #f093fb 50%, 
+        #f5576c 75%, 
+        #4facfe 100%);
+      opacity: 0.12;
+      animation: backgroundShift 20s ease-in-out infinite;
+    }
+
+    .video-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .animated-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%),
+        linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(143, 88, 188, 0.1) 100%);
+      animation: videoEffect 25s ease-in-out infinite;
+    }
+
+    @keyframes videoEffect {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+        filter: hue-rotate(0deg);
+      }
+      25% {
+        transform: scale(1.05) rotate(1deg);
+        filter: hue-rotate(90deg);
+      }
+      50% {
+        transform: scale(0.95) rotate(-1deg);
+        filter: hue-rotate(180deg);
+      }
+      75% {
+        transform: scale(1.02) rotate(0.5deg);
+        filter: hue-rotate(270deg);
+      }
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+      }
+      33% { 
+        background: linear-gradient(135deg, #4facfe 0%, #667eea 25%, #764ba2 50%, #f093fb 75%, #f5576c 100%);
+      }
+      66% { 
+        background: linear-gradient(135deg, #f5576c 0%, #4facfe 25%, #667eea 50%, #764ba2 75%, #f093fb 100%);
+      }
     }
 
     .floating-shapes {
@@ -39,8 +102,13 @@ import { CommonModule } from '@angular/common';
     .shape {
       position: absolute;
       border-radius: 50%;
-      background: rgba(102, 126, 234, 0.05);
+      background: linear-gradient(135deg, 
+        rgba(102, 126, 234, 0.1), 
+        rgba(118, 75, 162, 0.1), 
+        rgba(240, 147, 251, 0.1));
       animation: float 20s infinite linear;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+      backdrop-filter: blur(10px);
     }
 
     .shape-1 {
@@ -126,9 +194,12 @@ import { CommonModule } from '@angular/common';
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 30% 70%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
-                  radial-gradient(circle at 70% 30%, rgba(118, 75, 162, 0.3) 0%, transparent 50%);
-      animation: pulse 8s ease-in-out infinite;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(240, 147, 251, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 60% 60%, rgba(245, 87, 108, 0.3) 0%, transparent 50%);
+      animation: pulse 12s ease-in-out infinite;
     }
 
     @keyframes pulse {

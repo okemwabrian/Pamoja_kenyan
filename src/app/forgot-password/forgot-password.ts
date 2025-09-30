@@ -28,22 +28,26 @@ export class ForgotPassword {
   }
 
   onSubmit() {
-    if (this.forgotPasswordForm.invalid) {
-      this.forgotPasswordForm.markAllAsTouched();
+    if (!this.forgotPasswordForm.value.email) {
+      this.message = 'Please enter your email address.';
       return;
     }
+    
+    if (this.isLoading) return;
 
     this.isLoading = true;
     const email = this.forgotPasswordForm.get('email')?.value;
 
     this.http.post('http://localhost:8000/api/auth/password-reset/', { email }).subscribe({
       next: (response: any) => {
-        this.message = 'Password reset email sent! Please check your inbox.';
+        this.message = 'If this email exists in our system, you will receive password reset instructions.';
         this.isLoading = false;
+        this.forgotPasswordForm.reset();
       },
       error: (error) => {
-        this.message = 'Password reset email sent! Please check your inbox.';
+        this.message = 'If this email exists in our system, you will receive password reset instructions.';
         this.isLoading = false;
+        this.forgotPasswordForm.reset();
       }
     });
   }

@@ -1,8 +1,63 @@
 .payment-history {
   padding: 2rem;
-  background: linear-gradient(135deg, #FFF0DD 0%, #F5E6D3 50%, #E8D5C4 100%);
-  min-height: 100vh;
-  font-family: 'Georgia', serif;
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.payment-header h2 {
+  color: #495057;
+  margin: 0;
+}
+
+.make-payment-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.make-payment-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state p {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .payments-list {
@@ -12,18 +67,39 @@
 }
 
 .payment-card {
-  background: rgba(255, 240, 221, 0.8);
-  border: 1px solid rgba(226, 161, 111, 0.3);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 15px;
   padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(226, 161, 111, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.payment-header {
+.payment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.payment-card .payment-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.payment-card h3 {
+  color: #495057;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.payment-details p {
+  color: #6c757d;
+  margin: 0.5rem 0;
+}
+
+.payment-details strong {
+  color: #495057;
 }
 
 .status-badge {

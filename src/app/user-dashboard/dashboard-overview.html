@@ -15,35 +15,35 @@
     
     <!-- Stats Cards -->
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">📋</div>
+      <div class="stat-card membership-card">
+        <div class="stat-icon">👥</div>
         <div class="stat-content">
-          <h3>{{ userStats.applications || 0 }}</h3>
-          <p>Applications</p>
+          <h3>{{ membershipInfo.type || 'Single' }}</h3>
+          <p>Membership Type</p>
         </div>
       </div>
       
-      <div class="stat-card">
-        <div class="stat-icon">🏥</div>
+      <div class="stat-card shares-card">
+        <div class="stat-icon">📊</div>
         <div class="stat-content">
-          <h3>{{ userStats.claims || 0 }}</h3>
-          <p>Claims</p>
+          <h3>${{ membershipInfo.shares || 0 }}</h3>
+          <p>Current Shares</p>
         </div>
       </div>
       
-      <div class="stat-card">
-        <div class="stat-icon">💳</div>
-        <div class="stat-content">
-          <h3>{{ userStats.payments || 0 }}</h3>
-          <p>Payments</p>
-        </div>
-      </div>
-      
-      <div class="stat-card">
+      <div class="stat-card status-card">
         <div class="stat-icon">✅</div>
         <div class="stat-content">
-          <h3>{{ userStats.membershipStatus || 'Active' }}</h3>
+          <h3>{{ membershipInfo.status || 'Active' }}</h3>
           <p>Status</p>
+        </div>
+      </div>
+      
+      <div class="stat-card payments-card">
+        <div class="stat-icon">💳</div>
+        <div class="stat-content">
+          <h3>${{ membershipInfo.totalPaid || 0 }}</h3>
+          <p>Total Paid</p>
         </div>
       </div>
     </div>

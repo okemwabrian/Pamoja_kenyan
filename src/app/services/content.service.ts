@@ -9,6 +9,12 @@ export class ContentService {
   private eventsSubject = new BehaviorSubject<any[]>([]);
   private announcementsSubject = new BehaviorSubject<any[]>([]);
 
+  constructor(private http: HttpClient) {
+    // Initialize with empty arrays - no default data
+    this.eventsSubject.next([]);
+    this.announcementsSubject.next([]);
+  }
+
   events$ = this.eventsSubject.asObservable();
   announcements$ = this.announcementsSubject.asObservable();
 
