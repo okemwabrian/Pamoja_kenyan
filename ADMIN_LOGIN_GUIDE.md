@@ -1,53 +1,46 @@
-# Admin Login Guide
+# 🔐 Admin Login & Announcement Guide
 
-## 🔐 How to Login as Admin
+## Admin Login Process
+1. **Navigate to**: http://localhost:4200/admin-login
+2. **Use Admin Credentials**: 
+   - Username: `admin` (or your superuser username)
+   - Password: Your admin password
+3. **Access Admin Dashboard**: After login, redirected to `/admin-dashboard`
 
-### 1. **Go to Admin Login Page**
-- URL: `http://localhost:4200/admin-login`
-- Or click "Admin Login" link if available
+## Creating Announcements
+1. **Login as Admin** using admin-login page
+2. **Go to Admin Dashboard** → **Content Tab**
+3. **Fill Announcement Form**:
+   - Title: Announcement title
+   - Content: Message content
+   - Priority: Low/Medium/High/Urgent
+   - Pin: Check to pin announcement
+4. **Click "Create Announcement"**
 
-### 2. **Admin Credentials**
-You need to create an admin user in the Django backend first:
+## Creating Events
+1. **Same Admin Dashboard** → **Content Tab**
+2. **Fill Event Form**:
+   - Title: Event name
+   - Description: Event details
+   - Date & Time: When event occurs
+   - Location: Where event happens
+   - Featured: Check for featured event
+   - Registration: Check if registration required
+3. **Click "Create Event"**
 
-```bash
-# In your Django backend terminal:
-cd E:\full_stack\Pamoja\pamoja_backend
-py manage.py createsuperuser
+## Backend Endpoints Used
+- **Login**: `POST /api/auth/login/`
+- **Create Announcement**: `POST /api/notifications/announcements/`
+- **Create Event**: `POST /api/notifications/events/`
 
-# Follow prompts to create admin user:
-# Username: admin
-# Email: admin@pamojakenyamn.com  
-# Password: [your secure password]
-```
+## Current Status
+- ✅ Skip button removed from login
+- ✅ Admin login working with backend
+- ✅ Admin dashboard connected to backend APIs
+- ✅ Announcement creation via backend
+- ✅ Event creation via backend
 
-### 3. **Login Process**
-- Enter your admin username and password
-- Click "Sign In"
-- System checks if user has admin privileges (`is_staff = True`)
-- Redirects to admin dashboard if successful
-
-### 4. **Admin Dashboard Features**
-Now admin can post:
-- ✅ **Announcements** - Users will see these
-- ✅ **Events** - Users will see these  
-- ✅ **Meetings** - Schedule virtual meetings
-- ✅ **User Management** - Add/edit/remove users
-- ✅ **Application Reviews** - Approve/reject applications
-
-## ✅ **Removed Default Data**
-- ❌ No more mock users, applications, or meetings
-- ❌ No pre-filled login credentials
-- ❌ No sample announcements or events
-- ✅ Only backend data shown
-- ✅ Empty states when no data
-
-## 🧪 **Test Admin Features**
-1. Login as admin
-2. Go to "Content" tab
-3. Create announcement → Users will see it
-4. Create event → Users will see it
-5. Go to "Users" tab → Manage real users from backend
-
----
-**Admin URL**: `/admin-login`
-**Dashboard**: `/admin-dashboard`
+## Quick Access Links
+- **Admin Login**: http://localhost:4200/admin-login
+- **Admin Dashboard**: http://localhost:4200/admin-dashboard
+- **Test Connection**: http://localhost:4200/test-connection

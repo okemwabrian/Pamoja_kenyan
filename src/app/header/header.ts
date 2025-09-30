@@ -77,7 +77,22 @@ export class Header implements OnInit {
     if (typeof window === 'undefined') return;
     
     const token = localStorage.getItem('authToken');
-    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    if (!token) {
+      // No token, show default notification
+      this.notifications = [
+        {
+          id: 1,
+          title: 'Welcome!',
+          message: 'Welcome to Pamoja Kenya MN',
+          is_read: false,
+          created_at: new Date().toISOString()
+        }
+      ];
+      this.unreadCount = 1;
+      return;
+    }
+
+    const options = { headers: { Authorization: `Bearer ${token}` } };
 
     this.http.get('http://localhost:8000/api/notifications/list/', options).subscribe({
       next: (data: any) => {
@@ -86,16 +101,21 @@ export class Header implements OnInit {
       },
       error: (error) => {
         console.error('Error loading notifications:', error);
-        this.notifications = [
-          {
-            id: 1,
-            title: 'Welcome!',
-            message: 'Welcome to Pamoja Kenya MN',
-            is_read: false,
-            created_at: new Date().toISOString()
-          }
-        ];
-        this.unreadCount = 1;
+        if (error.status === 401) {
+          // Token invalid, redirect to login
+          this.logout();
+        } else {
+          this.notifications = [
+            {
+              id: 1,
+              title: 'Welcome!',
+              message: 'Welcome to Pamoja Kenya MN',
+              is_read: false,
+              created_at: new Date().toISOString()
+            }
+          ];
+          this.unreadCount = 1;
+        }
       }
     });
   }

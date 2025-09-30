@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +12,10 @@ import { environment } from '../../environments/environment';
 export class ApiService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
-    if (typeof window === 'undefined') {
-      return new HttpHeaders({
-        'Content-Type': 'application/json'
-      });
-    }
-    
-    const token = localStorage.getItem('authToken');
+    const token = this.authService.getToken();
     return new HttpHeaders({
       'Content-Type': 'application/json',
       ...(token && { 'Authorization': `Bearer ${token}` })
@@ -97,6 +93,11 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register/`, userData)
+      .pipe(catchError(this.handleError));
+  }
+
   registerForEvent(eventId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/events/${eventId}/register/`, {}, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
@@ -153,14 +154,22 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+  private handleError = (error: HttpErrorResponse) => {
+    console.error('API Error:', error);
+    
+    if (error.status === 401) {
+      // Token expired or invalid - check if user is admin or regular user
+      const isAdmin = this.authService.isAdmin();
+      this.authService.clearAuthState();
+      
+      if (isAdmin) {
+        this.router.navigate(['/admin-login']);
+      } else {
+        this.router.navigate(['/login']);
+      }
     }
-    console.error(errorMessage);
-    return throwError(() => errorMessage);
+    
+    // Return the full error object to preserve response body
+    return throwError(() => error);
   }
 }

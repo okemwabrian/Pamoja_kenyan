@@ -26,7 +26,13 @@ export class Announcements implements OnInit {
     if (typeof window === 'undefined') return;
     
     const token = localStorage.getItem('authToken');
-    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    if (!token) {
+      this.announcements = [];
+      this.isLoading = false;
+      return;
+    }
+
+    const options = { headers: { Authorization: `Bearer ${token}` } };
 
     this.http.get('http://localhost:8000/api/notifications/announcements/', options).subscribe({
       next: (data: any) => {
@@ -45,7 +51,12 @@ export class Announcements implements OnInit {
     if (typeof window === 'undefined') return;
     
     const token = localStorage.getItem('authToken');
-    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    if (!token) {
+      this.events = [];
+      return;
+    }
+
+    const options = { headers: { Authorization: `Bearer ${token}` } };
 
     this.http.get('http://localhost:8000/api/notifications/events/', options).subscribe({
       next: (data: any) => {

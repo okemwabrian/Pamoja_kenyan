@@ -2,16 +2,15 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../auth';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
-  imports: [CommonModule, FormsModule, HttpClientModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class Register {
   username: string = '';
@@ -22,13 +21,13 @@ export class Register {
   successMessage: string = '';
 
   constructor(
-    private router: Router, 
-    private http: HttpClient,
-    private authService: AuthService
+    private router: Router,
+    private apiService: ApiService
   ) {}
 
   register() {
     console.log('Register method called');
+    console.log('Form values:', { username: this.username, email: this.email, password: this.password, confirmPassword: this.confirmPassword });
     this.errorMessage = '';
     this.successMessage = '';
 
@@ -64,7 +63,7 @@ export class Register {
     console.log('Sending registration request:', payload);
     
     // Send registration request to backend
-    this.http.post('http://localhost:8000/api/auth/register/', payload).subscribe({
+    this.apiService.register(payload).subscribe({
       next: (response: any) => {
         console.log('Registration successful:', response);
         this.successMessage = 'Registration successful! Please login with your credentials.';

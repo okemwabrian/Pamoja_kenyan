@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SuccessAnimation } from '../shared/success-animation';
 import { ContentService } from '../services/content.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -49,7 +50,8 @@ export class AdminDashboard implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private contentService: ContentService
+    private contentService: ContentService,
+    private authService: AuthService
   ) {
     this.announcementForm = this.fb.group({
       title: ['', Validators.required],
@@ -151,28 +153,44 @@ export class AdminDashboard implements OnInit {
     if (this.announcementForm.invalid) return;
 
     this.isLoading = true;
+    const token = localStorage.getItem('authToken');
+    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
     
-    setTimeout(() => {
-      this.contentService.addAnnouncement(this.announcementForm.value);
-      this.isLoading = false;
-      this.successMessage = 'Announcement created successfully!';
-      this.showSuccess = true;
-      this.announcementForm.reset();
-    }, 1000);
+    this.http.post('http://localhost:8000/api/notifications/announcements/', 
+      this.announcementForm.value, options).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.successMessage = 'Announcement created successfully!';
+        this.showSuccess = true;
+        this.announcementForm.reset();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.message = 'Failed to create announcement: ' + (error.error?.message || 'Server error');
+      }
+    });
   }
 
   createEvent() {
     if (this.eventForm.invalid) return;
 
     this.isLoading = true;
+    const token = localStorage.getItem('authToken');
+    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
     
-    setTimeout(() => {
-      this.contentService.addEvent(this.eventForm.value);
-      this.isLoading = false;
-      this.successMessage = 'Event created successfully!';
-      this.showSuccess = true;
-      this.eventForm.reset();
-    }, 1000);
+    this.http.post('http://localhost:8000/api/notifications/events/', 
+      this.eventForm.value, options).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.successMessage = 'Event created successfully!';
+        this.showSuccess = true;
+        this.eventForm.reset();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.message = 'Failed to create event: ' + (error.error?.message || 'Server error');
+      }
+    });
   }
 
   updateApplicationStatus(appId: number, status: string) {
@@ -338,5 +356,15 @@ export class AdminDashboard implements OnInit {
 
   onSuccessComplete() {
     this.showSuccess = false;
+  }
+
+  logout() {
+    if (confirm('Are you sure you want to logout?')) {
+      this.authService.adminLogout();
+    }
+  }
+
+  getCurrentUser() {
+    return this.authService.getUserData();
   }
 }

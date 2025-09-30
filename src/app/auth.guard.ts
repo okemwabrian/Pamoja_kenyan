@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
   
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   canActivate(): boolean {
-    if (typeof window === 'undefined') return false;
-    
-    const token = localStorage.getItem('authToken');
-    
-    if (token) {
+    if (this.authService.isAuthenticated()) {
+      console.log('AuthGuard: Access granted');
       return true;
     } else {
+      console.log('AuthGuard: Access denied, redirecting to login');
       this.router.navigate(['/login']);
       return false;
     }
@@ -27,18 +26,21 @@ export class AuthGuard implements CanActivate {
 })
 export class AdminGuard implements CanActivate {
   
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   canActivate(): boolean {
-    if (typeof window === 'undefined') return false;
+    const isAuthenticated = this.authService.isAuthenticated();
+    const isAdmin = this.authService.isAdmin();
+    const userData = this.authService.getUserData();
     
-    const token = localStorage.getItem('authToken');
-    const userRole = localStorage.getItem('userRole');
+    console.log('AdminGuard check:', { isAuthenticated, isAdmin, userData });
     
-    if (token && userRole === 'admin') {
+    if (isAuthenticated && isAdmin) {
+      console.log('AdminGuard: Access granted');
       return true;
     } else {
-      this.router.navigate(['/login']);
+      console.log('AdminGuard: Access denied, redirecting to admin-login');
+      this.router.navigate(['/admin-login']);
       return false;
     }
   }
