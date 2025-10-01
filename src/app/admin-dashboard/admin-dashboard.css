@@ -7,21 +7,78 @@
 }
 
 .dashboard-header {
-  text-align: center;
   margin-bottom: 2rem;
 }
 
-.dashboard-header h1 {
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-info {
+  text-align: left;
+}
+
+.header-info h1 {
   color: #2c3e50;
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
 }
 
-.dashboard-header p {
+.header-info p {
   color: #7f8c8d;
   font-size: 1.1rem;
   margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.welcome-text {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.user-role {
+  color: #7f8c8d;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.logout-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
 
 .admin-tabs {
@@ -577,6 +634,19 @@
 @media (max-width: 768px) {
   .admin-dashboard {
     padding: 1rem;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .header-info {
+    text-align: center;
+  }
+  
+  .user-info {
+    align-items: center;
   }
   
   .admin-tabs {
