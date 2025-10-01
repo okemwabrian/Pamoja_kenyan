@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { SuccessAnimation } from '../shared/success-animation';
 import { ContentService } from '../services/content.service';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -101,7 +102,7 @@ export class AdminDashboard implements OnInit {
     const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 
     // Load stats (using users count)
-    this.http.get('http://localhost:8000/api/admin/users/', options).subscribe({
+    this.http.get(`${environment.apiUrl}/admin/users/`, options).subscribe({
       next: (users: any) => {
         this.stats = {
           total_users: users.length || 0,
@@ -121,7 +122,7 @@ export class AdminDashboard implements OnInit {
     });
 
     // Load users
-    this.http.get('http://localhost:8000/api/admin/users/', options).subscribe({
+    this.http.get(`${environment.apiUrl}/admin/users/`, options).subscribe({
       next: (data: any) => {
         this.users = data;
         this.filteredUsers = [...this.users];
@@ -133,7 +134,7 @@ export class AdminDashboard implements OnInit {
     });
 
     // Load applications
-    this.http.get('http://localhost:8000/api/admin/applications/', options).subscribe({
+    this.http.get(`${environment.apiUrl}/admin/applications/`, options).subscribe({
       next: (data: any) => {
         this.applications = data;
         this.filteredApplications = [...this.applications];
@@ -156,7 +157,7 @@ export class AdminDashboard implements OnInit {
     const token = localStorage.getItem('authToken');
     const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
     
-    this.http.post('http://localhost:8000/api/notifications/announcements/', 
+    this.http.post(`${environment.apiUrl}/notifications/announcements/`, 
       this.announcementForm.value, options).subscribe({
       next: () => {
         this.isLoading = false;
@@ -178,7 +179,7 @@ export class AdminDashboard implements OnInit {
     const token = localStorage.getItem('authToken');
     const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
     
-    this.http.post('http://localhost:8000/api/notifications/events/', 
+    this.http.post(`${environment.apiUrl}/notifications/events/`, 
       this.eventForm.value, options).subscribe({
       next: () => {
         this.isLoading = false;
@@ -197,7 +198,7 @@ export class AdminDashboard implements OnInit {
     const token = localStorage.getItem('authToken');
     const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
 
-    this.http.post(`http://localhost:8000/api/admin/applications/${appId}/update-status/`, 
+    this.http.post(`${environment.apiUrl}/admin/applications/${appId}/update-status/`, 
       { status }, options).subscribe({
       next: () => {
         this.successMessage = `Application ${status} successfully!`;

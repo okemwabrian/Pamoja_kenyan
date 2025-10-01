@@ -9,6 +9,7 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-upgrade',
@@ -117,7 +118,7 @@ export class Upgrade implements OnInit {
       }
     }
 
-    this.http.post('http://localhost:8000/api/upgrades/upgrade/', formData).subscribe({
+    this.http.post(`${environment.apiUrl}/upgrades/upgrade/`, formData).subscribe({
       next: () => {
         this.router.navigate(['/payments'], {
           queryParams: {

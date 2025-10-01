@@ -4,6 +4,7 @@ import { RegistrationService } from '../services/registration';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-payments',
@@ -17,7 +18,7 @@ export class Payments implements OnInit, AfterViewInit {
   paymentCompleted: boolean = false;
   paypalLoaded: boolean = false;
   paypalLoadError: boolean = false;
-  private readonly apiUrl = 'http://localhost:8000';
+  private readonly apiUrl = environment.apiUrl.replace('/api', '');
   private readonly paypalClientId = 'AcKeWOPTHodpfp9ana6qegVblvkw5AlwDZb-iTlvzTQHPADeoNjkV9w8ChY2khzu59kuHaBlshC33yMg';
 
   paymentData: any = {};

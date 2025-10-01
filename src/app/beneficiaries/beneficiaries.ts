@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-beneficiaries',
@@ -47,7 +48,7 @@ export class Beneficiaries implements OnInit {
       this.useMockData();
     }, 5000);
 
-    this.http.get<any[]>('http://localhost:8000/api/beneficiaries/list/').subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/beneficiaries/list/`).subscribe({
       next: (data) => {
         clearTimeout(timeout);
         this.beneficiaries = data;
@@ -104,7 +105,7 @@ export class Beneficiaries implements OnInit {
       return;
     }
 
-    this.http.post('http://localhost:8000/api/beneficiaries/request/', this.formData).subscribe({
+    this.http.post(`${environment.apiUrl}/beneficiaries/request/`, this.formData).subscribe({
       next: (res) => {
         alert('✅ Change request submitted successfully!');
         this.resetForm();

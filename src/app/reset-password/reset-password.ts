@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-reset-password',
@@ -70,7 +71,7 @@ export class ResetPassword implements OnInit {
       new_password: newPassword
     };
 
-    this.http.post('http://localhost:8000/api/auth/password-reset-confirm/', payload).subscribe({
+    this.http.post(`${environment.apiUrl}/auth/password-reset-confirm/`, payload).subscribe({
       next: (response: any) => {
         this.message = 'Password reset successful! You can now login with your new password.';
         this.isLoading = false;

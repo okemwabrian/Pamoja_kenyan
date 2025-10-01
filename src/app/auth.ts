@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 interface LoginPayload {
   identifier: string;
@@ -34,7 +35,7 @@ export class AuthService {
   private isBrowser: boolean;
   private loggedIn: BehaviorSubject<boolean>;
 
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private http: HttpClient,
