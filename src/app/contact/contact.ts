@@ -43,11 +43,14 @@ export class Contact {
       message: this.sanitizeInput(this.formData.message)
     };
 
-    this.http.post(`${this.apiUrl}/api/auth/contact/`, payload).subscribe({
-      next: () => {
+    this.http.post(`${environment.apiUrl}/contact/submit/`, payload).subscribe({
+      next: (response: any) => {
         this.successMessage = 'Message sent successfully! We will get back to you soon.';
         this.resetForm();
         this.isSubmitting = false;
+        
+        // Send notification to admin
+        this.notifyAdmin(payload);
       },
       error: () => {
         this.errorMessage = 'Something went wrong. Please try again later.';
@@ -84,5 +87,19 @@ export class Contact {
       helpType: 'membership',
       message: ''
     };
+  }
+
+  private notifyAdmin(contactData: any) {
+    // Send real-time notification to admin
+    this.http.post(`${environment.apiUrl}/admin/notifications/contact/`, {
+      type: 'contact_message',
+      title: `New Contact: ${contactData.subject}`,
+      message: `${contactData.name} (${contactData.email}) sent a message about ${contactData.help_type}`,
+      priority: 'high',
+      contact_id: Date.now()
+    }).subscribe({
+      next: () => console.log('Admin notified'),
+      error: () => console.log('Failed to notify admin')
+    });
   }
 }

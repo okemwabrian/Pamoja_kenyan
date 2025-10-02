@@ -42,8 +42,7 @@ export const routes: Routes = [
   { path: 'profile', loadComponent: () => import('./profile/profile').then(m => m.Profile), canActivate: [AuthGuard] },
   { path: 'claims', loadComponent: () => import('./claims/claims').then(m => m.Claims), canActivate: [AuthGuard] },
   
-  // Admin routes
-  { path: 'admin-login', loadComponent: () => import('./admin-login/admin-login').then(m => m.AdminLogin) },
+  // Admin routes (backend managed)
   { path: 'admin-dashboard', loadComponent: () => import('./admin-dashboard/admin-dashboard').then(m => m.AdminDashboard), canActivate: [AdminGuard] },
   
 

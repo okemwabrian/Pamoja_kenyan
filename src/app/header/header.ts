@@ -63,6 +63,10 @@ export class Header implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+  closeMenu() {
+    this.isMenuOpen = false;
+  }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
     this.showUserMenu = false;

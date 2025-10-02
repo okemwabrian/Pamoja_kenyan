@@ -75,8 +75,8 @@
     </div>
 
     <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary w-100 fw-bold">
-      Register
+    <button type="submit" class="btn btn-primary w-100 fw-bold" [disabled]="isLoading">
+      {{ isLoading ? 'Registering...' : 'Register' }}
     </button>
   </form>
 

@@ -102,7 +102,7 @@ export class AuthService {
 
   public adminLogout(): void {
     this.clearAuthState();
-    this.router.navigate(['/admin-login']);
+    this.router.navigate(['/login']);
   }
 
   public isAuthenticated(): boolean {

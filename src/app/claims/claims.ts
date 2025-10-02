@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SuccessAnimation } from '../shared/success-animation';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-claims',
@@ -30,7 +31,8 @@ export class Claims implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    private apiService: ApiService
   ) {
     this.claimForm = this.fb.group({
       claim_type: ['', Validators.required],
@@ -45,8 +47,15 @@ export class Claims implements OnInit {
   }
 
   loadUserClaims() {
-    // Mock claims data for now
-    this.userClaims = [];
+    this.apiService.getClaims().subscribe({
+      next: (claims: any) => {
+        this.userClaims = claims;
+      },
+      error: (error) => {
+        console.error('Error loading claims:', error);
+        this.userClaims = [];
+      }
+    });
   }
 
   onFileChange(event: any) {
@@ -79,14 +88,20 @@ export class Claims implements OnInit {
       formData.append('supporting_documents', formValues.supporting_documents);
     }
 
-    // Mock successful submission
-    setTimeout(() => {
-      this.isLoading = false;
-      this.successMessage = 'Claim submitted successfully!';
-      this.showSuccess = true;
-      this.claimForm.reset();
-      this.loadUserClaims();
-    }, 1000);
+    this.apiService.createClaim(formData).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        this.successMessage = 'Claim submitted successfully!';
+        this.showSuccess = true;
+        this.claimForm.reset();
+        this.loadUserClaims();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.message = 'Failed to submit claim: ' + (error.error?.message || 'Server error');
+        console.error('Claim submission error:', error);
+      }
+    });
   }
 
   onSuccessComplete() {

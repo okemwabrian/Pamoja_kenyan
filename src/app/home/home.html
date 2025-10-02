@@ -8,6 +8,45 @@
     </p>
   </section>
 
+  <!-- Latest News Section -->
+  <section class="latest-news my-5" *ngIf="!isLoading">
+    <h2 class="text-center fw-bold mb-4">Latest News & Events</h2>
+    
+    <div class="row g-4">
+      <!-- Latest Announcements -->
+      <div class="col-md-6">
+        <h3 class="h5 mb-3">📢 Recent Announcements</h3>
+        <div *ngIf="latestAnnouncements.length === 0" class="text-muted">
+          <p>No recent announcements</p>
+        </div>
+        <div *ngFor="let announcement of latestAnnouncements" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ announcement.title }}</h5>
+            <p class="card-text">{{ announcement.content | slice:0:100 }}{{ announcement.content.length > 100 ? '...' : '' }}</p>
+            <small class="text-muted">{{ formatDate(announcement.created_at) }}</small>
+          </div>
+        </div>
+        <a routerLink="/announcements" class="btn btn-outline-primary btn-sm">View All Announcements</a>
+      </div>
+      
+      <!-- Latest Events -->
+      <div class="col-md-6">
+        <h3 class="h5 mb-3">📅 Upcoming Events</h3>
+        <div *ngIf="latestEvents.length === 0" class="text-muted">
+          <p>No upcoming events</p>
+        </div>
+        <div *ngFor="let event of latestEvents" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ event.title }}</h5>
+            <p class="card-text">{{ event.description | slice:0:100 }}{{ event.description.length > 100 ? '...' : '' }}</p>
+            <small class="text-muted">{{ formatDate(event.date) }}</small>
+          </div>
+        </div>
+        <a routerLink="/announcements" class="btn btn-outline-primary btn-sm">View All Events</a>
+      </div>
+    </div>
+  </section>
+
   <!-- Login / Register CTA Section -->
 <section class="text-center my-5">
   <h2 class="fw-bold mb-3">Ready to get started?</h2>

@@ -10,12 +10,12 @@
 
     <!-- Navigation Links -->
     <div class="nav-menu" [class.active]="isMenuOpen">
-      <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-      <a routerLink="/about" class="nav-link" routerLinkActive="active">About</a>
-      <a routerLink="/membership" class="nav-link" routerLinkActive="active">Membership</a>
-      <a routerLink="/user-dashboard" class="nav-link" routerLinkActive="active" *ngIf="isLoggedIn()">Dashboard</a>
-      <a routerLink="/announcements" class="nav-link" routerLinkActive="active">News</a>
-      <a routerLink="/contact" class="nav-link" routerLinkActive="active">Contact</a>
+      <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
+      <a routerLink="/about" class="nav-link" routerLinkActive="active" (click)="closeMenu()">About</a>
+      <a routerLink="/membership" class="nav-link" routerLinkActive="active" (click)="closeMenu()">Membership</a>
+      <a routerLink="/user-dashboard" class="nav-link" routerLinkActive="active" *ngIf="isLoggedIn()" (click)="closeMenu()">Dashboard</a>
+      <a routerLink="/announcements" class="nav-link" routerLinkActive="active" (click)="closeMenu()">News</a>
+      <a routerLink="/contact" class="nav-link" routerLinkActive="active" (click)="closeMenu()">Contact</a>
       
       <!-- User Menu -->
       <div class="user-menu" *ngIf="isLoggedIn()">
@@ -47,9 +47,8 @@
       
       <!-- Auth Buttons -->
       <div class="auth-buttons" *ngIf="!isLoggedIn()">
-        <a routerLink="/login" class="nav-btn login-btn">Login</a>
-        <a routerLink="/register" class="nav-btn register-btn">Register</a>
-        <a routerLink="/admin-login" class="nav-btn admin-btn">Admin</a>
+        <a routerLink="/login" class="nav-btn login-btn" (click)="closeMenu()">Login</a>
+        <a routerLink="/register" class="nav-btn register-btn" (click)="closeMenu()">Register</a>
       </div>
     </div>
 

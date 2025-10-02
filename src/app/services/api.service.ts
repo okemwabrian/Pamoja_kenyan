@@ -148,6 +148,77 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
+  // Claims
+  getClaims(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/claims/`, { headers: this.getHeaders() })
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  createClaim(formData: FormData): Observable<any> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    });
+    return this.http.post(`${this.apiUrl}/claims/submit/`, formData, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  // User Dashboard Data
+  getDashboardStats(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/dashboard/stats/`, { headers: this.getHeaders() })
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  getUserActivities(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/dashboard/activities/`, { headers: this.getHeaders() })
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  // Notifications
+  getNotifications(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/notifications/`, { headers: this.getHeaders() })
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  markNotificationRead(notificationId: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/notifications/${notificationId}/`, 
+      { is_read: true }, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Admin Content Management
+  createAnnouncement(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin/announcements/create/`, data, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  createEvent(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin/events/create/`, data, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  createMeeting(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin/meetings/create/`, data, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Admin Stats
+  getAdminDashboardStats(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/stats/`, { headers: this.getHeaders() })
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  getAllClaims(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/claims/`, { headers: this.getHeaders() })
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  updateClaimStatus(claimId: number, status: string, notes?: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/admin/claims/${claimId}/`, 
+      { status, admin_notes: notes }, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
   // Test backend connection
   testConnection(): Observable<any> {
     return this.http.get(`${this.apiUrl}/applications/my-applications/`)
@@ -158,15 +229,9 @@ export class ApiService {
     console.error('API Error:', error);
     
     if (error.status === 401) {
-      // Token expired or invalid - check if user is admin or regular user
-      const isAdmin = this.authService.isAdmin();
+      // Token expired or invalid - redirect to login
       this.authService.clearAuthState();
-      
-      if (isAdmin) {
-        this.router.navigate(['/admin-login']);
-      } else {
-        this.router.navigate(['/login']);
-      }
+      this.router.navigate(['/login']);
     }
     
     // Return the full error object to preserve response body

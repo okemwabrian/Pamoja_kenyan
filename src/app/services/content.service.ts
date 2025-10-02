@@ -10,7 +10,7 @@ export class ContentService {
   private announcementsSubject = new BehaviorSubject<any[]>([]);
 
   constructor(private http: HttpClient) {
-    // Initialize with empty arrays - no default data
+    // Initialize with empty arrays - no default content
     this.eventsSubject.next([]);
     this.announcementsSubject.next([]);
   }

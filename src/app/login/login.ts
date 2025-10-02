@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
 import { SuccessAnimation } from '../shared/success-animation';
 
 @Component({
@@ -22,7 +23,8 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -51,25 +53,18 @@ export class Login {
       next: (response: any) => {
         console.log('Login successful:', response);
         
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('authToken', response.access);
-          localStorage.setItem('refreshToken', response.refresh);
-          
-          const fullName = (response.user.first_name + ' ' + response.user.last_name).trim();
-          const displayName = fullName || response.user.username;
-          
-          localStorage.setItem('userName', displayName);
-          localStorage.setItem('userRole', response.user.is_staff ? 'admin' : 'user');
-          localStorage.setItem('userId', response.user.id);
-          localStorage.setItem('userEmail', response.user.email);
-          localStorage.setItem('userUsername', response.user.username);
-          localStorage.setItem('loginTime', new Date().toISOString());
-        }
+        // Use AuthService to set authentication data
+        this.authService.setAuthData(response);
 
         this.isLoading = false;
         const fullName = (response.user?.first_name || '') + ' ' + (response.user?.last_name || '');
         const displayName = fullName.trim() || response.user?.username || 'User';
-        this.successMessage = `Welcome back, ${displayName}! Redirecting...`;
+        
+        if (response.user.is_staff || response.user.is_superuser) {
+          this.successMessage = `Welcome back, Admin ${displayName}! Redirecting to dashboard...`;
+        } else {
+          this.successMessage = `Welcome back, ${displayName}! Redirecting...`;
+        }
         this.showSuccess = true;
       },
       error: (error) => {
@@ -90,8 +85,8 @@ export class Login {
   }
 
   onSuccessComplete() {
-    const userRole = localStorage.getItem('userRole');
-    if (userRole === 'admin') {
+    const userData = this.authService.getUserData();
+    if (userData && (userData.isStaff || userData.isSuperuser)) {
       this.router.navigate(['/admin-dashboard']);
     } else {
       this.router.navigate(['/user-dashboard']);
@@ -119,17 +114,17 @@ export class Login {
   }
 
   // Temporary test login to bypass backend issues
-  testLogin() {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('authToken', 'test-token-123');
-      localStorage.setItem('refreshToken', 'test-refresh-123');
-      localStorage.setItem('userName', 'Test User');
-      localStorage.setItem('userRole', 'user');
-      localStorage.setItem('userId', '1');
-      localStorage.setItem('userEmail', 'test@test.com');
-    }
+  // testLogin() {
+  //   if (typeof window !== 'undefined') {
+  //     localStorage.setItem('authToken', 'test-token-123');
+  //     localStorage.setItem('refreshToken', 'test-refresh-123');
+  //     localStorage.setItem('userName', 'Test User');
+  //     localStorage.setItem('userRole', 'user');
+  //     localStorage.setItem('userId', '1');
+  //     localStorage.setItem('userEmail', 'test@test.com');
+  //   }
     
-    this.successMessage = 'Test login successful! Redirecting...';
-    this.showSuccess = true;
-  }
+  //   this.successMessage = 'Test login successful! Redirecting...';
+  //   this.showSuccess = true;
+  // }
 }

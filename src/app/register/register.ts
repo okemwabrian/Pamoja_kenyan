@@ -19,6 +19,7 @@ export class Register {
   confirmPassword: string = '';
   errorMessage: string = '';
   successMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private router: Router,
@@ -30,25 +31,30 @@ export class Register {
     console.log('Form values:', { username: this.username, email: this.email, password: this.password, confirmPassword: this.confirmPassword });
     this.errorMessage = '';
     this.successMessage = '';
+    this.isLoading = true;
 
     // Frontend validations
     if (!this.username || !this.email || !this.password || !this.confirmPassword) {
       this.errorMessage = 'All fields are required.';
+      this.isLoading = false;
       return;
     }
 
     if (!this.validateEmail(this.email)) {
       this.errorMessage = 'Please enter a valid email address.';
+      this.isLoading = false;
       return;
     }
 
     if (this.password.length < 6) {
       this.errorMessage = 'Password must be at least 6 characters.';
+      this.isLoading = false;
       return;
     }
 
     if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Passwords do not match.';
+      this.isLoading = false;
       return;
     }
 
@@ -66,6 +72,7 @@ export class Register {
     this.apiService.register(payload).subscribe({
       next: (response: any) => {
         console.log('Registration successful:', response);
+        this.isLoading = false;
         this.successMessage = 'Registration successful! Please login with your credentials.';
         
         // Clear form
@@ -81,6 +88,7 @@ export class Register {
       },
       error: (error) => {
         console.error('Registration failed:', error);
+        this.isLoading = false;
         
         if (error.status === 0) {
           this.errorMessage = 'Unable to connect to server. Please check your connection.';

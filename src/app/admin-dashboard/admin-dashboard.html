@@ -45,9 +45,21 @@
     </button>
     <button 
       class="tab-btn" 
+      [class.active]="activeTab === 'claims'"
+      (click)="setActiveTab('claims')">
+      🏥 Claims
+    </button>
+    <button 
+      class="tab-btn" 
       [class.active]="activeTab === 'meetings'"
       (click)="setActiveTab('meetings')">
       📹 Meetings
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'contacts'"
+      (click)="setActiveTab('contacts')">
+      📞 Contacts
     </button>
   </div>
 
@@ -95,7 +107,6 @@
       <p>Manage user accounts and permissions</p>
     </div>
     
-    <!-- Search Bar -->
     <div class="search-section">
       <input 
         type="text" 
@@ -164,7 +175,6 @@
       <p>Review and approve membership applications</p>
     </div>
     
-    <!-- Search Bar -->
     <div class="search-section">
       <input 
         type="text" 
@@ -202,13 +212,18 @@
         </div>
       </div>
       
-      <div class="app-actions" *ngIf="app.status === 'pending'">
-        <button class="action-btn approve" (click)="updateApplicationStatus(app.id, 'approved')">
-          Approve
+      <div class="app-actions">
+        <button class="action-btn view" (click)="viewDocuments(app.id)">
+          View Documents
         </button>
-        <button class="action-btn reject" (click)="updateApplicationStatus(app.id, 'rejected')">
-          Reject
-        </button>
+        <div *ngIf="app.status === 'pending'">
+          <button class="action-btn approve" (click)="showApprovalModal(app.id, 'approved')">
+            Approve
+          </button>
+          <button class="action-btn reject" (click)="showApprovalModal(app.id, 'rejected')">
+            Reject
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -254,51 +269,83 @@
         </form>
       </div>
 
-      <div class="form-section">
-        <h3>Create Event</h3>
-        <form [formGroup]="eventForm" (ngSubmit)="createEvent()">
-          <div class="form-group">
-            <label>Event Title</label>
-            <input type="text" formControlName="title" placeholder="Event title">
+      <div class="existing-content">
+        <h3>Existing Announcements</h3>
+        <div *ngIf="announcements.length === 0" class="empty-state">
+          <p>No announcements created yet</p>
+        </div>
+        <div *ngFor="let announcement of announcements" class="content-item">
+          <div class="content-header">
+            <h4>{{ announcement.title }}</h4>
+            <span class="priority-badge" [class]="'priority-' + announcement.priority">{{ announcement.priority }}</span>
           </div>
-          
-          <div class="form-group">
-            <label>Description</label>
-            <textarea formControlName="description" rows="3" placeholder="Event description"></textarea>
+          <p>{{ announcement.content }}</p>
+          <div class="content-meta">
+            <span>Created: {{ announcement.created_at | date:'short' }}</span>
+            <span *ngIf="announcement.is_pinned" class="pinned-badge">📌 Pinned</span>
           </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label>Date & Time</label>
-              <input type="datetime-local" formControlName="date">
-            </div>
-            
-            <div class="form-group">
-              <label>Location</label>
-              <input type="text" formControlName="location" placeholder="Event location">
-            </div>
+          <div class="content-actions">
+            <button class="action-btn edit" (click)="editAnnouncement(announcement.id)">Edit</button>
+            <button class="action-btn delete" (click)="deleteAnnouncement(announcement.id)">Delete</button>
           </div>
-          
-          <div class="form-row">
-            <div class="form-group checkbox">
-              <label>
-                <input type="checkbox" formControlName="is_featured">
-                Featured event
-              </label>
-            </div>
-            
-            <div class="form-group checkbox">
-              <label>
-                <input type="checkbox" formControlName="registration_required">
-                Registration required
-              </label>
-            </div>
-          </div>
-          
-          <button type="submit" class="submit-btn" [disabled]="eventForm.invalid || isLoading">
-            {{ isLoading ? 'Creating...' : 'Create Event' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Claims Tab -->
+  <div *ngIf="activeTab === 'claims'" class="tab-content">
+    <div class="section-header">
+      <h2>Claims Management</h2>
+      <p>Review and process benefit claims</p>
+    </div>
+    
+    <div *ngIf="claims.length === 0" class="empty-state">
+      <p>No claims submitted</p>
+    </div>
+    
+    <div *ngFor="let claim of claims" class="claim-card">
+      <div class="claim-header">
+        <h4>{{ claim.user?.username || 'Unknown User' }}</h4>
+        <span class="status-badge" [class]="'status-' + claim.status">{{ claim.status }}</span>
+      </div>
+      
+      <div class="claim-details">
+        <div class="detail-row">
+          <span>Type:</span> {{ claim.claim_type }}
+        </div>
+        <div class="detail-row">
+          <span>Amount Requested:</span> ${{ claim.amount_requested }}
+        </div>
+        <div class="detail-row" *ngIf="claim.amount_approved">
+          <span>Amount Approved:</span> ${{ claim.amount_approved }}
+        </div>
+        <div class="detail-row">
+          <span>Date:</span> {{ claim.created_at }}
+        </div>
+        <div class="description">
+          <span>Description:</span>
+          <p>{{ claim.description }}</p>
+        </div>
+        <div *ngIf="claim.admin_notes" class="admin-notes">
+          <span>Admin Notes:</span>
+          <p>{{ claim.admin_notes }}</p>
+        </div>
+      </div>
+      
+      <div class="claim-actions">
+        <button class="action-btn view" *ngIf="claim.supporting_documents" 
+                (click)="viewClaimDocuments(claim.id)">
+          View Documents
+        </button>
+        <div *ngIf="claim.status === 'pending'">
+          <button class="action-btn approve" (click)="showClaimModal(claim.id, 'approved')">
+            Approve
           </button>
-        </form>
+          <button class="action-btn reject" (click)="showClaimModal(claim.id, 'rejected')">
+            Reject
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -307,7 +354,7 @@
   <div *ngIf="activeTab === 'meetings'" class="tab-content">
     <div class="content-section">
       <div class="form-section">
-        <h3>Create Group Meeting</h3>
+        <h3>Create Meeting</h3>
         <form [formGroup]="meetingForm" (ngSubmit)="createMeeting()">
           <div class="form-group">
             <label>Meeting Title</label>
@@ -316,7 +363,7 @@
           
           <div class="form-group">
             <label>Description</label>
-            <textarea formControlName="description" rows="3" placeholder="Meeting agenda or description"></textarea>
+            <textarea formControlName="description" rows="3" placeholder="Meeting description"></textarea>
           </div>
           
           <div class="form-row">
@@ -327,45 +374,7 @@
             
             <div class="form-group">
               <label>Duration (minutes)</label>
-              <input type="number" formControlName="duration" placeholder="60" min="15" max="480">
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label>Meeting Type</label>
-              <select formControlName="type">
-                <option value="zoom">Zoom Meeting</option>
-                <option value="google-meet">Google Meet</option>
-                <option value="teams">Microsoft Teams</option>
-                <option value="webex">Cisco Webex</option>
-              </select>
-            </div>
-            
-            <div class="form-group">
-              <label>Max Participants</label>
-              <input type="number" formControlName="max_participants" placeholder="100" min="2" max="1000">
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label>Meeting Link (Optional)</label>
-            <input type="url" formControlName="meeting_link" placeholder="https://zoom.us/j/123456789">
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group checkbox">
-              <label>
-                <input type="checkbox" formControlName="require_registration">
-                Require registration
-              </label>
-            </div>
-            
-            <div class="form-group checkbox">
-              <label>
-                <input type="checkbox" formControlName="send_notifications">
-                Send notifications to all users
-              </label>
+              <input type="number" formControlName="duration" min="15" max="480">
             </div>
           </div>
           
@@ -374,111 +383,63 @@
           </button>
         </form>
       </div>
+    </div>
+  </div>
 
-      <div class="meetings-list">
-        <h3>Upcoming Meetings</h3>
-        <div *ngIf="meetings.length === 0" class="empty-state">
-          <p>No meetings scheduled</p>
+  <!-- Contacts Tab -->
+  <div *ngIf="activeTab === 'contacts'" class="tab-content">
+    <div class="section-header">
+      <h2>Contact Messages</h2>
+      <p>Manage user inquiries and contact requests</p>
+    </div>
+    
+    <div *ngIf="contacts.length === 0" class="empty-state">
+      <p>No contact messages</p>
+    </div>
+    
+    <div *ngFor="let contact of contacts" class="contact-card">
+      <div class="contact-header">
+        <h4>{{ contact.name }}</h4>
+        <span class="status-badge" [class]="'status-' + contact.status">{{ contact.status }}</span>
+        <span class="contact-date">{{ contact.created_at | date:'short' }}</span>
+      </div>
+      
+      <div class="contact-details">
+        <div class="detail-row">
+          <span>Email:</span> {{ contact.email }}
         </div>
-        
-        <div *ngFor="let meeting of meetings" class="meeting-card">
-          <div class="meeting-header">
-            <h4>{{ meeting.title }}</h4>
-            <span class="meeting-type">{{ meeting.type }}</span>
-          </div>
-          
-          <div class="meeting-details">
-            <div class="detail-row">
-              <span>📅 Date:</span> {{ meeting.date | date:'medium' }}
-            </div>
-            <div class="detail-row">
-              <span>⏱️ Duration:</span> {{ meeting.duration }} minutes
-            </div>
-            <div class="detail-row">
-              <span>👥 Participants:</span> {{ meeting.registered_count || 0 }}/{{ meeting.max_participants }}
-            </div>
-            <div class="detail-row" *ngIf="meeting.meeting_link">
-              <span>🔗 Link:</span> 
-              <a [href]="meeting.meeting_link" target="_blank">Join Meeting</a>
-            </div>
-          </div>
-          
-          <div class="meeting-actions">
-            <button class="action-btn" (click)="copyMeetingLink(meeting.meeting_link)">
-              Copy Link
-            </button>
-            <button class="action-btn" (click)="sendMeetingReminder(meeting.id)">
-              Send Reminder
-            </button>
-            <button class="action-btn delete" (click)="deleteMeeting(meeting.id)">
-              Cancel
-            </button>
-          </div>
+        <div class="detail-row" *ngIf="contact.phone">
+          <span>Phone:</span> {{ contact.phone }}
         </div>
+        <div class="detail-row">
+          <span>Subject:</span> {{ contact.subject }}
+        </div>
+        <div class="message">
+          <span>Message:</span>
+          <p>{{ contact.message }}</p>
+        </div>
+      </div>
+      
+      <div class="contact-actions">
+        <button class="action-btn" (click)="replyToContact(contact.id)">
+          📧 Reply
+        </button>
+        <button class="action-btn" *ngIf="contact.phone" (click)="callContact(contact.phone)">
+          📞 Call
+        </button>
+        <button class="action-btn" (click)="markContactResolved(contact.id)">
+          ✅ Mark Resolved
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Connection Status -->
+  <app-connection-status></app-connection-status>
 
   <!-- Message Display -->
   <div *ngIf="message" class="message error">
     {{ message }}
-  </div>
-
-  <!-- Edit User Modal -->
-  <div *ngIf="showEditModal" class="modal-overlay" (click)="closeEditModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>Edit User</h3>
-        <button class="close-btn" (click)="closeEditModal()">&times;</button>
-      </div>
-      
-      <form [formGroup]="editUserForm" (ngSubmit)="saveUserChanges()">
-        <div class="form-group">
-          <label>Username</label>
-          <input type="text" formControlName="username">
-        </div>
-        
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" formControlName="email">
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" formControlName="first_name">
-          </div>
-          
-          <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" formControlName="last_name">
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group checkbox">
-            <label>
-              <input type="checkbox" formControlName="is_active">
-              Active User
-            </label>
-          </div>
-          
-          <div class="form-group checkbox">
-            <label>
-              <input type="checkbox" formControlName="is_staff">
-              Admin User
-            </label>
-          </div>
-        </div>
-        
-        <div class="modal-actions">
-          <button type="button" class="action-btn" (click)="closeEditModal()">Cancel</button>
-          <button type="submit" class="action-btn approve" [disabled]="editUserForm.invalid">
-            Save Changes
-          </button>
-        </div>
-      </form>
-    </div>
   </div>
 
   <!-- Success Animation -->

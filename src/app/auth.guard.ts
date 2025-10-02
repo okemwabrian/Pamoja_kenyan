@@ -39,8 +39,8 @@ export class AdminGuard implements CanActivate {
       console.log('AdminGuard: Access granted');
       return true;
     } else {
-      console.log('AdminGuard: Access denied, redirecting to admin-login');
-      this.router.navigate(['/admin-login']);
+      console.log('AdminGuard: Access denied, redirecting to login');
+      this.router.navigate(['/login']);
       return false;
     }
   }

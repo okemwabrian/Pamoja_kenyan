@@ -5,8 +5,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SuccessAnimation } from '../shared/success-animation';
+import { ConnectionStatusComponent } from '../shared/connection-status.component';
 import { ContentService } from '../services/content.service';
 import { AuthService } from '../services/auth.service';
+import { ApiService } from '../services/api.service';
+import { SessionTimeoutService } from '../services/session-timeout.service';
+import { BackendConnectionService } from '../services/backend-connection.service';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -14,19 +18,30 @@ import { environment } from '../../environments/environment';
   standalone: true,
   templateUrl: './admin-dashboard.html',
   styleUrls: ['./admin-dashboard.css'],
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, SuccessAnimation]
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, SuccessAnimation, ConnectionStatusComponent]
 })
 export class AdminDashboard implements OnInit {
   stats: any = {};
   users: any[] = [];
   applications: any[] = [];
+  claims: any[] = [];
+  announcements: any[] = [];
+  events: any[] = [];
+  contacts: any[] = [];
   recentActivities: any[] = [];
+  
+  // Claims modal
+  showClaimModalFlag: boolean = false;
+  currentClaimId: number | null = null;
+  claimAction: string = '';
+  claimForm: FormGroup;
   
   // Forms
   announcementForm: FormGroup;
   eventForm: FormGroup;
   meetingForm: FormGroup;
   editUserForm: FormGroup;
+  approvalForm: FormGroup;
   
   // Data
   meetings: any[] = [];
@@ -40,6 +55,11 @@ export class AdminDashboard implements OnInit {
   // UI State
   showEditModal: boolean = false;
   editingUser: any = null;
+  showApprovalModalFlag: boolean = false;
+  showDocumentModal: boolean = false;
+  currentApplicationId: number | null = null;
+  approvalAction: string = '';
+  currentDocuments: any[] = [];
   
   // UI State
   activeTab = 'overview';
@@ -52,7 +72,10 @@ export class AdminDashboard implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private contentService: ContentService,
-    private authService: AuthService
+    private authService: AuthService,
+    private apiService: ApiService,
+    private sessionTimeout: SessionTimeoutService,
+    private backendConnection: BackendConnectionService
   ) {
     this.announcementForm = this.fb.group({
       title: ['', Validators.required],
@@ -90,39 +113,62 @@ export class AdminDashboard implements OnInit {
       is_active: [true],
       is_staff: [false]
     });
+
+    this.approvalForm = this.fb.group({
+      reason: ['', Validators.required],
+      sendEmail: [true]
+    });
+
+    this.claimForm = this.fb.group({
+      reason: ['', Validators.required],
+      amount_approved: [''],
+      sendEmail: [true]
+    });
   }
 
   ngOnInit() {
+    this.sessionTimeout.startTimer();
     this.loadDashboardData();
     this.loadMeetings();
   }
 
   loadDashboardData() {
-    const token = localStorage.getItem('authToken');
-    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    if (!this.backendConnection.isBackendConnected()) {
+      // Use mock data when backend is disconnected
+      this.stats = {
+        total_users: 25,
+        total_applications: 12,
+        pending_applications: 5,
+        total_claims: 8,
+        pending_claims: 3
+      };
+      this.users = this.getMockUsers();
+      this.filteredUsers = [...this.users];
+      this.applications = this.getMockApplications();
+      this.filteredApplications = [...this.applications];
+      this.claims = this.getMockClaims();
+      this.contacts = this.getMockContacts();
+      return;
+    }
 
-    // Load stats (using users count)
-    this.http.get(`${environment.apiUrl}/admin/users/`, options).subscribe({
-      next: (users: any) => {
+    // Load admin stats from backend
+    this.http.get(`${environment.apiUrl}/admin/stats/`, this.getAuthOptions()).subscribe({
+      next: (stats: any) => {
+        this.stats = stats;
+      },
+      error: () => {
         this.stats = {
-          total_users: users.length || 0,
+          total_users: 0,
           total_applications: 0,
           pending_applications: 0,
           total_claims: 0,
           pending_claims: 0
         };
-      },
-      error: () => this.stats = {
-        total_users: 0,
-        total_applications: 0,
-        pending_applications: 0,
-        total_claims: 0,
-        pending_claims: 0
       }
     });
 
     // Load users
-    this.http.get(`${environment.apiUrl}/admin/users/`, options).subscribe({
+    this.http.get(`${environment.apiUrl}/admin/users/`, this.getAuthOptions()).subscribe({
       next: (data: any) => {
         this.users = data;
         this.filteredUsers = [...this.users];
@@ -134,7 +180,7 @@ export class AdminDashboard implements OnInit {
     });
 
     // Load applications
-    this.http.get(`${environment.apiUrl}/admin/applications/`, options).subscribe({
+    this.http.get(`${environment.apiUrl}/admin/applications/`, this.getAuthOptions()).subscribe({
       next: (data: any) => {
         this.applications = data;
         this.filteredApplications = [...this.applications];
@@ -142,6 +188,46 @@ export class AdminDashboard implements OnInit {
       error: () => {
         this.applications = [];
         this.filteredApplications = [];
+      }
+    });
+
+    // Load claims
+    this.http.get(`${environment.apiUrl}/admin/claims/`, this.getAuthOptions()).subscribe({
+      next: (data: any) => {
+        this.claims = data;
+      },
+      error: () => {
+        this.claims = [];
+      }
+    });
+
+    // Load announcements
+    this.http.get(`${environment.apiUrl}/admin/announcements/`, this.getAuthOptions()).subscribe({
+      next: (data: any) => {
+        this.announcements = data;
+      },
+      error: () => {
+        this.announcements = [];
+      }
+    });
+
+    // Load events
+    this.http.get(`${environment.apiUrl}/admin/events/`, this.getAuthOptions()).subscribe({
+      next: (data: any) => {
+        this.events = data;
+      },
+      error: () => {
+        this.events = [];
+      }
+    });
+
+    // Load contacts
+    this.http.get(`${environment.apiUrl}/admin/contacts/`, this.getAuthOptions()).subscribe({
+      next: (data: any) => {
+        this.contacts = data;
+      },
+      error: () => {
+        this.contacts = [];
       }
     });
   }
@@ -154,16 +240,15 @@ export class AdminDashboard implements OnInit {
     if (this.announcementForm.invalid) return;
 
     this.isLoading = true;
-    const token = localStorage.getItem('authToken');
-    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
     
-    this.http.post(`${environment.apiUrl}/notifications/announcements/`, 
-      this.announcementForm.value, options).subscribe({
-      next: () => {
+    this.http.post(`${environment.apiUrl}/admin/announcements/create/`, 
+      this.announcementForm.value, this.getAuthOptions()).subscribe({
+      next: (newAnnouncement: any) => {
+        this.announcements.unshift(newAnnouncement);
         this.isLoading = false;
         this.successMessage = 'Announcement created successfully!';
         this.showSuccess = true;
-        this.announcementForm.reset();
+        this.announcementForm.reset({ priority: 'medium', is_pinned: false });
       },
       error: (error) => {
         this.isLoading = false;
@@ -176,16 +261,15 @@ export class AdminDashboard implements OnInit {
     if (this.eventForm.invalid) return;
 
     this.isLoading = true;
-    const token = localStorage.getItem('authToken');
-    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
     
-    this.http.post(`${environment.apiUrl}/notifications/events/`, 
-      this.eventForm.value, options).subscribe({
-      next: () => {
+    this.http.post(`${environment.apiUrl}/admin/events/create/`, 
+      this.eventForm.value, this.getAuthOptions()).subscribe({
+      next: (newEvent: any) => {
+        this.events.unshift(newEvent);
         this.isLoading = false;
         this.successMessage = 'Event created successfully!';
         this.showSuccess = true;
-        this.eventForm.reset();
+        this.eventForm.reset({ is_featured: false, registration_required: false });
       },
       error: (error) => {
         this.isLoading = false;
@@ -241,26 +325,26 @@ export class AdminDashboard implements OnInit {
 
     this.isLoading = true;
     
-    // Mock meeting creation
-    setTimeout(() => {
-      const newMeeting = {
-        id: this.meetings.length + 1,
-        ...this.meetingForm.value,
-        registered_count: 0
-      };
-      
-      this.meetings.unshift(newMeeting);
-      this.isLoading = false;
-      this.successMessage = 'Meeting created successfully!';
-      this.showSuccess = true;
-      this.meetingForm.reset({
-        duration: 60,
-        type: 'zoom',
-        max_participants: 100,
-        require_registration: false,
-        send_notifications: true
-      });
-    }, 1000);
+    this.http.post(`${environment.apiUrl}/admin/meetings/create/`, 
+      this.meetingForm.value, this.getAuthOptions()).subscribe({
+      next: (meeting: any) => {
+        this.meetings.unshift(meeting);
+        this.isLoading = false;
+        this.successMessage = 'Meeting created successfully!';
+        this.showSuccess = true;
+        this.meetingForm.reset({
+          duration: 60,
+          type: 'zoom',
+          max_participants: 100,
+          require_registration: false,
+          send_notifications: true
+        });
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.message = 'Failed to create meeting: ' + (error.error?.message || 'Server error');
+      }
+    });
   }
 
   copyMeetingLink(link: string) {
@@ -367,5 +451,241 @@ export class AdminDashboard implements OnInit {
 
   getCurrentUser() {
     return this.authService.getUserData();
+  }
+
+  showApprovalModal(appId: number, action: string) {
+    this.currentApplicationId = appId;
+    this.approvalAction = action;
+    this.showApprovalModalFlag = true;
+    this.approvalForm.reset({ sendEmail: true });
+  }
+
+  closeApprovalModal() {
+    this.showApprovalModalFlag = false;
+    this.currentApplicationId = null;
+    this.approvalAction = '';
+  }
+
+  submitApproval() {
+    if (this.approvalForm.invalid || !this.currentApplicationId) return;
+
+    const formData = this.approvalForm.value;
+    const payload = {
+      status: this.approvalAction,
+      reason: formData.reason,
+      send_email: formData.sendEmail
+    };
+
+    const headers = this.getAuthHeaders();
+    const options = headers ? { headers } : {};
+    this.http.post(`${environment.apiUrl}/admin/applications/${this.currentApplicationId}/update-status/`, 
+      payload, options).subscribe({
+      next: () => {
+        this.successMessage = `Application ${this.approvalAction} successfully!`;
+        this.showSuccess = true;
+        this.closeApprovalModal();
+        this.loadDashboardData();
+      },
+      error: () => {
+        this.message = 'Error updating application status';
+      }
+    });
+  }
+
+  viewDocuments(appId: number) {
+    const headers = this.getAuthHeaders();
+    const options = headers ? { headers } : {};
+    this.http.get(`${environment.apiUrl}/admin/applications/${appId}/documents/`, 
+      options).subscribe({
+      next: (documents: any) => {
+        this.currentDocuments = documents;
+        this.showDocumentModal = true;
+      },
+      error: () => {
+        this.message = 'Error loading documents';
+      }
+    });
+  }
+
+  closeDocumentModal() {
+    this.showDocumentModal = false;
+    this.currentDocuments = [];
+  }
+
+  openDocument(url: string) {
+    window.open(url, '_blank');
+  }
+
+  downloadDocument(url: string, filename: string) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+  }
+
+  private getAuthHeaders() {
+    const token = this.authService.getToken();
+    if (token) {
+      return { Authorization: `Bearer ${token}` };
+    }
+    return undefined;
+  }
+
+  private getAuthOptions() {
+    const token = this.authService.getToken();
+    return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+  }
+
+  showClaimModal(claimId: number, action: string) {
+    this.currentClaimId = claimId;
+    this.claimAction = action;
+    this.showClaimModalFlag = true;
+    this.claimForm.reset({ sendEmail: true });
+  }
+
+  closeClaimModal() {
+    this.showClaimModalFlag = false;
+    this.currentClaimId = null;
+    this.claimAction = '';
+  }
+
+  submitClaimDecision() {
+    if (this.claimForm.invalid || !this.currentClaimId) return;
+
+    const formData = this.claimForm.value;
+    const payload = {
+      status: this.claimAction,
+      admin_notes: formData.reason,
+      amount_approved: formData.amount_approved,
+      send_email: formData.sendEmail
+    };
+
+    this.http.patch(`${environment.apiUrl}/admin/claims/${this.currentClaimId}/`, 
+      payload, this.getAuthOptions()).subscribe({
+      next: () => {
+        this.successMessage = `Claim ${this.claimAction} successfully!`;
+        this.showSuccess = true;
+        this.closeClaimModal();
+        this.loadDashboardData();
+      },
+      error: () => {
+        this.message = 'Error updating claim status';
+      }
+    });
+  }
+
+  viewClaimDocuments(claimId: number) {
+    this.http.get(`${environment.apiUrl}/admin/claims/${claimId}/documents/`, 
+      this.getAuthOptions()).subscribe({
+      next: (documents: any) => {
+        this.currentDocuments = documents;
+        this.showDocumentModal = true;
+      },
+      error: () => {
+        this.message = 'Error loading claim documents';
+      }
+    });
+  }
+
+  getMockUsers() {
+    return [
+      { id: 1, username: 'john_doe', email: 'john@example.com', is_staff: false, is_active: true, first_name: 'John', last_name: 'Doe' },
+      { id: 2, username: 'jane_smith', email: 'jane@example.com', is_staff: false, is_active: true, first_name: 'Jane', last_name: 'Smith' },
+      { id: 3, username: 'admin_user', email: 'admin@example.com', is_staff: true, is_active: true, first_name: 'Admin', last_name: 'User' }
+    ];
+  }
+
+  getMockApplications() {
+    return [
+      { id: 1, applicant: 'John Doe', email: 'john@example.com', type: 'single', amount: 200, status: 'pending', created_at: '2024-01-20' },
+      { id: 2, applicant: 'Jane Smith', email: 'jane@example.com', type: 'double', amount: 400, status: 'approved', created_at: '2024-01-18' }
+    ];
+  }
+
+  getMockClaims() {
+    return [
+      { id: 1, user: { username: 'john_doe' }, claim_type: 'medical', amount_requested: 500, status: 'pending', description: 'Medical treatment costs', created_at: '2024-01-15', supporting_documents: true },
+      { id: 2, user: { username: 'jane_smith' }, claim_type: 'emergency', amount_requested: 300, amount_approved: 250, status: 'approved', description: 'Emergency assistance', created_at: '2024-01-10', admin_notes: 'Approved with documentation' }
+    ];
+  }
+
+  editAnnouncement(id: number) {
+    const announcement = this.announcements.find(a => a.id === id);
+    if (announcement) {
+      this.announcementForm.patchValue(announcement);
+    }
+  }
+
+  deleteAnnouncement(id: number) {
+    if (confirm('Are you sure you want to delete this announcement?')) {
+      this.http.delete(`${environment.apiUrl}/admin/announcements/${id}/`, this.getAuthOptions()).subscribe({
+        next: () => {
+          this.announcements = this.announcements.filter(a => a.id !== id);
+          this.successMessage = 'Announcement deleted successfully!';
+          this.showSuccess = true;
+        },
+        error: () => {
+          this.message = 'Failed to delete announcement';
+        }
+      });
+    }
+  }
+
+  editEvent(id: number) {
+    const event = this.events.find(e => e.id === id);
+    if (event) {
+      this.eventForm.patchValue(event);
+    }
+  }
+
+  deleteEvent(id: number) {
+    if (confirm('Are you sure you want to delete this event?')) {
+      this.http.delete(`${environment.apiUrl}/admin/events/${id}/`, this.getAuthOptions()).subscribe({
+        next: () => {
+          this.events = this.events.filter(e => e.id !== id);
+          this.successMessage = 'Event deleted successfully!';
+          this.showSuccess = true;
+        },
+        error: () => {
+          this.message = 'Failed to delete event';
+        }
+      });
+    }
+  }
+
+  getMockContacts() {
+    return [
+      { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+1234567890', subject: 'Membership Inquiry', message: 'I would like to know more about membership options.', status: 'pending', created_at: '2024-01-20T10:30:00Z' },
+      { id: 2, name: 'Jane Smith', email: 'jane@example.com', subject: 'Technical Issue', message: 'Having trouble with the application form.', status: 'resolved', created_at: '2024-01-18T14:15:00Z' }
+    ];
+  }
+
+  replyToContact(contactId: number) {
+    const contact = this.contacts.find(c => c.id === contactId);
+    if (contact) {
+      window.open(`mailto:${contact.email}?subject=Re: ${contact.subject}`, '_blank');
+      this.markContactResolved(contactId);
+    }
+  }
+
+  callContact(phone: string) {
+    window.open(`tel:${phone}`, '_self');
+  }
+
+  markContactResolved(contactId: number) {
+    this.http.patch(`${environment.apiUrl}/admin/contacts/${contactId}/`, 
+      { status: 'resolved' }, this.getAuthOptions()).subscribe({
+      next: () => {
+        const contact = this.contacts.find(c => c.id === contactId);
+        if (contact) {
+          contact.status = 'resolved';
+        }
+        this.successMessage = 'Contact marked as resolved!';
+        this.showSuccess = true;
+      },
+      error: () => {
+        this.message = 'Failed to update contact status';
+      }
+    });
   }
 }

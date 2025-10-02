@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ContentService } from '../services/content.service';
+import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
+import { SessionTimeoutService } from '../services/session-timeout.service';
 
 @Component({
   selector: 'app-dashboard-overview',
@@ -24,21 +27,22 @@ export class DashboardOverview implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private contentService: ContentService
+    private contentService: ContentService,
+    private apiService: ApiService,
+    private authService: AuthService,
+    private sessionTimeout: SessionTimeoutService
   ) {}
 
   ngOnInit() {
+    this.sessionTimeout.startTimer();
     this.loadDashboardData();
   }
 
   loadDashboardData() {
-    if (typeof window === 'undefined') return;
-    
-    const token = localStorage.getItem('authToken');
-    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    this.isLoading = true;
 
     // Load membership info from applications
-    this.http.get('http://localhost:8000/api/applications/my-applications/', options).subscribe({
+    this.apiService.getMembershipInfo().subscribe({
       next: (apps: any) => {
         if (apps && apps.length > 0) {
           const latestApp = apps[0];
@@ -68,40 +72,37 @@ export class DashboardOverview implements OnInit {
     });
 
     // Load recent applications
-    this.http.get('http://localhost:8000/api/applications/my-applications/', options).subscribe({
+    this.apiService.getApplications().subscribe({
       next: (apps: any) => {
         this.recentApplications = apps.slice(0, 3);
+        this.addToActivities(apps, 'application');
       },
       error: () => {
         this.recentApplications = [];
       }
     });
 
-    // Mock recent claims
-    this.recentClaims = [];
-
-    // Load notifications
-    this.http.get('http://localhost:8000/api/notifications/list/', options).subscribe({
-      next: (notifications: any) => {
-        this.notifications = notifications.slice(0, 5);
+    // Load recent claims
+    this.apiService.getClaims().subscribe({
+      next: (claims: any) => {
+        this.recentClaims = claims.slice(0, 3);
+        this.addToActivities(claims, 'claim');
       },
       error: () => {
-        this.notifications = [];
+        this.recentClaims = [];
       }
     });
 
-    // Load recent activities from backend
-    this.http.get('http://localhost:8000/api/activities/', options).subscribe({
-      next: (activities: any) => {
-        this.recentActivities = activities.slice(0, 5);
+    // Load payments
+    this.apiService.getPayments().subscribe({
+      next: (payments: any) => {
+        this.addToActivities(payments, 'payment');
       },
-      error: () => {
-        this.recentActivities = [];
-      }
+      error: () => {}
     });
 
-    // Load events from backend only
-    this.http.get('http://localhost:8000/api/notifications/events/', options).subscribe({
+    // Load events
+    this.apiService.getEvents().subscribe({
       next: (events: any) => {
         this.events = events.slice(0, 3);
       },
@@ -110,8 +111,8 @@ export class DashboardOverview implements OnInit {
       }
     });
 
-    // Load announcements from backend only
-    this.http.get('http://localhost:8000/api/notifications/announcements/', options).subscribe({
+    // Load announcements
+    this.apiService.getAnnouncements().subscribe({
       next: (announcements: any) => {
         this.announcements = announcements.slice(0, 3);
       },
@@ -144,10 +145,41 @@ export class DashboardOverview implements OnInit {
   }
 
   getUserName(): string {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('userName') || 'User';
+    const userData = this.authService.getUserData();
+    if (userData && userData.name) {
+      return userData.name.split(' ')[0]; // First name only
     }
     return 'User';
+  }
+
+  addToActivities(items: any[], type: string) {
+    const activities = items.slice(0, 2).map(item => ({
+      type: type,
+      action: this.getActivityAction(type, item),
+      description: this.getActivityDescription(type, item),
+      date: item.created_at || new Date().toISOString()
+    }));
+    this.recentActivities = [...this.recentActivities, ...activities]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5);
+  }
+
+  getActivityAction(type: string, item: any): string {
+    switch (type) {
+      case 'application': return 'Application Submitted';
+      case 'claim': return 'Claim Filed';
+      case 'payment': return 'Payment Made';
+      default: return 'Activity';
+    }
+  }
+
+  getActivityDescription(type: string, item: any): string {
+    switch (type) {
+      case 'application': return `${item.membership_type || 'Membership'} application for $${item.amount}`;
+      case 'claim': return `${item.claim_type} claim for $${item.amount_requested}`;
+      case 'payment': return `Payment of $${item.amount} processed`;
+      default: return 'Recent activity';
+    }
   }
 
   formatEventDate(dateString: string): string {
