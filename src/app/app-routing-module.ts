@@ -5,8 +5,7 @@ import { About } from './about/about';
 import { Beneficiaries } from './beneficiaries/beneficiaries';
 import { AuthGuard, AdminGuard } from './auth.guard';
 
-import { PamojaKenyaComponent } from './pamoja-kenya/pamoja-kenya.component';
-import { authGuard } from './auth-guard';
+
 
 export const routes: Routes = [
   // Public routes (no authentication required)
@@ -50,8 +49,7 @@ export const routes: Routes = [
   
 
   
-  // Connection test route
-  { path: 'test-connection', loadComponent: () => import('./test-connection.component').then(m => m.TestConnectionComponent) },
+
   
   // Redirect based on authentication status
   { path: '', redirectTo: '/login', pathMatch: 'full' },
