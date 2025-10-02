@@ -29,8 +29,8 @@ export class ForgotPassword {
   }
 
   onSubmit() {
-    if (!this.forgotPasswordForm.value.email) {
-      this.message = 'Please enter your email address.';
+    if (this.forgotPasswordForm.invalid) {
+      this.forgotPasswordForm.markAllAsTouched();
       return;
     }
     

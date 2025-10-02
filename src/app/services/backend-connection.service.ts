@@ -20,7 +20,7 @@ export class BackendConnectionService {
   }
 
   checkConnection(): void {
-    this.http.get(`${environment.apiUrl}/health/`, { timeout: 5000 }).subscribe({
+    this.http.get(`${environment.apiUrl}/notifications/announcements/`, { timeout: 5000 }).subscribe({
       next: () => {
         this.connectionStatus = 'connected';
         this.isConnectedSubject.next(true);

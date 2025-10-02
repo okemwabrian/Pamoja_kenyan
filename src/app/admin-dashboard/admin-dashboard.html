@@ -448,4 +448,137 @@
     [message]="successMessage"
     (complete)="onSuccessComplete()">
   </app-success-animation>
+
+  <!-- Edit User Modal -->
+  <div *ngIf="showEditModal" class="modal-overlay" (click)="closeEditModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Edit User</h3>
+        <button class="close-btn" (click)="closeEditModal()">&times;</button>
+      </div>
+      <form [formGroup]="editUserForm" (ngSubmit)="saveUserChanges()">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" formControlName="username">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="email">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" formControlName="first_name">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" formControlName="last_name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" formControlName="is_active">
+              Active User
+            </label>
+          </div>
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" formControlName="is_staff">
+              Admin User
+            </label>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="action-btn" (click)="closeEditModal()">Cancel</button>
+          <button type="submit" class="action-btn approve" [disabled]="editUserForm.invalid">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Approval Modal -->
+  <div *ngIf="showApprovalModalFlag" class="modal-overlay" (click)="closeApprovalModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ approvalAction === 'approved' ? 'Approve' : 'Reject' }} Application</h3>
+        <button class="close-btn" (click)="closeApprovalModal()">&times;</button>
+      </div>
+      <form [formGroup]="approvalForm" (ngSubmit)="submitApproval()">
+        <div class="form-group">
+          <label>Reason</label>
+          <textarea formControlName="reason" rows="4" placeholder="Enter reason for {{ approvalAction === 'approved' ? 'approval' : 'rejection' }}"></textarea>
+        </div>
+        <div class="form-group checkbox">
+          <label>
+            <input type="checkbox" formControlName="sendEmail">
+            Send email notification to applicant
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="action-btn" (click)="closeApprovalModal()">Cancel</button>
+          <button type="submit" class="action-btn" [class]="approvalAction === 'approved' ? 'approve' : 'reject'" [disabled]="approvalForm.invalid">
+            {{ approvalAction === 'approved' ? 'Approve' : 'Reject' }} Application
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Claim Modal -->
+  <div *ngIf="showClaimModalFlag" class="modal-overlay" (click)="closeClaimModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ claimAction === 'approved' ? 'Approve' : 'Reject' }} Claim</h3>
+        <button class="close-btn" (click)="closeClaimModal()">&times;</button>
+      </div>
+      <form [formGroup]="claimForm" (ngSubmit)="submitClaimDecision()">
+        <div class="form-group">
+          <label>Admin Notes</label>
+          <textarea formControlName="reason" rows="4" placeholder="Enter notes for this decision"></textarea>
+        </div>
+        <div class="form-group" *ngIf="claimAction === 'approved'">
+          <label>Amount Approved</label>
+          <input type="number" formControlName="amount_approved" placeholder="Enter approved amount">
+        </div>
+        <div class="form-group checkbox">
+          <label>
+            <input type="checkbox" formControlName="sendEmail">
+            Send email notification to claimant
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="action-btn" (click)="closeClaimModal()">Cancel</button>
+          <button type="submit" class="action-btn" [class]="claimAction === 'approved' ? 'approve' : 'reject'" [disabled]="claimForm.invalid">
+            {{ claimAction === 'approved' ? 'Approve' : 'Reject' }} Claim
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Document Modal -->
+  <div *ngIf="showDocumentModal" class="modal-overlay" (click)="closeDocumentModal()">
+    <div class="modal-content document-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Documents</h3>
+        <button class="close-btn" (click)="closeDocumentModal()">&times;</button>
+      </div>
+      <div class="document-list">
+        <div *ngIf="currentDocuments.length === 0" class="empty-state">
+          <p>No documents available</p>
+        </div>
+        <div *ngFor="let doc of currentDocuments" class="document-item">
+          <div class="document-info">
+            <div class="document-name">{{ doc.name || 'Document' }}</div>
+            <div class="document-type">{{ doc.type || 'Unknown' }}</div>
+          </div>
+          <div class="document-actions">
+            <button class="action-btn view" (click)="openDocument(doc.url)">View</button>
+            <button class="action-btn" (click)="downloadDocument(doc.url, doc.name)">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

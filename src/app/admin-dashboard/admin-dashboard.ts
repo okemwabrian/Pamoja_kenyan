@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SuccessAnimation } from '../shared/success-animation';
 import { ConnectionStatusComponent } from '../shared/connection-status.component';
+
 import { ContentService } from '../services/content.service';
 import { AuthService } from '../services/auth.service';
 import { ApiService } from '../services/api.service';
@@ -134,13 +135,13 @@ export class AdminDashboard implements OnInit {
 
   loadDashboardData() {
     if (!this.backendConnection.isBackendConnected()) {
-      // Use mock data when backend is disconnected
+      // Use empty data when backend is disconnected
       this.stats = {
-        total_users: 25,
-        total_applications: 12,
-        pending_applications: 5,
-        total_claims: 8,
-        pending_claims: 3
+        total_users: 0,
+        total_applications: 0,
+        pending_applications: 0,
+        total_claims: 0,
+        pending_claims: 0
       };
       this.users = this.getMockUsers();
       this.filteredUsers = [...this.users];
@@ -202,7 +203,7 @@ export class AdminDashboard implements OnInit {
     });
 
     // Load announcements
-    this.http.get(`${environment.apiUrl}/admin/announcements/`, this.getAuthOptions()).subscribe({
+    this.http.get(`${environment.apiUrl}/notifications/announcements/`, this.getAuthOptions()).subscribe({
       next: (data: any) => {
         this.announcements = data;
       },
@@ -212,7 +213,7 @@ export class AdminDashboard implements OnInit {
     });
 
     // Load events
-    this.http.get(`${environment.apiUrl}/admin/events/`, this.getAuthOptions()).subscribe({
+    this.http.get(`${environment.apiUrl}/notifications/events/`, this.getAuthOptions()).subscribe({
       next: (data: any) => {
         this.events = data;
       },
@@ -221,15 +222,8 @@ export class AdminDashboard implements OnInit {
       }
     });
 
-    // Load contacts
-    this.http.get(`${environment.apiUrl}/admin/contacts/`, this.getAuthOptions()).subscribe({
-      next: (data: any) => {
-        this.contacts = data;
-      },
-      error: () => {
-        this.contacts = [];
-      }
-    });
+    // Load contacts (no admin endpoint available, use mock)
+    this.contacts = this.getMockContacts();
   }
 
   setActiveTab(tab: string) {
@@ -588,25 +582,15 @@ export class AdminDashboard implements OnInit {
   }
 
   getMockUsers() {
-    return [
-      { id: 1, username: 'john_doe', email: 'john@example.com', is_staff: false, is_active: true, first_name: 'John', last_name: 'Doe' },
-      { id: 2, username: 'jane_smith', email: 'jane@example.com', is_staff: false, is_active: true, first_name: 'Jane', last_name: 'Smith' },
-      { id: 3, username: 'admin_user', email: 'admin@example.com', is_staff: true, is_active: true, first_name: 'Admin', last_name: 'User' }
-    ];
+    return [];
   }
 
   getMockApplications() {
-    return [
-      { id: 1, applicant: 'John Doe', email: 'john@example.com', type: 'single', amount: 200, status: 'pending', created_at: '2024-01-20' },
-      { id: 2, applicant: 'Jane Smith', email: 'jane@example.com', type: 'double', amount: 400, status: 'approved', created_at: '2024-01-18' }
-    ];
+    return [];
   }
 
   getMockClaims() {
-    return [
-      { id: 1, user: { username: 'john_doe' }, claim_type: 'medical', amount_requested: 500, status: 'pending', description: 'Medical treatment costs', created_at: '2024-01-15', supporting_documents: true },
-      { id: 2, user: { username: 'jane_smith' }, claim_type: 'emergency', amount_requested: 300, amount_approved: 250, status: 'approved', description: 'Emergency assistance', created_at: '2024-01-10', admin_notes: 'Approved with documentation' }
-    ];
+    return [];
   }
 
   editAnnouncement(id: number) {
@@ -654,10 +638,7 @@ export class AdminDashboard implements OnInit {
   }
 
   getMockContacts() {
-    return [
-      { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+1234567890', subject: 'Membership Inquiry', message: 'I would like to know more about membership options.', status: 'pending', created_at: '2024-01-20T10:30:00Z' },
-      { id: 2, name: 'Jane Smith', email: 'jane@example.com', subject: 'Technical Issue', message: 'Having trouble with the application form.', status: 'resolved', created_at: '2024-01-18T14:15:00Z' }
-    ];
+    return [];
   }
 
   replyToContact(contactId: number) {

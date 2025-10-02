@@ -24,19 +24,19 @@ export class ApiService {
 
   // User membership info
   getMembershipInfo(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/applications/my-applications/`, { headers: this.getHeaders() })
+    return this.http.get(`${this.apiUrl}/applications/`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   // User stats (fallback to applications count)
   getUserStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/applications/my-applications/`, { headers: this.getHeaders() })
+    return this.http.get(`${this.apiUrl}/dashboard/stats/`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   // Applications
   getApplications(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/applications/my-applications/`, { headers: this.getHeaders() })
+    return this.http.get(`${this.apiUrl}/applications/`, { headers: this.getHeaders() })
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -54,14 +54,14 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/payments/`, data, { headers: this.getHeaders() });
   }
 
-  // Profile (using applications as fallback)
+  // Profile
   getProfile(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/applications/my-applications/`, { headers: this.getHeaders() })
+    return this.http.get(`${this.apiUrl}/auth/profile/`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   updateProfile(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/contact/`, data, { headers: this.getHeaders() })
+    return this.http.put(`${this.apiUrl}/auth/profile/update/`, data, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -89,13 +89,25 @@ export class ApiService {
 
   // Auth
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login/`, credentials)
-      .pipe(catchError(this.handleError));
+    console.log('🔄 Attempting login to:', `${this.apiUrl}/auth/login/`);
+    console.log('📤 Sending credentials:', credentials);
+    
+    return this.http.post(`${this.apiUrl}/auth/login/`, credentials, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }).pipe(catchError(this.handleError));
   }
 
   register(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register/`, userData)
-      .pipe(catchError(this.handleError));
+    console.log('🔄 Attempting registration to:', `${this.apiUrl}/auth/register/`);
+    console.log('📤 Sending user data:', userData);
+    
+    return this.http.post(`${this.apiUrl}/auth/register/`, userData, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }).pipe(catchError(this.handleError));
   }
 
   registerForEvent(eventId: number): Observable<any> {
@@ -103,9 +115,9 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
-  // Admin endpoints (using users count as stats)
+  // Admin endpoints
   getAdminStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/users/`, { headers: this.getHeaders() })
+    return this.http.get(`${this.apiUrl}/admin/stats/`, { headers: this.getHeaders() })
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -159,7 +171,7 @@ export class ApiService {
     const headers = new HttpHeaders({
       ...(token && { 'Authorization': `Bearer ${token}` })
     });
-    return this.http.post(`${this.apiUrl}/claims/submit/`, formData, { headers })
+    return this.http.post(`${this.apiUrl}/claims/`, formData, { headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -214,19 +226,52 @@ export class ApiService {
   }
 
   updateClaimStatus(claimId: number, status: string, notes?: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/admin/claims/${claimId}/`, 
+    return this.http.put(`${this.apiUrl}/admin/claims/${claimId}/status/`, 
       { status, admin_notes: notes }, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Admin Applications
+  getAllApplications(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/applications/`, { headers: this.getHeaders() })
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  updateApplicationStatus(appId: number, status: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin/applications/${appId}/status/`, 
+      { status }, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   // Test backend connection
   testConnection(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/applications/my-applications/`)
+    return this.http.get(`${this.apiUrl}/notifications/announcements/`)
+      .pipe(catchError(this.handleError));
+  }
+
+  // Contact form
+  submitContact(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/notifications/contact/submit/`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  // PayPal payments
+  recordPayPalPayment(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/payments/paypal/`, data, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   private handleError = (error: HttpErrorResponse) => {
-    console.error('API Error:', error);
+    console.error('❌ API Error Details:');
+    console.error('Status:', error.status);
+    console.error('Status Text:', error.statusText);
+    console.error('URL:', error.url);
+    console.error('Error Body:', error.error);
+    console.error('Full Error:', error);
+    
+    if (error.status === 0) {
+      console.error('🚫 CORS or Network Error - Backend not reachable');
+    }
     
     if (error.status === 401) {
       // Token expired or invalid - redirect to login

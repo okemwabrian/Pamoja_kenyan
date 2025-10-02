@@ -88,10 +88,13 @@ export class Register {
       },
       error: (error) => {
         console.error('Registration failed:', error);
+        console.error('Error details:', error.error);
         this.isLoading = false;
         
         if (error.status === 0) {
           this.errorMessage = 'Unable to connect to server. Please check your connection.';
+        } else if (error.status === 400) {
+          this.errorMessage = 'Registration data invalid: ' + JSON.stringify(error.error);
         } else if (error.error?.username) {
           this.errorMessage = 'Username already exists. Please choose a different username.';
         } else if (error.error?.email) {

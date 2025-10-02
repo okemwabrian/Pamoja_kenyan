@@ -93,7 +93,7 @@
 
           <!-- Submit Button -->
           <div class="d-grid">
-            <button type="submit" class="btn btn-lg" style="background: #667eea; color: white; border: none; border-radius: 8px; padding: 12px 24px;" [disabled]="isSubmitting">
+            <button type="submit" class="btn btn-lg btn-accent btn-3d" [disabled]="isSubmitting">
               <i class="fas" [class.fa-paper-plane]="!isSubmitting" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting" class="me-2"></i>
               {{ isSubmitting ? 'Sending...' : 'Send Message' }}
             </button>

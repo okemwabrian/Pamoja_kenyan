@@ -43,7 +43,7 @@ export class Contact {
       message: this.sanitizeInput(this.formData.message)
     };
 
-    this.http.post(`${environment.apiUrl}/contact/submit/`, payload).subscribe({
+    this.http.post(`${environment.apiUrl}/notifications/contact/submit/`, payload).subscribe({
       next: (response: any) => {
         this.successMessage = 'Message sent successfully! We will get back to you soon.';
         this.resetForm();

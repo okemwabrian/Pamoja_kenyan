@@ -9,23 +9,25 @@ import { PamojaKenyaComponent } from './pamoja-kenya/pamoja-kenya.component';
 import { authGuard } from './auth-guard';
 
 export const routes: Routes = [
-  // Public routes
+  // Public routes (no authentication required)
   { path: 'login', loadComponent: () => import('./login/login').then(m => m.Login) },
   { path: 'register', loadComponent: () => import('./register/register').then(m => m.Register) },
-  { path: 'about', component: About },
   { path: 'contact', loadComponent: () => import('./contact/contact').then(m => m.Contact) },
-  { path: 'membership', loadComponent: () => import('./membership/membership').then(m => m.Membership) },
-  { path: 'single-application', loadComponent: () => import('./single-application/single-application').then(m => m.SingleApplication) },
-  { path: 'double-application', loadComponent: () => import('./double-application/double-application').then(m => m.DoubleApplication) },
-  { path: 'shares', loadComponent: () => import('./shares/shares').then(m => m.Shares) },
-  { path: 'payments', loadComponent: () => import('./payments/payments').then(m => m.Payments) },
-  { path: 'beneficiaries', component: Beneficiaries },
-  { path: 'announcements', loadComponent: () => import('./announcements/announcements').then(m => m.Announcements) },
-  { path: 'upgrade', loadComponent: () => import('./upgrade/upgrade').then(m => m.Upgrade) },
   { path: 'forgot-password', loadComponent: () => import('./forgot-password/forgot-password').then(m => m.ForgotPassword) },
   { path: 'reset-password/:uid/:token', loadComponent: () => import('./reset-password/reset-password').then(m => m.ResetPassword) },
   
-  // Protected routes
+  // Protected routes (authentication required)
+  { path: 'about', component: About, canActivate: [AuthGuard] },
+  { path: 'membership', loadComponent: () => import('./membership/membership').then(m => m.Membership), canActivate: [AuthGuard] },
+  { path: 'single-application', loadComponent: () => import('./single-application/single-application').then(m => m.SingleApplication), canActivate: [AuthGuard] },
+  { path: 'double-application', loadComponent: () => import('./double-application/double-application').then(m => m.DoubleApplication), canActivate: [AuthGuard] },
+  { path: 'shares', loadComponent: () => import('./shares/shares').then(m => m.Shares), canActivate: [AuthGuard] },
+  { path: 'payments', loadComponent: () => import('./payments/payments').then(m => m.Payments), canActivate: [AuthGuard] },
+  { path: 'beneficiaries', component: Beneficiaries, canActivate: [AuthGuard] },
+  { path: 'announcements', loadComponent: () => import('./announcements/announcements').then(m => m.Announcements), canActivate: [AuthGuard] },
+  { path: 'upgrade', loadComponent: () => import('./upgrade/upgrade').then(m => m.Upgrade), canActivate: [AuthGuard] },
+  
+  // User dashboard and profile routes
   { 
     path: 'user-dashboard', 
     loadComponent: () => import('./user-dashboard/user-dashboard.component').then(m => m.UserDashboardComponent), 
@@ -41,6 +43,7 @@ export const routes: Routes = [
   { path: 'my-events', loadComponent: () => import('./user-events/user-events').then(m => m.UserEvents), canActivate: [AuthGuard] },
   { path: 'profile', loadComponent: () => import('./profile/profile').then(m => m.Profile), canActivate: [AuthGuard] },
   { path: 'claims', loadComponent: () => import('./claims/claims').then(m => m.Claims), canActivate: [AuthGuard] },
+  { path: 'home', loadComponent: () => import('./home/home').then(m => m.Home), canActivate: [AuthGuard] },
   
   // Admin routes (backend managed)
   { path: 'admin-dashboard', loadComponent: () => import('./admin-dashboard/admin-dashboard').then(m => m.AdminDashboard), canActivate: [AdminGuard] },
@@ -50,9 +53,8 @@ export const routes: Routes = [
   // Connection test route
   { path: 'test-connection', loadComponent: () => import('./test-connection.component').then(m => m.TestConnectionComponent) },
   
-  // Home route
-  { path: '', loadComponent: () => import('./home/home').then(m => m.Home) },
-  { path: 'home', loadComponent: () => import('./home/home').then(m => m.Home) },
+  // Redirect based on authentication status
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   
   // Wildcard
   { path: '**', redirectTo: '' }

@@ -2,7 +2,7 @@
   <div class="nav-container">
     <!-- Logo -->
     <div class="nav-logo">
-      <a routerLink="/" class="logo-link">
+      <a routerLink="/home" class="logo-link">
         <img src="images/logo.png" alt="Pamoja Kenya MN" class="logo-image">
         <span class="logo-text">Pamoja Kenya MN</span>
       </a>
@@ -10,7 +10,7 @@
 
     <!-- Navigation Links -->
     <div class="nav-menu" [class.active]="isMenuOpen">
-      <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
+      <a routerLink="/home" class="nav-link" routerLinkActive="active" (click)="closeMenu()">Home</a>
       <a routerLink="/about" class="nav-link" routerLinkActive="active" (click)="closeMenu()">About</a>
       <a routerLink="/membership" class="nav-link" routerLinkActive="active" (click)="closeMenu()">Membership</a>
       <a routerLink="/user-dashboard" class="nav-link" routerLinkActive="active" *ngIf="isLoggedIn()" (click)="closeMenu()">Dashboard</a>

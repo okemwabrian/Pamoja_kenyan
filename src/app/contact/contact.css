@@ -224,6 +224,10 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .contact-wrapper {
+    padding: 1rem 0;
+  }
+  
   .contact-card {
     margin: 1rem;
     padding: 2rem !important;
@@ -231,6 +235,44 @@
   
   .contact-card:hover {
     transform: translateZ(5px);
+  }
+  
+  .input-3d {
+    padding: 0.75rem 1rem;
+  }
+  
+  .btn-accent {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .form-check {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-card {
+    margin: 0.5rem;
+    padding: 1.5rem !important;
+  }
+  
+  .input-3d {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .btn-accent {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+  .form-label {
+    font-size: 0.9rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
   }
 }
 

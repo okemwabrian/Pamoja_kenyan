@@ -33,9 +33,8 @@ export class Login {
   }
 
   onSubmit() {
-    console.log('Form submitted!', this.loginForm.value);
-    
-    if (!this.loginForm.value.username || !this.loginForm.value.password) {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
       this.message = 'Please fill in all required fields.';
       return;
     }
@@ -60,7 +59,7 @@ export class Login {
         const fullName = (response.user?.first_name || '') + ' ' + (response.user?.last_name || '');
         const displayName = fullName.trim() || response.user?.username || 'User';
         
-        if (response.user.is_staff || response.user.is_superuser) {
+        if (response.user.is_admin || response.user.is_staff || response.user.is_superuser) {
           this.successMessage = `Welcome back, Admin ${displayName}! Redirecting to dashboard...`;
         } else {
           this.successMessage = `Welcome back, ${displayName}! Redirecting...`;
@@ -69,10 +68,13 @@ export class Login {
       },
       error: (error) => {
         console.error('Login failed:', error);
+        console.error('Error details:', error.error);
         this.isLoading = false;
         
         if (error.status === 0) {
           this.message = 'Cannot connect to server. Please check if backend is running.';
+        } else if (error.status === 400) {
+          this.message = 'Login data invalid: ' + JSON.stringify(error.error);
         } else if (error.status === 401) {
           this.message = 'Invalid username or password. Please check your credentials.';
         } else if (error.status === 405) {
@@ -86,10 +88,10 @@ export class Login {
 
   onSuccessComplete() {
     const userData = this.authService.getUserData();
-    if (userData && (userData.isStaff || userData.isSuperuser)) {
+    if (userData && (userData.isStaff || userData.isSuperuser || userData.role === 'admin')) {
       this.router.navigate(['/admin-dashboard']);
     } else {
-      this.router.navigate(['/user-dashboard']);
+      this.router.navigate(['/home']);
     }
   }
 
@@ -111,6 +113,10 @@ export class Login {
 
   goToRegister() {
     this.router.navigate(['/register']);
+  }
+
+  goToForgotPassword() {
+    this.router.navigate(['/forgot-password']);
   }
 
   // Temporary test login to bypass backend issues

@@ -148,7 +148,7 @@ export class Payments implements OnInit, AfterViewInit {
       description: 'Pamoja Kenya Membership Payment'
     };
 
-    this.http.post(`${this.apiUrl}/api/payments/`, payload).subscribe({
+    this.http.post(`${environment.apiUrl}/payments/paypal/`, payload).subscribe({
       next: (response) => {
         console.log('Payment recorded successfully:', response);
         // Show success message and redirect after delay

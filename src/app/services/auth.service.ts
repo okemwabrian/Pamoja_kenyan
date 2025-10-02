@@ -52,25 +52,26 @@ export class AuthService {
     localStorage.setItem('authToken', response.tokens.access);
     localStorage.setItem('refreshToken', response.tokens.refresh);
     
-    // Store user data
-    localStorage.setItem('userName', response.user.first_name + ' ' + response.user.last_name);
-    localStorage.setItem('userRole', response.user.is_staff ? 'admin' : 'user');
+    // Store user data - handle backend response format
+    const userName = (response.user.first_name || '') + ' ' + (response.user.last_name || '') || response.user.username;
+    localStorage.setItem('userName', userName.trim());
+    localStorage.setItem('userRole', response.user.is_admin ? 'admin' : 'user');
     localStorage.setItem('userId', response.user.id.toString());
-    localStorage.setItem('userEmail', response.user.email);
-    localStorage.setItem('isStaff', response.user.is_staff.toString());
-    localStorage.setItem('isSuperuser', response.user.is_superuser.toString());
+    localStorage.setItem('userEmail', response.user.email || '');
+    localStorage.setItem('isStaff', (response.user.is_staff || response.user.is_admin).toString());
+    localStorage.setItem('isSuperuser', (response.user.is_superuser || response.user.is_admin).toString());
 
     // Update subjects
     this.isAuthenticatedSubject.next(true);
-    this.isAdminSubject.next(response.user.is_staff);
+    this.isAdminSubject.next(response.user.is_admin || response.user.is_staff);
     
     const userData = {
       id: response.user.id,
-      name: response.user.first_name + ' ' + response.user.last_name,
-      email: response.user.email,
-      role: response.user.is_staff ? 'admin' : 'user',
-      isStaff: response.user.is_staff,
-      isSuperuser: response.user.is_superuser
+      name: userName.trim(),
+      email: response.user.email || '',
+      role: response.user.is_admin ? 'admin' : 'user',
+      isStaff: response.user.is_staff || response.user.is_admin,
+      isSuperuser: response.user.is_superuser || response.user.is_admin
     };
     
     this.userDataSubject.next(userData);
@@ -101,6 +102,19 @@ export class AuthService {
   }
 
   public adminLogout(): void {
+    // Call backend logout endpoint
+    const token = this.getToken();
+    if (token) {
+      // Make logout API call (optional - for token blacklisting)
+      fetch('/api/auth/logout/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }).catch(() => {});
+    }
+    
     this.clearAuthState();
     this.router.navigate(['/login']);
   }
